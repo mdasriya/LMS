@@ -1,0 +1,2708 @@
+import React, { useState } from "react";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Button,
+  Grid,
+  Center,
+  HStack,
+  Heading,
+} from "@chakra-ui/react";
+
+const plotTypes = ["Type 1", "Type 2", "Type 3"]; // Replace with actual plot types
+
+const genders = ["Male", "Female", "Other"]; // Replace with actual gender options
+
+const NewBooking = () => {
+  const [formData, setFormData] = useState({
+    projectName: "",
+    blockName: "",
+    plotNo: "",
+    plotType: "",
+    customerName: "",
+    customerAddress: "",
+    customerContact: "",
+    registryGender: "",
+    areaSqmt: "",
+    ratePerSqmt: "",
+    totalAmount: "",
+    discountApplicable: "No",
+    discountPercent: "",
+    netAmount: "",
+    registryAmount: "",
+    serviceAmount: "",
+    maintenanceAmount: "",
+    miscAmount: "",
+    grandTotal: "",
+    constructionApplicable: "No",
+    constructionContractor: "",
+    totalAmountPayable: "",
+    guidelineAmount: "",
+    registryPercent: "",
+    bankAmountPayable: "",
+    cashAmountPayable: "",
+    bookingDate: "",
+    constructionAmount: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add your logic to handle form submission
+    console.log("Form Data:", formData);
+  };
+
+  return (
+    <Box p={4} width="100%">
+      <Center mb={"20px"}>
+        <Heading>New Booking</Heading>
+      </Center>
+      <form onSubmit={handleSubmit}>
+        <Grid templateColumns="repeat(4, 1fr)" gap={4}>
+          <FormControl>
+            <FormLabel>Project Name</FormLabel>
+            <Input
+              type="text"
+              name="projectName"
+              value={formData.projectName}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Block Name</FormLabel>
+            <Input
+              type="text"
+              name="blockName"
+              value={formData.blockName}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Plot No</FormLabel>
+            <Input
+              type="text"
+              name="plotNo"
+              value={formData.plotNo}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Plot Type</FormLabel>
+            <Select
+              name="plotType"
+              value={formData.plotType}
+              onChange={handleChange}
+              required
+            >
+              <option value="" disabled>
+                Select Plot Type
+              </option>
+              {plotTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Customer Name</FormLabel>
+            <Input
+              type="text"
+              name="customerName"
+              value={formData.customerName}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Customer Address</FormLabel>
+            <Input
+              type="text"
+              name="customerAddress"
+              value={formData.customerAddress}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Customer Contact</FormLabel>
+            <Input
+              type="text"
+              name="customerContact"
+              value={formData.customerContact}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Registry Gender</FormLabel>
+            <Select
+              name="registryGender"
+              value={formData.registryGender}
+              onChange={handleChange}
+              required
+            >
+              <option value="" disabled>
+                Select Gender
+              </option>
+              {genders.map((gender) => (
+                <option key={gender} value={gender}>
+                  {gender}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+          <HStack spacing={4}>
+            <FormControl>
+              <FormLabel>Area Sqmt</FormLabel>
+              <Input
+                type="number"
+                name="areaSqmt"
+                value={formData.areaSqmt}
+                onChange={handleChange}
+                required
+                width="150px"
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Rate Per Sqmt</FormLabel>
+              <Input
+                type="number"
+                name="ratePerSqmt"
+                value={formData.ratePerSqmt}
+                onChange={handleChange}
+                required
+                width="150px"
+              />
+            </FormControl>
+          </HStack>
+          <FormControl>
+            <FormLabel>Total Amount</FormLabel>
+            <Input
+              type="number"
+              name="totalAmount"
+              value={formData.totalAmount}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Discount Applicable</FormLabel>
+            <Select
+              name="discountApplicable"
+              value={formData.discountApplicable}
+              onChange={handleChange}
+              required
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Discount Percent</FormLabel>
+            <Input
+              type="number"
+              name="discountPercent"
+              value={formData.discountPercent}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Net Amount</FormLabel>
+            <Input
+              type="number"
+              name="netAmount"
+              value={formData.netAmount}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Registry Amount</FormLabel>
+            <Input
+              type="number"
+              name="registryAmount"
+              value={formData.registryAmount}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Service Amount</FormLabel>
+            <Input
+              type="number"
+              name="serviceAmount"
+              value={formData.serviceAmount}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Maintenance Amount</FormLabel>
+            <Input
+              type="number"
+              name="maintenanceAmount"
+              value={formData.maintenanceAmount}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Misc Amount</FormLabel>
+            <Select
+              name="miscAmount"
+              value={formData.miscAmount}
+              onChange={handleChange}
+              required
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Grand Total</FormLabel>
+            <Input
+              type="number"
+              name="grandTotal"
+              value={formData.grandTotal}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Construction Applicable</FormLabel>
+            <Select
+              name="constructionApplicable"
+              value={formData.constructionApplicable}
+              onChange={handleChange}
+              required
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Construction Contractor</FormLabel>
+            <Input
+              type="text"
+              name="constructionContractor"
+              value={formData.constructionContractor}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Construction Amount</FormLabel>
+            <Input
+              type="number"
+              name="constructionAmount"
+              value={formData.constructionAmount}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Total Amount Payable</FormLabel>
+            <Input
+              type="number"
+              name="totalAmountPayable"
+              value={formData.totalAmountPayable}
+              onChange={handleChange}
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Guideline Amount</FormLabel>
+            <Input
+              type="number"
+              name="guidelineAmount"
+              value={formData.guidelineAmount}
+              onChange={handleChange}
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Registry Percent</FormLabel>
+            <Input
+              type="number"
+              name="registryPercent"
+              value={formData.registryPercent}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Bank Amount Payable</FormLabel>
+            <Input
+              type="number"
+              name="bankAmountPayable"
+              value={formData.bankAmountPayable}
+              onChange={handleChange}
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Cash Amount Payable</FormLabel>
+            <Input
+              type="number"
+              name="cashAmountPayable"
+              value={formData.cashAmountPayable}
+              onChange={handleChange}
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>Booking Date</FormLabel>
+            <Input
+              type="date"
+              name="bookingDate"
+              value={formData.bookingDate}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+          <Button colorScheme="blue" type="submit" mt={4}>
+            Submit
+          </Button>
+        </Grid>
+      </form>
+    </Box>
+  );
+};
+
+export default NewBooking;
+ const toast = useToast();
+
+  const [projects, setProjects] = useState([]); //this state use for fetching
+  //this use for fecthing projects
+
+  // useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://lkgexcel.com/backend/getprojects.php"
+      );
+      setProjects(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchData();
+  // }, []);
+  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const [formData, setFormData] = useState({
+    projectName: "",
+    location: "",
+    city: "",
+    state: "",
+    projectType: "",
+    totalLandArea: "",
+    totalSalableArea: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const onAdd = async (e) => {
+    e.preventDefault();
+
+    const url = "https://lkgexcel.com/backend/addproject.php";
+    let fData = new FormData();
+    fData.append("projectName", formData.projectName);
+    fData.append("city", formData.city);
+    fData.append("state", formData.state);
+    fData.append("location", formData.location);
+    fData.append("projectType", formData.projectType);
+    fData.append("totalLandArea", formData.totalLandArea);
+    fData.append("totalSalableArea", formData.totalSalableArea);
+
+    try {
+      const response = await axios.post(url, fData);
+      toast({
+        title: "Project added successfully!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      setProjects([
+        ...projects,
+        { ...response.data, id: response.data.projectId },
+      ]);
+
+      // Clear the form data after successful submission
+      setFormData({
+        projectName: "",
+        location: "",
+        city: "",
+        state: "",
+        projectType: "",
+        totalLandArea: "",
+        totalSalableArea: "",
+      });
+    } catch (error) {
+      console.log(error.toJSON());
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, [onAdd]);
+  const handleDelete = async (projectId) => {
+    try {
+      // Make a DELETE request to your API endpoint for deleting a project
+      await axios.delete(
+        `https://lkgexcel.com/backend/deleteproject.php?id=${projectId}`
+      );
+      // Update the projects state after successful deletion
+      setProjects(projects.filter((project) => project.id !== projectId));
+      toast({
+        title: "Project deleted successfully!",
+        // status: "danger",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
+
+  // Add a state to manage the modal open/close
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Add a state to store the project data for editing
+  const [editFormData, setEditFormData] = useState({
+    id: "",
+    projectName: "",
+    location: "",
+    city: "",
+    state: "",
+    projectType: "",
+    totalLandArea: "",
+    totalSalableArea: "",
+  });
+
+  // Function to open the modal and set the project data for editing
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleEditClick = (project) => {
+    setIsModalOpen(true);
+    setEditFormData({
+      id: project.id, // Add the project ID
+      projectName: project.projectName,
+      location: project.location,
+      city: project.city,
+      state: project.state,
+      projectType: project.projectType,
+      totalLandArea: project.totalLandArea,
+      totalSalableArea: project.totalSalableArea,
+    });
+  };
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const url = "https://lkgexcel.com/backend/editproject.php";
+
+    try {
+      console.log("Before axios.post");
+      const response = await axios.post(url, {
+        id: editFormData.id,
+        projectName: editFormData.projectName,
+        location: editFormData.location,
+        city: editFormData.city,
+        state: editFormData.state,
+        projectType: editFormData.projectType,
+        totalLandArea: editFormData.totalLandArea,
+        totalSalableArea: editFormData.totalSalableArea,
+      });
+      console.log("After axios.post");
+
+      if (response && response.data && response.data.status === "success") {
+        // Close the modal after successful submission
+        setIsModalOpen(false);
+
+        // Fetch updated projects data (make sure this function is implemented correctly)
+        fetchData();
+
+        // Show a success toast message
+        toast({
+          title: "Project updated successfully!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        // Handle error response
+        console.error("Error updating project. Response:", response);
+
+        // Show an error toast message
+        toast({
+          title: "Error updating project",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error("Error in handleEditSubmit:", error);
+
+      // Show an error toast message
+      toast({
+        title: "Error updating project",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+   // const toast = useToast();
+
+  // const [projects, setProjects] = useState([]);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://lkgexcel.com/backend/getprojects.php"
+  //     );
+  //     setProjects(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []); // Fetch data on component mount
+
+  // const [formData, setFormData] = useState({
+  //   projectName: "",
+  //   location: "",
+  //   city: "",
+  //   state: "",
+  //   projectType: "",
+  //   totalLandArea: "",
+  //   totalSalableArea: "",
+  // });
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prevData) => ({ ...prevData, [name]: value }));
+  // };
+
+  // const onAdd = (e) => {
+  //   e.preventDefault();
+
+  //   const url = "https://lkgexcel.com/backend/addproject.php";
+  //   let fData = new FormData();
+  //   fData.append("projectName", formData.projectName);
+  //   fData.append("city", formData.city);
+  //   fData.append("state", formData.state);
+  //   fData.append("location", formData.location);
+  //   fData.append("projectType", formData.projectType);
+  //   fData.append("totalLandArea", formData.totalLandArea);
+  //   fData.append("totalSalableArea", formData.totalSalableArea);
+
+  //   axios
+  //     .post(url, fData)
+  //     .then((response) => {
+  //       toast({
+  //         title: "Project added successfully!",
+  //         status: "success",
+  //         duration: 3000,
+  //         isClosable: true,
+  //       });
+
+  //       // Update the projects state with the new project
+  //       setProjects([
+  //         ...projects,
+  //         { ...response.data, id: response.data.projectId },
+  //       ]);
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.toJSON());
+  //     });
+
+  //   // Clear the form data after submission
+  //   setFormData({
+  //     projectName: "",
+  //     location: "",
+  //     city: "",
+  //     state: "",
+  //     projectType: "",
+  //     totalLandArea: "",
+  //     totalSalableArea: "",
+  //   });
+  // };
+
+  // const handleDelete = async (projectId) => {
+  //   try {
+  //     await axios.delete(
+  //       `https://lkgexcel.com/backend/deleteproject.php?id=${projectId}`
+  //     );
+  //     setProjects(projects.filter((project) => project.id !== projectId));
+
+  //     toast({
+  //       title: "Project deleted successfully!",
+  //       duration: 3000,
+  //       isClosable: true,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error deleting project:", error);
+  //   }
+  // };
+ // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://lkgexcel.com/backend/getprojects.php"
+  //     );
+  //     setProjects(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+
+  // fetchData();
+
+
+    const onAddPlot = async (e) => {
+    e.preventDefault();
+
+    const url = "https://lkgexcel.com/backend/addplot.php";
+    const fData = new FormData();
+    fData.append("projectName", formData.projectName);
+    fData.append("blockName", formData.blockName);
+    fData.append("plotNo", formData.plotNo);
+    fData.append("areaSqft", formData.areaSqft);
+    fData.append("areaSqmt", formData.areaSqmt);
+    fData.append("ratePerSqft", formData.ratePerSqft);
+    fData.append("plotType", formData.plotType);
+    fData.append("plotStatus", formData.plotStatus);
+
+    try {
+      const response = await axios.post(url, fData);
+      toast({
+        title: "Plot added successfully!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      console.log(response);
+      // Clear the form data after successful submission
+      setFormData({
+        projectName: "",
+        blockName: "",
+        plotNo: "",
+        areaSqft: "",
+        areaSqmt: "",
+        ratePerSqft: "",
+        plotType: "",
+        plotStatus: "Available",
+      });
+    } catch (error) {
+      console.log(error.toJSON());
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, [onAddPlot]);
+  import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Nav from "./Nav";
+import Home from "./Home";
+import AddProject from "./components/AddProject";
+import NewBooking from "./components/NewBooking";
+import MasterInputs from "./components/MasterInputs";
+import AddBlock from "./components/AddBlock";
+import AddPlot from "./components/AddPlot";
+import AddUser from "./components/AddUser";
+import UserList from "./components/UserList";
+import AddContractor from "./components/AddContractor";
+import ContractorList from "./components/ContractorList";
+import BrokerList from "./components/BrokerList";
+import AddBroker from "./components/AddBroker";
+import Admin from "./components/Admin";
+import BookingStatus from "./components/BookingStatus";
+
+const App = () => {
+  const [isAdminLoggedIn, setAdminLoggedIn] = useState(false);
+
+  const handleAdminLogin = () => {
+    setAdminLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setAdminLoggedIn(false);
+  };
+
+  return (
+    <Router>
+      {isAdminLoggedIn && <Nav onLogout={handleLogout} />}
+      <Routes>
+        {isAdminLoggedIn ? (
+          <>
+            <Route path="/home" element={<Home />} />
+            <Route path="/addproject" element={<AddProject />} />
+            <Route path="/newbooking" element={<NewBooking />} />
+            <Route path="/masterinputs" element={<MasterInputs />} />
+            <Route path="/addblock" element={<AddBlock />} />
+            <Route path="/addplot" element={<AddPlot />} />
+            <Route path="/adduser" element={<AddUser />} />
+            <Route path="/userlist" element={<UserList />} />
+            <Route path="/addcontractor" element={<AddContractor />} />
+            <Route path="/contractorlist" element={<ContractorList />} />
+            <Route path="/brokerlist" element={<BrokerList />} />
+            <Route path="/addbroker" element={<AddBroker />} />
+            <Route path="/bookingstatus" element={<BookingStatus />} />
+          </>
+        ) : (
+          <Route path="/" element={<Admin onAdminLogin={handleAdminLogin} />} />
+        )}
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+ const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editedRowData, setEditedRowData] = useState({});
+  const handleEditClick = () => {
+    setIsEditModalOpen(true);
+    // Set initial data for editing based on the first selected row
+    const firstSelectedRowId = selectedRows[0];
+    const firstSelectedRow = master.find(
+      (row) => row.id === firstSelectedRowId
+    );
+    setEditedRowData(firstSelectedRow);
+  };
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditedRowData({}); // Reset edited data when closing the modal
+  };
+
+  const handleInputChange = (columnName, value) => {
+    setEditedRowData((prevData) => ({
+      ...prevData,
+      [columnName]: value,
+    }));
+  };
+    if (email === adminUser.email && password === adminUser.password) {
+      localStorage.setItem("isAuth", true);
+      // onAdminLogin();
+      // Display a success toast
+      toast({
+        title: "Login Successful",
+        description: "Welcome, Admin!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
+    } else {
+      // Display an error toast
+      toast({
+        title: "Login Failed",
+        description: "Invalid email or password",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Nav from "./Nav";
+import Home from "./Home";
+import AddProject from "./components/AddProject";
+import NewBooking from "./components/NewBooking";
+import MasterInputs from "./components/MasterInputs";
+import AddBlock from "./components/AddBlock";
+import AddPlot from "./components/AddPlot";
+import AddUser from "./components/AddUser";
+import UserList from "./components/UserList";
+import AddContractor from "./components/AddContractor";
+import ContractorList from "./components/ContractorList";
+import BrokerList from "./components/BrokerList";
+import AddBroker from "./components/AddBroker";
+
+import BookingStatus from "./components/BookingStatus";
+
+const App = () => {
+  return (
+    <Router>
+      <Nav />
+
+      <Routes>
+        <Route path="/addproject" element={<AddProject />} />
+        <Route path="/newbooking" element={<NewBooking />} />
+        <Route path="/masterinputs" element={<MasterInputs />} />
+        <Route path="/addblock" element={<AddBlock />} />
+        <Route path="/addplot" element={<AddPlot />} />
+        <Route path="/adduser" element={<AddUser />} />
+        <Route path="/userlist" element={<UserList />} />
+        <Route path="/addcontractor" element={<AddContractor />} />
+        <Route path="/contractorlist" element={<ContractorList />} />
+        <Route path="/brokerlist" element={<BrokerList />} />
+        <Route path="/addbroker" element={<AddBroker />} />
+        <Route path="/bookingstatus" element={<BookingStatus />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+  {/* <Tbody>
+          {bookings.map((booking) => (
+            <Tr key={booking.id}>
+              <Td fontSize={"12px"} p={"10px"} width={"fit-content"}>
+                {booking.projectName}
+              </Td>
+              <Td fontSize={"12px"} p={"10px"} width={"fit-content"}>
+                {booking.blockName}
+              </Td>
+              <Td fontSize={"12px"} p={"10px"} width={"fit-content"}>
+                {booking.plotNo}
+              </Td>
+              <Td fontSize={"12px"} p={"10px"} width={"fit-content"}>
+                {booking.areaSqft}
+              </Td>
+              <Td fontSize={"12px"} p={"10px"} width={"fit-content"}>
+                {booking.areaSqmt}
+              </Td>
+              <Td fontSize={"12px"} p={"10px"} width={"fit-content"}>
+                {booking.plotStatus}
+              </Td>
+
+              <Td fontSize={"12px"} p={"10px"} width={"fit-content"}>
+                {booking.plotType}
+              </Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table> */}
+
+
+
+
+
+       <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{"On Hold Details"}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {/* Display On Hold details for the selected booking */}
+            {selectedBooking && (
+              <>
+                <p>
+                  {"On Hold Date:"} {selectedBooking.onHoldDate}
+                </p>
+                <p>
+                  {"On Hold Customer Name:"}{" "}
+                  {selectedBooking.onHoldCustomerName}
+                </p>
+                <p>
+                  {"On Hold Contact:"} {selectedBooking.onHoldContact}
+                </p>
+                <p>
+                  {"On Hold Address:"} {selectedBooking.onHoldAddress}
+                </p>
+                {/* Add more details as needed */}
+              </>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+
+
+
+
+
+      //payment tbale 
+       <TableContainer>
+              <Table>
+                <Thead color={"white"}>
+                  <Tr bg={"#121212"} color={"whitesmoke"}>
+                    <Th color={"white"}>To convert</Th>
+                    <Th color={"white"}>into</Th>
+                    <Th isNumeric color={"white"}>
+                      multiply by
+                    </Th>
+                    <Th color={"white"}>To convert</Th>
+                    <Th color={"white"}>into</Th>
+                    <Th color={"white"} isNumeric>
+                      multiply by
+                    </Th>
+                    <Th color={"white"}>To convert</Th>
+                    <Th color={"white"}>into</Th>
+                    <Th isNumeric color={"white"}>
+                      multiply by
+                    </Th>
+                    <Th color={"white"}> To convert</Th>
+                    <Th color={"white"}>into</Th>
+                    <Th isNumeric color={"white"}>
+                      multiply by
+                    </Th>
+                    <Th color={"white"}>To convert</Th>
+                    <Th color={"white"}>into</Th>
+                    <Th isNumeric color={"white"}>
+                      multiply by
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td>inches</Td>
+                    <Td>millimetres (mm)</Td>
+                    <Td isNumeric>25.4</Td>
+                    <Td>inches</Td>
+                    <Td>millimetres (mm)</Td>
+                    <Td isNumeric>25.4</Td>
+                    <Td>inches</Td>
+                    <Td>millimetres (mm)</Td>
+                    <Td isNumeric>25.4</Td>
+                    <Td>inches</Td>
+                    <Td>millimetres (mm)</Td>
+                    <Td isNumeric>25.4</Td>
+                    <Td>inches</Td>
+                    <Td>millimetres (mm)</Td>
+                    <Td isNumeric>25.4</Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TableContainer>
+
+
+
+
+            //payment // // import React, { useState } from "react";
+// // import {
+// //   Grid,
+// //   GridItem,
+// //   Input,
+// //   FormControl,
+// //   FormLabel,
+// //   Box,
+// //   Flex,
+// //   Center,
+// //   VStack,
+// //   Textarea,
+// //   HStack,
+// //   Divider,
+// //   Text,
+// //   Button,
+// //   Table,
+// //   Thead,
+// //   Tr,
+// //   Th,
+// //   Tbody,
+// //   Td,
+// //   Select,
+// //   TableContainer,
+// // } from "@chakra-ui/react";
+
+// // const PaymentTransaction = () => {
+// //   const [displa, setdisplay] = useState(false);
+// //   return (
+// //     // <>
+// //     //   <Grid
+// //     //     h="100vh"
+// //     //     templateRows="repeat(1, 1fr)"
+// //     //     templateColumns="repeat(4, 1fr)"
+// //     //     gap={4}
+// //     //   >
+// //     //     {/* First box  */}
+// //     //     <GridItem colSpan={1} border={"1px solid green"}>
+// //     //       <Box
+// //     //         height="100%"
+// //     //         display="flex"
+// //     //         flexDirection="column"
+// //     //         padding="10px"
+// //     //       >
+// //     //         <FormControl marginBottom="1rem">
+// //     //           <Flex align="center">
+// //     //             <FormLabel>Project Name:</FormLabel>
+// //     //             <Input type="text" placeholder="Enter project name" w={"60%"} />
+// //     //           </Flex>
+// //     //         </FormControl>
+// //     //       </Box>
+// //     //     </GridItem>
+// //     //     {/* second box */}
+// //     //     <GridItem colSpan={3} border={"1px solid black"}>
+// //     //       <Center>Second Box </Center>
+// //     //     </GridItem>
+// //     //   </Grid>
+// //     // </>
+// //     <Box display={"flex"} height={"100vh"} maxW={"100vw"}>
+// //       <Box flex={"20%"} borderRight={"1px solid grey"}>
+// //         <VStack alignItems={"flex-start"} gap={0}>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Project Name</FormLabel>
+// //               <Select placeholder="Select Project " w={"60%"}>
+// //                 <option value="project1">Project 1</option>
+// //                 <option value="project2">Project 2</option>
+// //                 {/* Add more projects as needed */}
+// //               </Select>
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Block Name</FormLabel>
+// //               <Select placeholder="Select Block " w={"60%"}>
+// //                 <option value="blockA">Block A</option>
+// //                 <option value="blockB">Block B</option>
+// //                 {/* Add more blocks as needed */}
+// //               </Select>
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Plot No</FormLabel>
+// //               <Select placeholder="Select Plot No" w={"60%"}>
+// //                 <option value="plot1">Plot 1</option>
+// //                 <option value="plot2">Plot 2</option>
+// //                 {/* Add more plot numbers as needed */}
+// //               </Select>
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Plot Type</FormLabel>
+// //               <Input type="text" placeholder="Enter Plot Type" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Cust Name</FormLabel>
+// //               <Input type="text" placeholder="Enter Cust name" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Cust Address</FormLabel>
+// //               <Textarea
+// //                 resize={"horizontal"}
+// //                 placeholder="Enter Address"
+// //                 w={"60%"}
+// //                 minH={"2.5rem"}
+// //               />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Ares Sqft</FormLabel>
+// //               <Input type="number" placeholder="Enter Area Sqft" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Rate Per Sqft</FormLabel>
+// //               <Input type="number" placeholder="Enter Rate Sqft" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Total Amount</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Discount</FormLabel>
+// //               <Select placeholder="Select Discount " w={"60%"}>
+// //                 <option value="yes">Yes</option>
+// //                 <option value="no">No</option>
+// //                 {/* Add more projects as needed */}
+// //               </Select>
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Discount %</FormLabel>
+// //               <Input type="number" placeholder="Enter Discount%" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Net Amount</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Registry Amount</FormLabel>
+// //               <Input type="number" placeholder="Enter Registry" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Service Amount</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Maintenace Amt</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Misc Amount</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Grand Total</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Construction Yes/No</FormLabel>
+// //               <Select placeholder="Select  " w={"60%"}>
+// //                 <option value="Yes">Yes</option>
+// //                 <option value="No">No</option>
+// //                 {/* Add more projects as needed */}
+// //               </Select>
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Contractor</FormLabel>
+// //               <Select placeholder="Select  " w={"60%"}>
+// //                 <option value="">Select 1</option>
+// //                 <option value="">Select 2</option>
+// //                 {/* Add more projects as needed */}
+// //               </Select>
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Construction Amount</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Total Amount Payable</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>{" "}
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Guideline Amount</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>{" "}
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Registry Percent</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>{" "}
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Bank Amount Payable</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>{" "}
+// //           <FormControl>
+// //             <Flex
+// //               align="center"
+// //               justifyContent={"space-between"}
+// //               padding={"0px 4px 0px 4px"}
+// //             >
+// //               <FormLabel>Cash Amount Payable</FormLabel>
+// //               <Input type="number" placeholder="Enter Amount" w={"60%"} />
+// //             </Flex>
+// //           </FormControl>
+// //           <Flex padding={"0px 4px 0px 4px"} alignSelf={"end"}>
+// //             <Button colorScheme="blue"> Edit</Button>
+// //           </Flex>
+// //           {/* <Center>
+// //             <hr style={{ width: "80%", marginTop: "10px" }} />
+// //           </Center> */}
+// //         </VStack>
+// //       </Box>
+// //       <Box flex={"80%"} maxW={"80%"}>
+// //         <Box borderBottom={"1px solid black"} w={"100%"} p={2} pb={4}>
+// //           <HStack justifyContent={"space-between"}>
+// //             <Box maxW={"80%"}>
+// //               <HStack marginLeft={2}>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="center"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"}>Plot Status</FormLabel>
+// //                     <Input type="number" w={"60%"} />
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="center"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"}>Registry Gender</FormLabel>
+// //                     <Input type="text" w={"60%"} />
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="center"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"}>Registry Date</FormLabel>
+// //                     <Input type="date" w={"60%"} />
+// //                   </Flex>
+// //                 </FormControl>
+// //               </HStack>
+// //               <Divider mt={4} />
+// //               <HStack
+// //                 alignContent={"flex-start"}
+// //                 justifyContent={"space-between"}
+// //                 mt={4}
+// //                 mb={4}
+// //               >
+// //                 <VStack>
+// //                   <Text>Total Amount Payable = 15000</Text>
+// //                   <Text>Bank Amount Payable = 15000</Text>
+// //                   <Text>Cash Amount Payable = 15000</Text>
+// //                 </VStack>
+// //                 <VStack>
+// //                   <Text>Total Amount Received = </Text>
+// //                   <Text>Bank Amount Received = </Text>
+// //                   <Text>Cash Amount Received = </Text>
+// //                 </VStack>
+// //                 <VStack>
+// //                   <Text>Total Amount Balance = </Text>
+
+// //                   <Text>Bank Amount Balance = </Text>
+
+// //                   <Text>Cash Amount Balance = </Text>
+// //                 </VStack>
+// //               </HStack>
+// //             </Box>
+// //             <VStack>
+// //               <Button colorScheme="orange" size={"sm"}>
+// //                 Add Payment
+// //               </Button>
+// //               <Button colorScheme="orange" size={"sm"}>
+// //                 Add Payment
+// //               </Button>
+// //               <Button colorScheme="orange" size={"sm"}>
+// //                 Add Payment
+// //               </Button>
+// //               <Button colorScheme="orange" size={"sm"}>
+// //                 Add Payment
+// //               </Button>
+// //             </VStack>
+// //           </HStack>
+// //           <Divider w={"100%"} bg={"#121212"} />
+// //           <HStack
+// //             alignContent={"flex-start"}
+// //             justifyContent={"space-between"}
+// //             mt={4}
+// //           >
+// //             <Text>Payment Transaction</Text>
+// //             <Button
+// //               colorScheme="teal"
+// //               size="sm"
+// //               onClick={() => {
+// //                 setdisplay(!displa);
+// //               }}
+// //             >
+// //               Add Payment
+// //             </Button>
+// //           </HStack>
+// //           <Divider w={"100%"} bg={"#121212"} mt={4} />
+// //           <Box display={displa == true ? "flex" : "none"}>
+// //             <VStack alignItems={"flex-start"}>
+// //               <HStack gap={"15px"} p={3}>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Date
+// //                     </FormLabel>
+// //                     <Input
+// //                       type="date"
+// //                       // w={"60%"}
+// //                     />
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Payment Type
+// //                     </FormLabel>
+// //                     <Select placeholder="Select  ">
+// //                       <option value="cash">Cash</option>
+// //                       <option value="bank">Bank</option>
+// //                       {/* Add more projects as needed */}
+// //                     </Select>
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Amount
+// //                     </FormLabel>
+// //                     <Input
+// //                       type="number"
+// //                       // w={"60%"}
+// //                     />
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Bank Mode
+// //                     </FormLabel>
+// //                     <Select placeholder="Select  ">
+// //                       <option value="none">None</option>
+// //                       <option value="cheque">Cheque/DD</option>
+// //                       <option value="rtgs">RTGS/NEFT</option>
+// //                       <option value="loan">Loan</option>
+// //                       <option value="upi">UPI</option>
+
+// //                       {/* Add more projects as needed */}
+// //                     </Select>
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Chq/Ref No
+// //                     </FormLabel>
+// //                     <Input
+// //                       type="number"
+// //                       // w={"60%"}
+// //                     />
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Bank Name
+// //                     </FormLabel>
+// //                     <Input
+// //                       type="text"
+// //                       // w={"60%"}
+// //                     />
+// //                   </Flex>
+// //                 </FormControl>
+// //               </HStack>
+// //               <HStack gap={"15px"} p={3} pt={0}>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Trasaction Status
+// //                     </FormLabel>
+// //                     <Select placeholder="Select  ">
+// //                       <option value="pending">Pending</option>
+// //                       <option value="clear">Clear</option>
+// //                       <option value="pdc">PDC</option>
+// //                       <option value="prov">Provisional</option>
+// //                       <option value="bounced">Bounced</option>
+// //                       <option value="return">Returned</option>
+
+// //                       {/* Add more projects as needed */}
+// //                     </Select>
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Status Date
+// //                     </FormLabel>
+// //                     <Input
+// //                       type="Date"
+// //                       // w={"60%"}
+// //                     />
+// //                   </Flex>
+// //                 </FormControl>
+// //                 <FormControl>
+// //                   <Flex
+// //                     align="flex-start"
+// //                     // justifyContent={"space-between"}
+// //                     // padding={"0px 4px 0px 4px"}
+// //                     flexDirection={"column"}
+// //                   >
+// //                     <FormLabel fontSize={"sm"} margin={0}>
+// //                       Remarks
+// //                     </FormLabel>
+// //                     <Input type="text" w={"250%"} />
+// //                   </Flex>
+// //                 </FormControl>
+// //                 {/* <Button
+// //                   colorScheme="telegram"
+// //                   top={3}
+// //                   size={"md"}
+// //                   pos={"relative"}
+// //                   left={"60%"}
+// //                   w={"80%"}
+// //                 >
+// //                   Submit
+// //                 </Button> */}
+// //               </HStack>
+// //               <Button
+// //                 colorScheme="telegram"
+// //                 alignSelf={"flex-end"}
+// //                 size={"md"}
+// //                 m={3}
+// //                 mt={0}
+// //               >
+// //                 Submit
+// //               </Button>
+// //             </VStack>
+// //           </Box>
+// //           <Divider w={"100%"} bg={"#121212"} />
+// //           <Box display={"none"}>
+// //             <TableContainer>
+// //               <Table>
+// //                 <Thead color={"white"}>
+// //                   <Tr bg={"#121212"} color={"whitesmoke"}>
+// //                     <Th color={"white"}>To convert</Th>
+// //                     <Th color={"white"}>into</Th>
+// //                     <Th isNumeric color={"white"}>
+// //                       multiply by
+// //                     </Th>
+// //                     <Th color={"white"}>To convert</Th>
+// //                     <Th color={"white"}>into</Th>
+// //                     <Th color={"white"} isNumeric>
+// //                       multiply by
+// //                     </Th>
+// //                     <Th color={"white"}>To convert</Th>
+// //                     <Th color={"white"}>into</Th>
+// //                     <Th isNumeric color={"white"}>
+// //                       multiply by
+// //                     </Th>
+// //                     <Th color={"white"}> To convert</Th>
+// //                     <Th color={"white"}>into</Th>
+// //                     <Th isNumeric color={"white"}>
+// //                       multiply by
+// //                     </Th>
+// //                     <Th color={"white"}>To convert</Th>
+// //                     <Th color={"white"}>into</Th>
+// //                     <Th isNumeric color={"white"}>
+// //                       multiply by
+// //                     </Th>
+// //                   </Tr>
+// //                 </Thead>
+// //                 <Tbody>
+// //                   <Tr>
+// //                     <Td>inches</Td>
+// //                     <Td>millimetres (mm)</Td>
+// //                     <Td isNumeric>25.4</Td>
+// //                     <Td>inches</Td>
+// //                     <Td>millimetres (mm)</Td>
+// //                     <Td isNumeric>25.4</Td>
+// //                     <Td>inches</Td>
+// //                     <Td>millimetres (mm)</Td>
+// //                     <Td isNumeric>25.4</Td>
+// //                     <Td>inches</Td>
+// //                     <Td>millimetres (mm)</Td>
+// //                     <Td isNumeric>25.4</Td>
+// //                     <Td>inches</Td>
+// //                     <Td>millimetres (mm)</Td>
+// //                     <Td isNumeric>25.4</Td>
+// //                   </Tr>
+// //                 </Tbody>
+// //               </Table>
+// //             </TableContainer>
+// //           </Box>
+// //         </Box>
+// //       </Box>
+// //     </Box>
+// //   );
+// // };
+
+// // export default PaymentTransaction;
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+
+// import {
+//   Grid,
+//   GridItem,
+//   Input,
+//   FormControl,
+//   FormLabel,
+//   Box,
+//   Flex,
+//   Center,
+//   VStack,
+//   Textarea,
+//   HStack,
+//   Divider,
+//   Text,
+//   Button,
+//   Table,
+//   Thead,
+//   Tr,
+//   Th,
+//   Tbody,
+//   Td,
+//   Select,
+//   TableContainer,
+// } from "@chakra-ui/react";
+
+// const PaymentTransaction = () => {
+//   const [displa, setdisplay] = useState(false);
+
+//   const [projectName, setProjectName] = useState("");
+//   const [blockName, setBlockname] = useState("");
+//   // const [plotName, setPlotName] = useState("")
+//   const [projectsData, setprojectsData] = useState([]);
+//   const [blockData, setblockData] = useState([]);
+//   const [plotData, setplotData] = useState([]);
+//   const [plotType, setPlotType] = useState([]);
+
+//   const [custName, setCustName] = useState("");
+//   const [custAddress, setCustAddress] = useState("");
+//   const [areaSqft, setAreaSqft] = useState("");
+//   const [ratePerSqft, setRatePerSqft] = useState("");
+//   const [totalAmount, setTotalAmount] = useState("");
+//   const [discount, setDiscount] = useState("");
+//   const [discountPercent, setDiscountPercent] = useState("");
+//   const [netAmount, setNetAmount] = useState("");
+//   const [registryAmount, setRegistryAmount] = useState("");
+//   const [serviceAmount, setServiceAmount] = useState("");
+//   const [maintenanceAmount, setMaintenanceAmount] = useState("");
+//   const [miscAmount, setMiscAmount] = useState("");
+//   const [grandTotal, setGrandTotal] = useState("");
+//   const [construction, setConstruction] = useState("");
+//   const [contractor, setContractor] = useState("");
+//   const [constructionAmount, setConstructionAmount] = useState("");
+//   const [totalAmountPayable, setTotalAmountPayable] = useState("");
+//   const [guidelineAmount, setGuidelineAmount] = useState("");
+//   const [registryPercent, setRegistryPercent] = useState("");
+//   const [bankAmountPayable, setBankAmountPayable] = useState("");
+//   const [cashAmountPayable, setCashAmountPayable] = useState("");
+
+//   const loadProjects = async () => {
+//     let query = "SELECT * FROM project;";
+//     // alert(query);
+
+//     const url = "https://lkgexcel.com/backend/getQuery.php";
+//     let fData = new FormData();
+
+//     fData.append("query", query);
+
+//     try {
+//       const response = await axios.post(url, fData);
+
+//       if (response && response.data) {
+//         if (response.data.phpresult) {
+//           setprojectsData(response.data.phpresult);
+//           console.log(response.data.phpresult);
+//         }
+//       }
+//     } catch (error) {
+//       console.log("Please Select Proper Input");
+//     }
+//   };
+
+//   const loadBlocks = async (pname) => {
+//     let query = "SELECT * FROM block where projectName = '" + pname + "' ;";
+//     // alert(query);
+
+//     const url = "https://lkgexcel.com/backend/getQuery.php";
+//     let fData = new FormData();
+
+//     fData.append("query", query);
+
+//     try {
+//       const response = await axios.post(url, fData);
+
+//       if (response && response.data) {
+//         if (response.data.phpresult) {
+//           setblockData(response.data.phpresult);
+//           console.log(response.data.phpresult);
+//         }
+//       }
+//     } catch (error) {
+//       console.log("Please Select Proper Input");
+//     }
+//   };
+
+//   // const loadPlots = async (bname) => {
+//   //   let query =
+//   //     "SELECT * FROM plot where blockName = '" +
+//   //     bname +
+//   //     "' AND projectName ='" +
+//   //     projectName +
+//   //     "' AND plotStatus ='Booked' ;";
+//   //   // alert(query);
+
+//   //   const url = "https://lkgexcel.com/backend/getQuery.php";
+//   //   let fData = new FormData();
+
+//   //   fData.append("query", query);
+
+//   //   try {
+//   //     const response = await axios.post(url, fData);
+
+//   //     if (response && response.data) {
+//   //       if (response.data.phpresult) {
+//   //         setplotData(response.data.phpresult);
+//   //         console.log(response.data.phpresult);
+//   //       }
+//   //     }
+//   //   } catch (error) {
+//   //     console.log("Please Select Proper Input");
+//   //   }
+//   // };
+
+//   const loadPlots = async (bname) => {
+//     let query =
+//       "SELECT * FROM plot WHERE blockName = '" +
+//       bname +
+//       "' AND projectName ='" +
+//       projectName +
+//       "' AND plotStatus ='Booked';";
+//     // alert(query);
+
+//     const url = "https://lkgexcel.com/backend/getQuery.php";
+//     let fData = new FormData();
+
+//     fData.append("query", query);
+
+//     try {
+//       const response = await axios.post(url, fData);
+
+//       if (response && response.data) {
+//         if (response.data.phpresult) {
+//           setplotData(response.data.phpresult);
+//           console.log(response.data.phpresult);
+
+//           // Fetch booking data based on the selected plot
+//           const selectedPlot = response.data.phpresult[0]; // Assuming the first plot is selected
+//           if (selectedPlot) {
+//             const bookingQuery =
+//               "SELECT * FROM booking WHERE plotNo = '" +
+//               selectedPlot.plotNo +
+//               "' AND plotStatus = 'Booked';";
+//             const bookingResponse = await axios.post(url, {
+//               query: bookingQuery,
+//             });
+
+//             if (
+//               bookingResponse &&
+//               bookingResponse.data &&
+//               bookingResponse.data.phpresult
+//             ) {
+//               const bookingData = bookingResponse.data.phpresult[0]; // Assuming only one booking for the selected plot
+//               if (bookingData) {
+//                 // Set the fetched data into the respective state variables
+//                 setblockData(bookingData.plotNo);
+//                 setPlotType(bookingData.plotType);
+//                 setCustName(bookingData.custName);
+//                 setCustAddress(bookingData.custAddress);
+//                 setAreaSqft(bookingData.areaSqft);
+//                 setRatePerSqft(bookingData.ratePerSqft);
+//                 setTotalAmount(bookingData.totalAmount);
+//                 setDiscount(bookingData.discount === "Yes" ? "yes" : "no"); // Assuming the 'discount' field is a string
+//                 setDiscountPercent(bookingData.discountPercent);
+//                 setNetAmount(bookingData.netAmount);
+//                 setRegistryAmount(bookingData.registryAmount);
+//                 setServiceAmount(bookingData.serviceAmount);
+//                 setMaintenanceAmount(bookingData.maintenanceAmount);
+//                 setMiscAmount(bookingData.miscAmount);
+//                 setGrandTotal(bookingData.grandTotal);
+//                 setConstruction(
+//                   bookingData.construction === "Yes" ? "Yes" : "No"
+//                 ); // Assuming the 'construction' field is a string
+//                 setContractor(bookingData.contractor);
+//                 setConstructionAmount(bookingData.constructionAmount);
+//                 setTotalAmountPayable(bookingData.totalAmountPayable);
+//                 setGuidelineAmount(bookingData.guidelineAmount);
+//                 setRegistryPercent(bookingData.registryPercent);
+//                 setBankAmountPayable(bookingData.bankAmountPayable);
+//                 setCashAmountPayable(bookingData.cashAmountPayable);
+//               }
+//             }
+//           }
+//         }
+//       }
+//     } catch (error) {
+//       console.log("Please Select Proper Input");
+//     }
+//   };
+//   console.log(plotData);
+
+//   useEffect(() => {
+//     // Call the loadContractor function when the component mounts
+//     loadProjects();
+//     loadBlocks();
+//     loadPlots();
+//   }, []);
+//   return (
+//     <Box display={"flex"} height={"100vh"} maxW={"100vw"}>
+//       <Box flex={"20%"} borderRight={"1px solid grey"}>
+//         <VStack alignItems={"flex-start"} gap={0}>
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="projectName">Project Name</FormLabel>
+//               <Select
+//                 id="projectName"
+//                 placeholder="Select Project"
+//                 onChange={(e) => {
+//                   setProjectName(e.target.value);
+//                   loadBlocks(e.target.value);
+//                 }}
+//                 w={"60%"}
+//               >
+//                 {projectsData.map((project) => {
+//                   return (
+//                     <option
+//                       key={project.projectName}
+//                       value={project.projectName}
+//                     >
+//                       {project.projectName}
+//                     </option>
+//                   );
+//                 })}
+//                 {/* Add more projects as needed */}
+//               </Select>
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="blockName">Block Name</FormLabel>
+//               <Select
+//                 id="blockName"
+//                 placeholder="Select Block"
+//                 onChange={(e) => {
+//                   setBlockname(e.target.value);
+//                   loadPlots(e.target.value);
+//                 }}
+//                 w={"60%"}
+//               >
+//                 {blockData.map((block) => {
+//                   return (
+//                     <option key={block.blockName} value={block.blockName}>
+//                       {block.blockName}
+//                     </option>
+//                   );
+//                 })}
+//               </Select>
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="plotNo">Plot No</FormLabel>
+//               <Select
+//                 id="plotNo"
+//                 placeholder="Select Plot No"
+//                 onChange={(e) => {
+//                   setblockData(e.target.value);
+//                 }}
+//                 w={"60%"}
+//               >
+//                 {plotData.map((plot) => {
+//                   return (
+//                     <option key={plot.plotNo} value={plot.plotNo}>
+//                       {plot.plotNo}
+//                     </option>
+//                   );
+//                 })}
+//               </Select>
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="plotType">Plot Type</FormLabel>
+//               <Input
+//                 id="plotType"
+//                 type="text"
+//                 placeholder="Enter Plot Type"
+//                 w={"60%"}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="custName">Cust Name</FormLabel>
+//               <Input
+//                 id="custName"
+//                 type="text"
+//                 placeholder="Enter Cust name"
+//                 w={"60%"}
+//                 onChange={(e) => custName(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="custAddress">Cust Address</FormLabel>
+//               <Textarea
+//                 id="custAddress"
+//                 resize={"horizontal"}
+//                 placeholder="Enter Address"
+//                 w={"60%"}
+//                 minH={"2.5rem"}
+//                 onChange={(e) => custAddress(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="areaSqft">Ares Sqft</FormLabel>
+//               <Input
+//                 id="areaSqft"
+//                 type="number"
+//                 placeholder="Enter Area Sqft"
+//                 w={"60%"}
+//                 onChange={(e) => areaSqft(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="ratePerSqft">Rate Per Sqft</FormLabel>
+//               <Input
+//                 id="ratePerSqft"
+//                 type="number"
+//                 placeholder="Enter Rate Sqft"
+//                 w={"60%"}
+//                 onChange={(e) => ratePerSqft(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="totalAmount">Total Amount</FormLabel>
+//               <Input
+//                 id="totalAmount"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => totalAmount(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="discount">Discount</FormLabel>
+//               <Select
+//                 id="discount"
+//                 placeholder="Select Discount"
+//                 w={"60%"}
+//                 onChange={(e) => setDiscount(e.target.value)}
+//               >
+//                 <option value="yes">Yes</option>
+//                 <option value="no">No</option>
+//                 {/* Add more options as needed */}
+//               </Select>
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="discountPercent">Discount %</FormLabel>
+//               <Input
+//                 id="discountPercent"
+//                 type="number"
+//                 placeholder="Enter Discount%"
+//                 w={"60%"}
+//                 onChange={(e) => discountPercent(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="netAmount">Net Amount</FormLabel>
+//               <Input
+//                 id="netAmount"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => netAmount(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="registryAmount">Registry Amount</FormLabel>
+//               <Input
+//                 id="registryAmount"
+//                 type="number"
+//                 placeholder="Enter Registry"
+//                 w={"60%"}
+//                 onChange={(e) => registryAmount(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="serviceAmount">Service Amount</FormLabel>
+//               <Input
+//                 id="serviceAmount"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => serviceAmount(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="maintenanceAmount">Maintenace Amt</FormLabel>
+//               <Input
+//                 id="maintenanceAmount"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => maintenanceAmount(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="miscAmount">Misc Amount</FormLabel>
+//               <Input
+//                 id="miscAmount"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => miscAmount(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="grandTotal">Grand Total</FormLabel>
+//               <Input
+//                 id="grandTotal"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => grandTotal(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="construction">Construction Yes/No</FormLabel>
+//               <Select id="construction" placeholder="Select" w={"60%"}>
+//                 <option value="Yes">Yes</option>
+//                 <option value="No">No</option>
+//                 {/* Add more options as needed */}
+//               </Select>
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="contractor">Contractor</FormLabel>
+//               <Select id="contractor" placeholder="Select" w={"60%"}>
+//                 <option value="contractor1">Select 1</option>
+//                 <option value="contractor2">Select 2</option>
+//                 {/* Add more options as needed */}
+//               </Select>
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="constructionAmount">
+//                 Construction Amount
+//               </FormLabel>
+//               <Input
+//                 id="constructionAmount"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => constructionAmount(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="totalAmountPayable">
+//                 Total Amount Payable
+//               </FormLabel>
+//               <Input
+//                 id="totalAmountPayable"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => totalAmountPayable(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="guidelineAmount">Guideline Amount</FormLabel>
+//               <Input
+//                 id="guidelineAmount"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => guidelineAmount(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="registryPercent">Registry Percent</FormLabel>
+//               <Input
+//                 id="registryPercent"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => registryPercent(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="bankAmountPayable">
+//                 Bank Amount Payable
+//               </FormLabel>
+//               <Input
+//                 id="bankAmountPayable"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 w={"60%"}
+//                 onChange={(e) => bankAmountPayable(e.target.value)}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <FormControl>
+//             <Flex
+//               align="center"
+//               justifyContent={"space-between"}
+//               padding={"0px 4px 0px 4px"}
+//             >
+//               <FormLabel htmlFor="cashAmountPayable">
+//                 Cash Amount Payable
+//               </FormLabel>
+//               <Input
+//                 id="cashAmountPayable"
+//                 type="number"
+//                 placeholder="Enter Amount"
+//                 onChange={(e) => cashAmountPayable(e.target.value)}
+//                 w={"60%"}
+//               />
+//             </Flex>
+//           </FormControl>
+
+//           <Flex padding={"0px 4px 0px 4px"} alignSelf={"end"}>
+//             <Button colorScheme="blue"> Edit</Button>
+//           </Flex>
+//         </VStack>
+//       </Box>
+
+//       <Box flex={"80%"} maxW={"80%"}>
+//         <Box borderBottom={"1px solid black"} w={"100%"} p={2} pb={4}>
+//           <HStack justifyContent={"space-between"}>
+//             <Box maxW={"80%"}>
+//               <HStack marginLeft={2}>
+//                 <FormControl>
+//                   <Flex align="center">
+//                     <FormLabel fontSize={"sm"}>Plot Status</FormLabel>
+//                     <Input type="number" w={"60%"} />
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="center">
+//                     <FormLabel fontSize={"sm"}>Registry Gender</FormLabel>
+//                     <Input type="text" w={"60%"} />
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="center">
+//                     <FormLabel fontSize={"sm"}>Registry Date</FormLabel>
+//                     <Input type="date" w={"60%"} />
+//                   </Flex>
+//                 </FormControl>
+//               </HStack>
+//               <Divider mt={4} />
+//               <HStack
+//                 alignContent={"flex-start"}
+//                 justifyContent={"space-between"}
+//                 mt={4}
+//                 mb={4}
+//               >
+//                 <VStack>
+//                   <Text>Total Amount Payable = 15000</Text>
+//                   <Text>Bank Amount Payable = 15000</Text>
+//                   <Text>Cash Amount Payable = 15000</Text>
+//                 </VStack>
+//                 <VStack>
+//                   <Text>Total Amount Received = </Text>
+//                   <Text>Bank Amount Received = </Text>
+//                   <Text>Cash Amount Received = </Text>
+//                 </VStack>
+//                 <VStack>
+//                   <Text>Total Amount Balance = </Text>
+
+//                   <Text>Bank Amount Balance = </Text>
+
+//                   <Text>Cash Amount Balance = </Text>
+//                 </VStack>
+//               </HStack>
+//             </Box>
+//             <VStack>
+//               <Button colorScheme="orange" size={"sm"}>
+//                 Add Payment
+//               </Button>
+//               <Button colorScheme="orange" size={"sm"}>
+//                 Add Payment
+//               </Button>
+//               <Button colorScheme="orange" size={"sm"}>
+//                 Add Payment
+//               </Button>
+//               <Button colorScheme="orange" size={"sm"}>
+//                 Add Payment
+//               </Button>
+//             </VStack>
+//           </HStack>
+//           <Divider w={"100%"} bg={"#121212"} />
+//           <HStack
+//             alignContent={"flex-start"}
+//             justifyContent={"space-between"}
+//             mt={4}
+//           >
+//             <Text>Payment Transaction</Text>
+//             <Button
+//               colorScheme="teal"
+//               size="sm"
+//               onClick={() => {
+//                 setdisplay(!displa);
+//               }}
+//             >
+//               Add Payment
+//             </Button>
+//           </HStack>
+//           <Divider w={"100%"} bg={"#121212"} mt={4} />
+//           <Box display={displa == true ? "flex" : "none"}>
+//             <VStack alignItems={"flex-start"}>
+//               <HStack gap={"15px"} p={3}>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Date
+//                     </FormLabel>
+//                     <Input type="date" />
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Payment Type
+//                     </FormLabel>
+//                     <Select placeholder="Select  ">
+//                       <option value="cash">Cash</option>
+//                       <option value="bank">Bank</option>
+//                     </Select>
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Amount
+//                     </FormLabel>
+//                     <Input type="number" />
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Bank Mode
+//                     </FormLabel>
+//                     <Select placeholder="Select  ">
+//                       <option value="none">None</option>
+//                       <option value="cheque">Cheque/DD</option>
+//                       <option value="rtgs">RTGS/NEFT</option>
+//                       <option value="loan">Loan</option>
+//                       <option value="upi">UPI</option>
+//                     </Select>
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Chq/Ref No
+//                     </FormLabel>
+//                     <Input type="number" />
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Bank Name
+//                     </FormLabel>
+//                     <Input type="text" />
+//                   </Flex>
+//                 </FormControl>
+//               </HStack>
+//               <HStack gap={"15px"} p={3} pt={0}>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Trasaction Status
+//                     </FormLabel>
+//                     <Select placeholder="Select  ">
+//                       <option value="pending">Pending</option>
+//                       <option value="clear">Clear</option>
+//                       <option value="pdc">PDC</option>
+//                       <option value="prov">Provisional</option>
+//                       <option value="bounced">Bounced</option>
+//                       <option value="return">Returned</option>
+//                     </Select>
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Status Date
+//                     </FormLabel>
+//                     <Input type="Date" />
+//                   </Flex>
+//                 </FormControl>
+//                 <FormControl>
+//                   <Flex align="flex-start" flexDirection={"column"}>
+//                     <FormLabel fontSize={"sm"} margin={0}>
+//                       Remarks
+//                     </FormLabel>
+//                     <Input type="text" w={"250%"} />
+//                   </Flex>
+//                 </FormControl>
+//               </HStack>
+//               <Button
+//                 colorScheme="telegram"
+//                 alignSelf={"flex-end"}
+//                 size={"md"}
+//                 m={3}
+//                 mt={0}
+//               >
+//                 Submit
+//               </Button>
+//             </VStack>
+//           </Box>
+//           <Divider w={"100%"} bg={"#121212"} />
+//           <Box display={"none"}></Box>
+//         </Box>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+// export default PaymentTransaction;
+import { Table, Thead, Tbody, Tr, Th, Td, Badge } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import React from "react";
+const BookingStatus = () => {
+  // State for modal
+
+  // Dummy data (replace with your actual data)
+  const [bookings, setBooking] = useState([]);
+  const [status, setStatus] = useState([]);
+
+  const loadBooking = async () => {
+    let query = "SELECT *FROM booking ;";
+    // "' AND plotStatus ='Booked' ;";
+    // alert(query);
+
+    const url = "https://lkgexcel.com/backend/getQuery.php";
+    let fData = new FormData();
+
+    fData.append("query", query);
+
+    try {
+      const response = await axios.post(url, fData);
+
+      if (response && response.data) {
+        if (response.data.phpresult) {
+          setStatus(response.data.phpresult);
+          console.log(response.data.phpresult);
+        }
+      }
+    } catch (error) {
+      console.log("Please Select Proper Input");
+    }
+  };
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://lkgexcel.com/backend/getplot.php"
+      );
+      setBooking(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    loadBooking();
+  }, []);
+  console.log(bookings);
+  console.log(status);
+  return (
+    <>
+      <Table variant="simple" colorScheme="blue">
+        <Thead>
+          <Tr>
+            <Th fontSize="12px" padding={"25px"}>
+              ProjectName
+            </Th>
+            <Th fontSize="12px" p={"6px"}>
+              BlockName
+            </Th>
+            <Th fontSize="12px" p={"10px"}>
+              PlotNo.
+            </Th>
+            <Th fontSize="12px" p={"10px"}>
+              AreaSqft
+            </Th>
+            <Th fontSize="12px" p={"10px"}>
+              AreaSqmt
+            </Th>
+            {/* <Th fontSize="12px">Rate PerSqft</Th> */}
+            <Th fontSize="12px" p={"10px"}>
+              PlotType
+            </Th>{" "}
+            <Th fontSize="12px">PlotStatus</Th>
+            <Th fontSize="12px">BookingDate</Th>
+            <Th fontSize="12px">RegistryDate</Th>
+            <Th fontSize="12px">CustName</Th>
+            <Th fontSize="12px">CustNo.</Th>
+            <Th fontSize="12px">onHoldDate</Th>
+            <Th fontSize="12px">onHoldCust</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {bookings.map((plotItem) => (
+            <Tr key={plotItem.id}>
+              <Td>{plotItem.projectName}</Td>
+              <Td>{plotItem.blockName}</Td>
+              <Td>{plotItem.plotNo}</Td>
+              <Td>{plotItem.areaSqft}</Td>
+              <Td>{plotItem.areaSqmt}</Td>
+              <Td>{plotItem.plotType}</Td>
+              <Td>
+                <Badge
+                  colorScheme={
+                    plotItem.plotStatus === "Available"
+                      ? "yellow"
+                      : plotItem.plotStatus === "Booked"
+                      ? "red"
+                      : plotItem.plotStatus === "Registry"
+                      ? "green"
+                      : "gray"
+                  }
+                >
+                  {plotItem.plotStatus}
+                </Badge>
+              </Td>
+
+              {status
+                .filter((book) => book.blockName === plotItem.blockName)
+                .map((book) => (
+                  <React.Fragment key={book.id}>
+                    <Td>{book.bookingDate}</Td>
+                    <Td>{book.registryDate}</Td>
+                    <Td>{book.customerName}</Td>
+                    <Td>{book.customerContact}</Td>
+                  </React.Fragment>
+                ))}
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </>
+  );
+};
+
+export default BookingStatus;

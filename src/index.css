@@ -1,0 +1,22 @@
+.css-1lkzu4s {
+  flex: auto !important;
+}
+
+.css-1u2cvaz {
+  backdrop-filter: blur(7px);
+}
+@media print {
+  .hide-on-print {
+    display: none !important; /* Hide the buttons when printing */
+  }
+}
+.transferred-row {
+  text-decoration: line-through;
+  color: red;
+}
+@media print {
+  .print {
+    font-size: 10px;
+    padding-right: 5px;
+  }
+}

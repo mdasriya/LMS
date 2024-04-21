@@ -1,0 +1,53 @@
+   <p>Contractor: {constructionData.contractor}</p>
+      <p>Amount: {constructionData.amount}</p>
+
+
+      import React, { createContext, useContext, useState } from "react";
+
+const DataContext = createContext();
+
+export const DataProvider = ({ children }) => {
+  const [constructionData, setConstructionData] = useState({
+    contractor: "",
+    amount: 0,
+  });
+
+  const [projectData, setProjectData] = useState({
+    plotNo: "",
+    projectName: "",
+    blockName: "",
+  });
+
+  return (
+    <DataContext.Provider
+      value={{
+        constructionData,
+        setConstructionData,
+        projectData,
+        setProjectData,
+      }}
+    >
+      {children}
+    </DataContext.Provider>
+  );
+};
+
+export const useData = () => useContext(DataContext);
+  {/* <FormControl>
+            <Flex align="center" justifyContent={"space-between"}>
+              <FormLabel fontSize={"18px"} fontWeight={"semibold"}>
+                Date :-
+              </FormLabel>
+              <Input
+                type="date"
+                w={"60%"}
+                position={"relative"}
+                right={"40px"}
+                value={transactionDate}
+                onChange={(e) => setTransactionDate(e.target.value)}
+              />
+            </Flex>
+          </FormControl> */}
+
+
+            <Button onClick={addTransaction}>Save</Button>

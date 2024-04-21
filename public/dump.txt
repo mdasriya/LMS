@@ -1,0 +1,353 @@
+  {testProjects.map((project) => (
+              <Tr key={project.id}>
+                <Td>{project.id}</Td>
+                <Td>{project.projectName}</Td>
+                <Td>{project.location}</Td>
+                <Td>{project.city}</Td>
+                <Td>{project.state}</Td>
+                <Td>{project.projectType}</Td>
+                <Td textAlign={"center"}>{project.totalLandArea}</Td>
+                <Td textAlign={"center"}>{project.totalSalableArea}</Td>
+                <Td>
+                  <Button
+                    colorScheme="teal"
+                    size="sm"
+                    mr={2}
+                    onClick={() => {
+                      setEditFormData(project);
+                      onOpen();
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button colorScheme="red" size="sm">
+                    Delete
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+             const handleEditMasterSubmit = async (e) => {
+    e.preventDefault();
+
+    const url = "https://lkgexcel.com/backend/editmaster.php";
+    const formData = new FormData();
+
+    // Append the edited master data to the formData object
+    formData.append("id", editFormData.id);
+    formData.append("projectName", editFormData.projectName);
+    formData.append("guideline", editFormData.guideline);
+    formData.append("registryMalePercent", editFormData.registryMalePercent);
+    formData.append(
+      "registryFemalePercent",
+      editFormData.registryFemalePercent
+    );
+    formData.append("serviceType", editFormData.serviceType);
+    formData.append("serviceLumpsumValue", editFormData.serviceLumpsumValue);
+    formData.append(" maintenanceType", editFormData.maintenanceType);
+    formData.append("maintenancePerSqmt", editFormData.maintenancePerSqmt);
+    formData.append(
+      "maintenanceLumpsumValue",
+      editFormData.maintenanceLumpsumValue
+    );
+    formData.append("miscType", editFormData.miscType);
+    formData.append("miscPerSqmt", editFormData.miscPerSqmt);
+    formData.append("miscLumpsumValue", editFormData.miscLumpsumValue);
+    formData.append("brokerageValue", editFormData.brokerageValue);
+    // ... other fields
+
+    try {
+      const response = await axios.post(url, formData);
+
+      if (response && response.data && response.data.status === "success") {
+        // Handle success, e.g., fetch updated data, show a toast
+        console.log("Master data updated successfully:", response.data.message);
+
+        toast({
+          title: "Master data updated successfully!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+
+        // Close the modal after successful edit
+        setIsEditModalOpen(false);
+
+        // Implement any additional logic you need here
+      } else {
+        // Handle error response
+        console.error("Error updating master data:", response.data.message);
+
+        toast({
+          title: "Error updating master data",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+
+        // Still close the modal in case of an error
+        setIsEditModalOpen(false);
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error("Error in handleEditMasterSubmit:", error);
+
+      toast({
+        title: "Error updating master data",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      // Still close the modal in case of an error
+      setIsEditModalOpen(false);
+    }
+  };
+
+
+
+
+
+   <Modal >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Master Data</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <form onSubmit={handleEditMasterSubmit}>
+              {/* Render input fields based on editFormData */}
+              {/* Example: */}
+              <FormControl>
+                <FormLabel>Project Name</FormLabel>
+                <Input
+                  type="text"
+                  name="projectName"
+                  value={editFormData.projectName}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      projectName: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel> Guideline</FormLabel>
+                <Input
+                  type="text"
+                  name="guideline"
+                  value={editFormData.guideline}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      guideline: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel>Registry Male</FormLabel>
+                <Input
+                  type="text"
+                  name="registryMalePercent"
+                  value={editFormData.registryMalePercent}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      registryMalePercent: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel>Registry Female</FormLabel>
+                <Input
+                  type="text"
+                  name="registryFemalePercent"
+                  value={editFormData.registryFemalePercent}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      registryFemalePercent: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel> Service Type</FormLabel>
+                <Input
+                  type="text"
+                  name="serviceType"
+                  value={editFormData.serviceType}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      serviceType: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel> Service (Per Sqmt)</FormLabel>
+                <Input
+                  type="text"
+                  name="servicePerSqmt"
+                  value={editFormData.servicePerSqmt}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      servicePerSqmt: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel> Service Lumpsum Value</FormLabel>
+                <Input
+                  type="text"
+                  name="serviceLumpsumValue"
+                  value={editFormData.serviceLumpsumValue}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      serviceLumpsumValue: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel> Maintenance Type</FormLabel>
+                <Input
+                  type="text"
+                  name="maintenanceType"
+                  value={editFormData.maintenanceType}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      maintenanceType: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel>Maintenance (PerSqmt)</FormLabel>
+                <Input
+                  type="text"
+                  name="maintenancePerSqmt"
+                  value={editFormData.maintenancePerSqmt}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      maintenancePerSqmt: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel>Maintenance Lumpsum Value</FormLabel>
+                <Input
+                  type="text"
+                  name="maintenanceLumpsumValue"
+                  value={editFormData.maintenanceLumpsumValue}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      maintenanceLumpsumValue: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel>Misc Type</FormLabel>
+                <Input
+                  type="text"
+                  name="miscType"
+                  value={editFormData.miscType}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      miscType: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel>Misc (PerSqmt)</FormLabel>
+                <Input
+                  type="text"
+                  name="miscPerSqmt"
+                  value={editFormData.miscPerSqmt}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      miscPerSqmt: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>{" "}
+              <FormControl>
+                <FormLabel>Misc Lumpsum Value</FormLabel>
+                <Input
+                  type="text"
+                  name="miscLumpsumValue"
+                  value={editFormData.miscLumpsumValue}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      miscLumpsumValue: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Brokerage Value</FormLabel>
+                <Input
+                  type="text"
+                  name="brokerageValue"
+                  value={editFormData.brokerageValue}
+                  onChange={(e) =>
+                    setEditFormData({
+                      ...editFormData,
+                      brokerageValue: e.target.value,
+                    })
+                  }
+                  required
+                />
+              </FormControl>
+              {/* ... other input fields */}
+              <Button colorScheme="blue" type="submit">
+                Update
+              </Button>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+       const [editFormData, setEditFormData] = useState({
+    id: "", // Add other fields as needed
+    projectName: "",
+    guideline: "",
+    registryMalePercent: "",
+    registryFemalePercent: "",
+    serviceType: "",
+    servicePerSqmt: "",
+    serviceLumpsumValue: "",
+    maintenanceType: "",
+    maintenancePerSqmt: "",
+    maintenanceLumpsumValue: "",
+    miscType: "",
+    miscPerSqmt: "",
+    miscLumpsumValue: "",
+    brokerageValue: "",
+  });

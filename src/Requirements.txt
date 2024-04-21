@@ -1,0 +1,176 @@
+Items (Fields) Names 
+
+2. Master 
+
+ 2.1. Add project 
+A. Project Name
+B. Location
+C. City
+D. State
+E. Project Type (Residential Plotting, Residential Multi, Commercial Plotting, Commercial Multi)
+F. Total Land Area (in sqmt)
+G. Total Salable Area (in sqmt)
+
+ 2.2. Add Block 
+A. Project Name (dropdown)
+B. Block Name (textbox)
+C. Area (in sqft)
+D. Area (in sqmt)
+E. Rate (per sqft)
+
+ 2.3. Add Plot 
+A. Project Name (dropdown)
+B. Block Name (dropdown)
+C. Plot No (text box)
+D. Area (in sqft)
+E. Area (in sqmt)
+F. Rate (per sqft)
+G. Plot Type (Normal, EWS)
+H. Plot Status (Available)
+
+ 2.4. Master Input 
+A. Project Name
+B. Guideline (per sqmt)
+C. Registry Male (%)
+D. Registry Female (%)
+E. Service Type (Per Sqmt, Lumpsum)
+F. Service Value
+G. Maintenance Type (Per Sqmt, Lumpsum)
+H. Maintenance Value
+I. Misc Type (Per Sqmt, Lumpsum)
+J. Misc Value
+K. Brokerage Value (%)
+
+ 4. Reports 
+
+ 4.1. Booking List 
+A. Filter Options
+B. Row for Count/Sum of columns
+C. S.No.
+D. Everything which is in New Booking
+E. Registry Date
+F. Tally Button
+G. Tallied / Not Tallied
+
+ 4.2. Transaction Report 
+A. Filter Options
+B. Row for Count/Sum of columns
+C. S.No.
+D. Project Name
+E. Block Name
+F. Plot No
+G. Customer Name
+H. Transaction Date
+I. Payment Type
+J. Amount
+K. Bank Mode
+L. Cheque no
+M. Bank
+N. Trans Status
+O. Status Date
+P. Remarks
+Q Time
+R. "Transaction Tally" Button
+S. Tallied / Not Tallied
+
+ 4.3. Balance Report  (Shows all plots including Available)
+A. Filter Options
+B. Row for Count/Sum of columns
+C. S.No.
+D. Project Name
+E. Block Name
+F. Plot No
+G. Customer Name
+H. Customer Contact
+I. Construction Applicable
+J. Plot Status
+K. Registry Date
+L. Total Amt Balance
+M. Bank Amt Balance
+N. Cash Amt Balance
+O. Balance Status Date
+P. Total Amt Received
+Q. Bank Amt Received
+R. Cash Amt Received
+
+ 4.4. Historical Payment Transaction 
+A. Same as 4.2
+
+ 5. User 
+
+ 5.1 Add User 
+A. User ID (Mandatory)
+B. Password (Mandatory)
+C. Confirm password (Mandatory)
+D. User Rights (Admin/User)
+E. User's Name (Mandatory)
+F. User Contact 
+G. User Email ID
+H. User Address
+I. User City
+J. User State
+
+ 5.2. User List 
+A. Same as 5.1 in table format with edit and delete button
+
+5.3. User Role
+A. ..........
+
+ 6. Contractor
+
+ 6.1. Add Contractor 
+A. Contractor (Name/Company) (Mandatory)
+B. Contractor Name (Mandatory)
+C. Contractor Contact 
+D. Contractor Email ID
+E. Contractor Address
+F. Contractor City
+G. Contractor State
+
+ 6.2 Contractor List 
+A. Same as 6.1 with Edit and Delete button
+
+ 6.3 Contractor Ledger 
+A. Contractor Name (Dropdown) (Select One, Multiple or all)
+B. Filter by Project name, Block name, plot no (multiple, select all option)
+C. S.No
+D. Contractor Name
+E. Project Name
+F. Block Name
+G. Plot No
+H. Construction Amount
+I. Less (%)  (input field by default zero)
+J. Total Amt Payable
+K. Total Amt Paid
+L. Total Amt Balance
+
+
+formula for less :- J=H-H*I/100
+
+ 7. Broker 
+
+ 7.1. Add Broker 
+A. Broker (Name/Company) (Mandatory)
+B. Broker Name (Mandatory)
+C. Broker Contact 
+D. Broker Email ID
+E. Broker Address
+F. Broker City
+G. Broker State
+
+ 7.2 Broker List 
+A. Same as 7.1
+
+ 7.3 Broker Ledger 
+A. Broker (Dropdown) (Select One, Multiple or all)
+B. Filter by Project name, Block name, plot no (multiple, select all option)
+C. S.No
+D. Broker
+E. Project Name
+F. Block Name
+G. Plot No
+H. Net Amount (After Discount)
+I. Brokerage (%) (taken from master input)
+J. Total Amt Payable = sno H * sno I /100
+K. Total Amt Paid
+L. Total Amt Balance
