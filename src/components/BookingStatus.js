@@ -33,6 +33,7 @@ const BookingStatus = () => {
   const [selectedProject, setSelectedProject] = useState([]);
   const [selectedBlock, setSelectedBlock] = useState([]);
   const [selectedPlot, setSelectedPlot] = useState([]);
+  const [selectedPlottype, setSelectedPlottype] = useState([]);
   const [selectedFromDate, setSelectedFromDate] = useState("");
   const [selectedToDate, setSelectedToDate] = useState("");
   const [highlightedRow, setHighlightedRow] = useState(null);
@@ -45,6 +46,7 @@ const BookingStatus = () => {
       setter([...state, value]);
     }
   };
+ 
 
   const loadBooking = async () => {
     let query = "SELECT * FROM booking;";
@@ -139,7 +141,10 @@ const plotType = getUniqueValues("plotType");
         selectedBlock.includes(item.blockName)) &&
       (!selectedPlot.length ||
         selectedPlot.includes("Select All") ||
-        selectedPlot.includes(item.plotNo)) 
+        selectedPlot.includes(item.plotNo))  && 
+        (!selectedPlottype.length ||
+          selectedPlottype.includes("Select All") ||
+          selectedPlottype.includes(item.plotType))
   );
 
 
@@ -148,6 +153,7 @@ const plotType = getUniqueValues("plotType");
     setSelectedProject([]);
     setSelectedBlock([]);
     setSelectedPlot([]);
+    setSelectedPlottype([]);
     setSelectedFromDate("");
     setSelectedToDate("");
     setHighlightedRow(null);
@@ -283,7 +289,7 @@ const plotType = getUniqueValues("plotType");
               ))}
             </MenuList>
           </Menu>
-   {/* plot no filter */}
+   {/* plot type filter */}
    <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Select Plots type
@@ -291,12 +297,12 @@ const plotType = getUniqueValues("plotType");
             <MenuList>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedPlot.includes("Select All")}
+                  isChecked={selectedPlottype.includes("Select All")}
                   onChange={() =>
                     handleCheckboxChange(
                       "Select All",
-                      selectedPlot,
-                      setSelectedPlot
+                      selectedPlottype,
+                    setSelectedPlottype
                     )
                   }
                 >
@@ -306,9 +312,9 @@ const plotType = getUniqueValues("plotType");
               {plotType.map((plot) => (
                 <MenuItem key={plot}>
                   <Checkbox
-                    isChecked={selectedPlot.includes(plot)}
+                    isChecked={selectedPlottype.includes(plot)}
                     onChange={() =>
-                      handleCheckboxChange(plot, selectedPlot, setSelectedPlot)
+                      handleCheckboxChange(plot, selectedPlottype, setSelectedPlottype)
                     }
                   >
                     {plot}
