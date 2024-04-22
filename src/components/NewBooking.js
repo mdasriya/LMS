@@ -25,10 +25,11 @@ const NewBooking = () => {
   const [plottype, setplottype] = useState("");
   const [registerygender, setregisterygender] = useState("");
   const [discountApplicable, setdiscountApplicable] = useState("");
-  const [constructionapplicable, setconstructionapplicable] = useState("");
+  const [constructionapplicable, setconstructionapplicable] = useState("No");
   const [broker, setBroker] = useState("");
   const plotTypes = ["Normal", "EWS", "1BHK", "2BHK", "3BHK", "4BHK", "5BHK"]; // Replace with actual plot types
   const genders = ["Male", "Female", "Other"]; // Replace with actual gender options
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toast = useToast();
   const [formData, setFormData] = useState({
@@ -69,6 +70,7 @@ const NewBooking = () => {
   };
 
   const onAddBook = async () => {
+    setIsSubmitting(true);
     const url = "https://lkgexcel.com/backend/setQuery.php";
     let query =
       "INSERT INTO booking (id, projectName, blockName, plotNo, plotType, customerName, customerAddress, customerContact, registryGender, areaSqft, rateAreaSqft, totalAmount, discountApplicable, discountPercent, netAmount, registryAmount, serviceAmount, maintenanceAmount, miscAmount, grandTotal, constructionApplicable, constructionContractor, constructionAmount, totalAmountPayable, guidelineAmount, registryPercent, bankAmountPayable, bookingDate, cashAmountPayable, broker,remarks) VALUES (NULL, '" +
@@ -177,8 +179,10 @@ const NewBooking = () => {
       document.getElementById("bookingDate").value = "";
       document.getElementById("cashAmountPayable").value = "";
       document.getElementById("remarks").value = "";
+      setIsSubmitting(false);
     } catch (error) {
       console.log(error.toJSON());
+      setIsSubmitting(false);
     }
   };
 
@@ -292,7 +296,7 @@ const NewBooking = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           setplotData(response.data.phpresult);
-          console.log(response.data.phpresult);
+          console.log("Ploat DAta : ", response.data);
         }
       }
     } catch (error) {
@@ -315,7 +319,7 @@ const NewBooking = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           setprojectsData(response.data.phpresult);
-          console.log(response.data.phpresult);
+          console.log("project data", response.data.phpresult);
         }
       }
     } catch (error) {
@@ -344,7 +348,7 @@ const NewBooking = () => {
 
       if (response && response.data) {
         if (response.data.phpresult) {
-          console.log(response.data.phpresult);
+          console.log("onselect phot No : ", response.data.phpresult);
 
           let query1 =
             "SELECT * FROM master where projectName ='" + projectName + "';";
@@ -359,7 +363,7 @@ const NewBooking = () => {
 
           if (response1 && response1.data) {
             if (response1.data.phpresult) {
-              setMaster(response1.data.phpresult);
+              setMaster("masterData : ", response1.data.phpresult);
 
               document.getElementById("registryGender").value = "Male";
 
@@ -379,7 +383,8 @@ const NewBooking = () => {
               document.getElementById("netAmount").value =
                 document.getElementById("totalAmount").value;
               document.getElementById("guidelineAmount").value =
-                response.data.phpresult[0]["areaSqft"] *
+                // response.data.phpresult[0]["areaSqft"] *
+                response.data.phpresult[0]["areaSqmt"] *
                 response1.data.phpresult[0]["guideline"];
 
               if (document.getElementById("registryGender").value == "Male") {
@@ -495,8 +500,11 @@ const NewBooking = () => {
         document.getElementById("totalAmount").value;
     }
 
-    document.getElementById("guidelineAmount").value =
-      plotData[0]["areaSqft"] * master[0]["guideline"];
+    {
+      // This is Previous
+      // document.getElementById("guidelineAmount").value =
+      //   plotData[0]["areaSqmt"] * master[0]["guideline"];
+    }
 
     if (document.getElementById("registryGender").value == "Male") {
       document.getElementById("registryPercent").value =
@@ -507,10 +515,11 @@ const NewBooking = () => {
         master[0]["registryFemalePercent"];
     }
 
-    document.getElementById("registryAmount").value =
-      (document.getElementById("guidelineAmount").value *
-        document.getElementById("registryPercent").value) /
-      100;
+    // this is for previous
+    //  { document.getElementById("registryAmount").value =
+    //     (document.getElementById("guidelineAmount").value *
+    //       document.getElementById("registryPercent").value) /
+    //     100;}
     if (master[0]["serviceType"] == "Lumpsum") {
       document.getElementById("serviceAmount").value =
         master[0]["serviceValue"];
@@ -564,14 +573,17 @@ const NewBooking = () => {
         document.getElementById("grandTotal").value;
     }
 
-    document.getElementById("bankAmountPayable").value =
-      (document.getElementById("guidelineAmount").value *
-        document.getElementById("registry").value) /
-      100;
+    {
+      // This is Previous
+      // document.getElementById("bankAmountPayable").value =
+      //   (document.getElementById("guidelineAmount").value *
+      //     document.getElementById("registry").value) /
+      //   100;
+    }
 
-    document.getElementById("cashAmountPayable").value =
-      document.getElementById("totalAmountPayable").value -
-      document.getElementById("bankAmountPayable").value;
+    // document.getElementById("cashAmountPayable").value =
+    //   document.getElementById("totalAmountPayable").value -
+    //   document.getElementById("bankAmountPayable").value;
   };
 
   useEffect(() => {
@@ -582,7 +594,7 @@ const NewBooking = () => {
   }, []);
 
   return (
-    <Box p={4} width="100%" position={"relative"} bottom={"0rem"}>
+    <Box p={4} width="100%" position={"relative"} bottom={"0rem"} >
       <Center pb={2}>
         <Heading fontSize={"22px"} position={"relative"} bottom={"1rem"}>
           New Booking
@@ -1026,6 +1038,7 @@ const NewBooking = () => {
                   name="bookingDate"
                   //onChange={handleChange}
                   required
+                  defaultValue={new Date().toISOString().substr(0, 10)}
                 />
               </FormControl>
               <FormControl>
@@ -1059,21 +1072,35 @@ const NewBooking = () => {
                   name="remarks"
                   //onChange={handleChange}
                   required
+                  width={"320px"}
                 />
               </FormControl>
 
-              <Button
+           
+                <Button
+                  colorScheme="blue"
+                  type="button"
+                  mt={8}
+                  onClick={onAddBook}
+                  isDisabled = {isSubmitting}
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                </Button>
+            
+
+              {/* <Button
                 colorScheme="blue"
                 type="button"
                 mt={8}
                 onClick={onAddBook}
               >
-                Submit
-              </Button>
+                Submitting...
+              </Button> */}
             </Box>
           </Grid>
         </form>
       </Box>
+      <br /><br />
     </Box>
   );
 };
