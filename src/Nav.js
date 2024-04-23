@@ -62,7 +62,7 @@ const Nav = ({ isLoggedIn, handleLogout }) => {
             alignItems="center"
             justifyContent="center" // Center the menu items
           >
-            <Text fontWeight={"600"} mr={"15px"} cursor={"pointer"}>
+            <Text fontWeight={"600"} mr={"15px"} cursor={"pointer"} as={Link} to="/">
               DashBoard
             </Text>
             <Menu>

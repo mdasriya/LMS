@@ -35,7 +35,7 @@ const TransactionReport = () => {
   const [filteredPlots, setFilteredPlots] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedStatusDate, setSelectedStatusDate] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState(["All"]);
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
       setter(state.filter((item) => item !== value));
@@ -43,8 +43,22 @@ const TransactionReport = () => {
       setter([...state, value]);
     }
   };
+  // const handleStatusChange = (status) => {
+  //   setSelectedStatus(status);
+  // };
+
   const handleStatusChange = (status) => {
-    setSelectedStatus(status);
+    if (selectedStatus.includes(status) && status !== "All") {
+      setSelectedStatus(selectedStatus.filter((item) => item !== status));
+    } else {
+      if (selectedStatus.includes("All")) {
+        setSelectedStatus([status]);
+      } else if (status === "All") {
+        setSelectedStatus(["All"]);
+      } else {
+        setSelectedStatus([...selectedStatus, status]);
+      }
+    }
   };
 
   const loadTransaction = async () => {
@@ -93,7 +107,8 @@ const TransactionReport = () => {
       (!selectedStatusDate ||
         new Date(item.statusDate).toISOString().split("T")[0] ===
           selectedStatusDate) &&
-      (selectedStatus === "All" || item.transactionStatus === selectedStatus)
+      (selectedStatus[0] === "All" ||
+        selectedStatus.includes(item.transactionStatus))
   );
 
   const clearFilters = () => {
@@ -253,7 +268,7 @@ const TransactionReport = () => {
             <MenuList>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "All"}
+                  isChecked={selectedStatus.includes("All")}
                   onChange={() => handleStatusChange("All")}
                 >
                   All
@@ -261,7 +276,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "Pending"}
+                  isChecked={selectedStatus.includes("Pending")}
                   onChange={() => handleStatusChange("Pending")}
                 >
                   Pending
@@ -269,7 +284,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "Clear"}
+                  isChecked={selectedStatus.includes("Clear")}
                   onChange={() => handleStatusChange("Clear")}
                 >
                   Clear
@@ -277,7 +292,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "PDC"}
+                  isChecked={selectedStatus.includes("PDC")}
                   onChange={() => handleStatusChange("PDC")}
                 >
                   PDC
@@ -285,7 +300,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "Provisional"}
+                  isChecked={selectedStatus.includes("Provisional")}
                   onChange={() => handleStatusChange("Provisional")}
                 >
                   Provisional
@@ -293,7 +308,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "Bounced"}
+                  isChecked={selectedStatus.includes("Bounced")}
                   onChange={() => handleStatusChange("Bounced")}
                 >
                   Bounced
