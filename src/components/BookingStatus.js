@@ -19,6 +19,7 @@ import {
   MenuList,
   MenuItem,
   Select,
+  FormLabel,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -34,11 +35,12 @@ const BookingStatus = () => {
   const [selectedBlock, setSelectedBlock] = useState([]);
   const [selectedPlot, setSelectedPlot] = useState([]);
   const [selectedPlottype, setSelectedPlottype] = useState([]);
+  const [selectedPlotstatus, setSelectedPlotstatus] = useState([]);
   const [selectedFromDate, setSelectedFromDate] = useState("");
   const [selectedToDate, setSelectedToDate] = useState("");
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [loading, setLoading] = useState(true);
- 
+  const [count, setCount] = useState(null)
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
       setter(state.filter((item) => item !== value));
@@ -103,6 +105,7 @@ const BookingStatus = () => {
         "https://lkgexcel.com/backend/getplot.php"
       );
       setBooking(response.data);
+      setCount(filteredBookings.length)
       // console.log("booking", response.data)
       setLoading(false);
     } catch (error) {
@@ -130,6 +133,7 @@ setBooking(filterArray)
   const blockOptions = getUniqueValues("blockName");
   const plotOptions = getUniqueValues("plotNo");
 const plotType = getUniqueValues("plotType");
+const plotStatus = getUniqueValues("plotStatus");
 
   const filteredBookings = bookings.filter(
     (item) =>
@@ -144,7 +148,10 @@ const plotType = getUniqueValues("plotType");
         selectedPlot.includes(item.plotNo))  && 
         (!selectedPlottype.length ||
           selectedPlottype.includes("Select All") ||
-          selectedPlottype.includes(item.plotType))
+          selectedPlottype.includes(item.plotType)) && 
+          (!selectedPlotstatus.length ||
+            selectedPlotstatus.includes("Select All") ||
+            selectedPlotstatus.includes(item.plotStatus))
   );
 
 
@@ -154,6 +161,7 @@ const plotType = getUniqueValues("plotType");
     setSelectedBlock([]);
     setSelectedPlot([]);
     setSelectedPlottype([]);
+    setSelectedPlotstatus([]);
     setSelectedFromDate("");
     setSelectedToDate("");
     setHighlightedRow(null);
@@ -171,14 +179,26 @@ const plotType = getUniqueValues("plotType");
  console.log("status", status)
 // console.log("bookings", bookings)
 // console.log("filter", bookings)
+console.log("component render")
+
+
+// setCount(filteredBookings.length)
+
+
+console.log(filteredBookings.length)
+console.log("component render")
+
   return (
     <>
-      <Box mb={4}>
-        <Center>
+   
+      <Center>
+         <FormLabel textAlign={"left"} fontSize="20px">Total Booking : ({bookings.length})</FormLabel>
           <Text fontSize="30px" fontWeight="600" p="20px">
             Booking Status
           </Text>
         </Center>
+      <Box mb={4} boxShadow={"md"} p={2}>
+      
         <Flex justifyContent={"space-evenly"}>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -315,6 +335,40 @@ const plotType = getUniqueValues("plotType");
                     isChecked={selectedPlottype.includes(plot)}
                     onChange={() =>
                       handleCheckboxChange(plot, selectedPlottype, setSelectedPlottype)
+                    }
+                  >
+                    {plot}
+                  </Checkbox>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+   {/* plot status filter */}
+   <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Select Plots status
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Checkbox
+                  isChecked={selectedPlotstatus.includes("Select All")}
+                  onChange={() =>
+                    handleCheckboxChange(
+                      "Select All",
+                      selectedPlotstatus,
+                    setSelectedPlotstatus
+                    )
+                  }
+                >
+                  Select All
+                </Checkbox>
+              </MenuItem>
+              {plotStatus.map((plot) => (
+                <MenuItem key={plot}>
+                  <Checkbox
+                    isChecked={selectedPlotstatus.includes(plot)}
+                    onChange={() =>
+                      handleCheckboxChange(plot, selectedPlotstatus, setSelectedPlotstatus)
                     }
                   >
                     {plot}
