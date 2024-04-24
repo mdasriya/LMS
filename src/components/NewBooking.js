@@ -1088,14 +1088,7 @@ const NewBooking = () => {
                 </Button>
             
 
-              {/* <Button
-                colorScheme="blue"
-                type="button"
-                mt={8}
-                onClick={onAddBook}
-              >
-                Submitting...
-              </Button> */}
+           
             </Box>
           </Grid>
         </form>

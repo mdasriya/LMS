@@ -35,7 +35,10 @@ const TransactionReport = () => {
   const [filteredPlots, setFilteredPlots] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedStatusDate, setSelectedStatusDate] = useState(null);
-  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState(["All"]);
+  const [talliedStatus, setTalliedStatus] = useState({});
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
       setter(state.filter((item) => item !== value));
@@ -43,8 +46,24 @@ const TransactionReport = () => {
       setter([...state, value]);
     }
   };
+  // const handleStatusChange = (status) => {
+  //   setSelectedStatus(status);
+  // };
+
   const handleStatusChange = (status) => {
-    setSelectedStatus(status);
+    if (selectedStatus.includes(status) && selectedStatus.length === 1) {
+      setSelectedStatus(["All"]);
+    } else if (selectedStatus.includes(status) && status !== "All") {
+      setSelectedStatus(selectedStatus.filter((item) => item !== status));
+    } else {
+      if (selectedStatus.includes("All")) {
+        setSelectedStatus([status]);
+      } else if (status === "All") {
+        setSelectedStatus(["All"]);
+      } else {
+        setSelectedStatus([...selectedStatus, status]);
+      }
+    }
   };
 
   const loadTransaction = async () => {
@@ -76,25 +95,28 @@ const TransactionReport = () => {
   };
 
   const projectOptions = getUniqueValues("projectName");
-
-  const filteredBookings = transaction.filter(
-    (item) =>
-      (!selectedProject.length ||
-        selectedProject.includes("Select All") ||
-        selectedProject.includes(item.projectName)) &&
-      (!selectedBlock.length ||
-        selectedBlock.includes("Select All") ||
-        selectedBlock.includes(item.blockName)) &&
-      (!selectedPlot.length ||
-        selectedPlot.includes("Select All") ||
-        selectedPlot.includes(item.plotno)) &&
-      (!selectedDate ||
-        new Date(item.date).toISOString().split("T")[0] === selectedDate) &&
-      (!selectedStatusDate ||
-        new Date(item.statusDate).toISOString().split("T")[0] ===
-          selectedStatusDate) &&
-      (selectedStatus === "All" || item.transactionStatus === selectedStatus)
-  );
+  let temp = 0;
+  const filteredBookings = transaction
+    .filter(
+      (item) =>
+        (!selectedProject.length ||
+          selectedProject.includes("Select All") ||
+          selectedProject.includes(item.projectName)) &&
+        (!selectedBlock.length ||
+          selectedBlock.includes("Select All") ||
+          selectedBlock.includes(item.blockName)) &&
+        (!selectedPlot.length ||
+          selectedPlot.includes("Select All") ||
+          selectedPlot.includes(item.plotno)) &&
+        (!selectedDate ||
+          new Date(item.date).toISOString().split("T")[0] === selectedDate) &&
+        (!selectedStatusDate ||
+          new Date(item.statusDate).toISOString().split("T")[0] ===
+            selectedStatusDate) &&
+        (selectedStatus[0] === "All" ||
+          selectedStatus.includes(item.transactionStatus))
+    )
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const clearFilters = () => {
     setSelectedProject([]);
@@ -102,7 +124,7 @@ const TransactionReport = () => {
     setSelectedPlot([]);
     setSelectedDate(null);
     setSelectedStatusDate(null);
-    setSelectedStatus("All");
+    setSelectedStatus(["All"]);
   };
   useEffect(() => {
     const blocks = getUniqueValues("blockName").filter(
@@ -131,6 +153,15 @@ const TransactionReport = () => {
     (total, booking) => total + parseFloat(booking.amount),
     0
   );
+
+  // Temprary
+  const handleTallyButtonClick = (index) => {
+    setTalliedStatus({ ...talliedStatus, [index]: true });
+  };
+
+  // transaction.forEach((obj, index) => {
+  //   console.log(`Transaction[${index}]:`, obj);
+  // });
 
   return (
     <>
@@ -253,7 +284,7 @@ const TransactionReport = () => {
             <MenuList>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "All"}
+                  isChecked={selectedStatus.includes("All")}
                   onChange={() => handleStatusChange("All")}
                 >
                   All
@@ -261,7 +292,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "Pending"}
+                  isChecked={selectedStatus.includes("Pending")}
                   onChange={() => handleStatusChange("Pending")}
                 >
                   Pending
@@ -269,7 +300,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "Clear"}
+                  isChecked={selectedStatus.includes("Clear")}
                   onChange={() => handleStatusChange("Clear")}
                 >
                   Clear
@@ -277,7 +308,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "PDC"}
+                  isChecked={selectedStatus.includes("PDC")}
                   onChange={() => handleStatusChange("PDC")}
                 >
                   PDC
@@ -285,7 +316,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "Provisional"}
+                  isChecked={selectedStatus.includes("Provisional")}
                   onChange={() => handleStatusChange("Provisional")}
                 >
                   Provisional
@@ -293,7 +324,7 @@ const TransactionReport = () => {
               </MenuItem>
               <MenuItem>
                 <Checkbox
-                  isChecked={selectedStatus === "Bounced"}
+                  isChecked={selectedStatus.includes("Bounced")}
                   onChange={() => handleStatusChange("Bounced")}
                 >
                   Bounced
@@ -349,71 +380,191 @@ const TransactionReport = () => {
           </Flex>
         ) : (
           <>
-            <Text p={5} fontWeight={"bold"}>
-              Count :- {filteredBookings.length}
-            </Text>
+            <Flex>
+              <Box>
+                <Text p={5} fontWeight={"bold"}>
+                  Count :- {filteredBookings.length}
+                </Text>
+              </Box>
+              <Box>
+                <Text p={5} fontWeight={"bold"}>
+                  Total Amount :- {totalAmount}
+                </Text>
+              </Box>
+            </Flex>
             <Table variant="simple">
               <TableContainer>
                 <Thead>
                   <Tr border="1px solid black" bg={"#121212"}>
-                    <Th border="1px solid black" color={"white"}>
+                    <Th border="1px solid white" color={"white"}>
                       {" "}
                       SrNo
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Project Name
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Block Name
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Plot No
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Date
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Payment Type
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Amount
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Bank Mode
                     </Th>
 
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Cheq No
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Bank Name
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Transaction Status
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Status Date
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"18px"}>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
                       Remakrs
                     </Th>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
+                      Tallied / Not
+                    </Th>
+                    <Th
+                      border="1px solid white"
+                      color={"white"}
+                      p={"18px"}
+                      textAlign={"center"}
+                    >
+                      Tally
+                    </Th>
+                    {/* <Th border="1px solid white" color={"white"} p={"18px"}>
+                      Amount
+                    </Th> */}
                   </Tr>
                 </Thead>
                 <Tbody>
                   {filteredBookings.map((data, index) => (
-                    <Tr key={data.srNo}>
-                      <Td border="1px solid black">{index + 1}</Td>
-                      <Td border="1px solid black">{data.projectName}</Td>
-                      <Td border="1px solid black">{data.blockName}</Td>
-                      <Td border="1px solid black">{data.plotno}</Td>
-                      <Td border="1px solid black">{data.date}</Td>
-                      <Td border="1px solid black">{data.paymentType}</Td>
-                      <Td border="1px solid black">{data.amount}</Td>
-                      <Td border="1px solid black">{data.bankMode}</Td>
-                      <Td border="1px solid black">{data.cheqNo}</Td>
-                      <Td border="1px solid black">{data.bankName}</Td>
+                    <Tr
+                      key={data.srNo}
+                      onClick={() => setSelectedRowIndex(index)}
+                      bg={
+                        selectedRowIndex === index ? "green.100" : "transparent"
+                      }
+                      height={"50px"}
+                    >
                       <Td
                         border="1px solid black"
+                        p={"10px"}
+                        textAlign={"center"}
+                      >
+                        {index + 1}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.projectName}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.blockName}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.plotno}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.date}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.paymentType}
+                      </Td>
+                      <Td border="1px solid black" textAlign={"end"}>
+                        {data.amount}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.bankMode}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.cheqNo}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.bankName}
+                      </Td>
+                      <Td
+                        border="1px solid black"
+                        p={"10px"}
                         style={{
                           backgroundColor:
                             data.transactionStatus === "Clear"
@@ -442,8 +593,30 @@ const TransactionReport = () => {
                         {data.transactionStatus}
                       </Td>
 
-                      <Td border="1px solid black">{data.statusDate}</Td>
-                      <Td border="1px solid black">{data.remarks}</Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.statusDate}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        {data.remarks}
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        <Text color={talliedStatus[index] ? "green" : "red"}>
+                          {talliedStatus[index] ? "Tallied" : "Not Tallied"}
+                        </Text>
+                      </Td>
+                      <Td border="1px solid black" p={"10px"}>
+                        <Button
+                          w={"100px"}
+                          bg={"rgb(34, 195, 94)"}
+                          onClick={() => {
+                            handleTallyButtonClick(index);
+                          }}
+                          h={"30px"}
+                        >
+                          Tally
+                        </Button>
+                      </Td>
+                      {/* <Td border="1px solid black" p={"10px"}>{data.amount}</Td> */}
                     </Tr>
                   ))}
                   <Tr>
@@ -458,7 +631,7 @@ const TransactionReport = () => {
                       Total: {totalAmount}
                     </Td>
 
-                    <Td colSpan={5}></Td>
+                    <Td colSpan={8}></Td>
                   </Tr>
                 </Tbody>
               </TableContainer>
