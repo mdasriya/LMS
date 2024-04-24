@@ -116,19 +116,19 @@ const AddBlock = () => {
     fData.append("areaSqft", formData.areaSqft);
     fData.append("areaSqmt", formData.areaSqmt);
     fData.append("ratePerSqft", formData.ratePerSqft);
-    const findProject = block.find(
-      (element) => formData.projectName === element.projectName
-    );
-    if (findProject) {
-      toast({
-        title: `Block Already exist`,
-        status: "warning",
-        position: "top-right",
-        isClosable: true,
-      });
-      setAddLoading(false);
-      return;
-    }
+    // const findProject = block.find(
+    //   (element) => formData.projectName === element.projectName
+    // );
+    // if (findProject) {
+    //   toast({
+    //     title: `Block Already exist`,
+    //     status: "warning",
+    //     position: "top-right",
+    //     isClosable: true,
+    //   });
+    //   setAddLoading(false);
+    //   return;
+    // }
     try {
       const response = await axios.post(url, fData);
       toast({

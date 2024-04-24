@@ -41,6 +41,8 @@ const BookingStatus = () => {
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(null)
+ 
+ 
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
       setter(state.filter((item) => item !== value));
@@ -176,7 +178,7 @@ const plotStatus = getUniqueValues("plotStatus");
     setSelectedToDate("")
   }, [selectedFromDate]);
 
- console.log("status", status)
+ console.log("181 filter", filteredBookings)
 // console.log("bookings", bookings)
 // console.log("filter", bookings)
 console.log("component render")
@@ -184,15 +186,16 @@ console.log("component render")
 
 // setCount(filteredBookings.length)
 
-
-console.log(filteredBookings.length)
+// console.log(filteredBookings.length)
 console.log("component render")
-
+// useEffect(()=> {
+//   console.log("inside useEffect")
+//   },[bookings])
   return (
     <>
    
       <Center>
-         <FormLabel textAlign={"left"} fontSize="20px">Total Booking : ({bookings.length})</FormLabel>
+        
           <Text fontSize="30px" fontWeight="600" p="20px">
             Booking Status
           </Text>
@@ -419,85 +422,87 @@ console.log("component render")
           />
         </Center>
       ) : (
-        <Table variant="simple" colorScheme="blue">
-          <Thead>
-            <Tr>
-              <Th>ProjectName</Th>
-              <Th>BlockName</Th>
-              <Th>PlotNo.</Th>
-              <Th>AreaSqft</Th>
-              <Th>AreaSqmt</Th>
-              <Th>PlotType</Th>
-              <Th>PlotStatus</Th>
-              <Th>BookingDate</Th>
-              <Th>CustName</Th>
-              <Th>CustNo.</Th>
-              <Th>RegistryDate</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {filteredBookings.map((plotItem, index) => (
-              <Tr
-                key={plotItem.id}
-                onClick={() => setHighlightedRow(index)}
-                style={{
-                  background:
-                    highlightedRow === index ? "#FFFAF0" : "transparent",
-                  cursor: "pointer",
-                }}
-              >
-                <Td>{plotItem.projectName}</Td>
-                <Td>{plotItem.blockName}</Td>
-                <Td>{plotItem.plotNo}</Td>
-                <Td>{plotItem.areaSqft}</Td>
-                <Td>{plotItem.areaSqmt}</Td>
-                <Td>{plotItem.plotType}</Td>
-                <Td>
-                  <Badge
-                    colorScheme={
-                      plotItem.plotStatus === "Available"
-                        ? "yellow"
-                        : plotItem.plotStatus === "Booked"
-                        ? "red"
-                        : plotItem.plotStatus === "Registered"
-                        ? "green"
-                        : "gray"
-                    }
-                  >
-                    {plotItem.plotStatus}
-                  </Badge>
-                </Td>
+    <> <FormLabel fontWeight={700} >Total Booking : ({filteredBookings.length})</FormLabel> <Box border={"1px solid blue"} w={"100%"}> <Table variant="simple" border={"1px solid red"} w={"100%"} colorScheme="blue">
+    <Thead>
+      <Tr bg="gray.800" >
+        <Th color="white">ProjectName</Th>
+        <Th color="white">BlockName</Th>
+        <Th color="white">PlotNo.</Th>
+        <Th color="white">AreaSqft</Th>
+        <Th color="white">AreaSqmt</Th>
+        <Th color="white">PlotType</Th>
+        <Th color="white">PlotStatus</Th>
+        <Th color="white">BookingDate</Th>
+        <Th color="white">CustName</Th>
+        <Th color="white">CustNo.</Th>
+        <Th color="white">RegistryDate</Th>
+      </Tr>
+    </Thead>
+    <Tbody>
+      {filteredBookings.map((plotItem, index) => (
+        <Tr
+          key={plotItem.id}
+          onClick={() => setHighlightedRow(index)}
+          style={{
+            background:
+              highlightedRow === index ? "#FFFAF0" : "transparent",
+            cursor: "pointer",
+          }}
+        >
+          <Td fontWeight={700}>{plotItem.projectName}</Td>
+          <Td>{plotItem.blockName}</Td>
+          <Td>{plotItem.plotNo}</Td>
+          <Td>{plotItem.areaSqft}</Td>
+          <Td>{plotItem.areaSqmt}</Td>
+          <Td>{plotItem.plotType}</Td>
+          <Td>
+        {plotItem.plotStatus !== "Booked" &&  <Badge
+              colorScheme={
+                plotItem.plotStatus === "Available"
+                  ? "black"
+                  : plotItem.plotStatus === "Registered"
+                  ? "green"
+                  : "gray"
+              }
+            >
+              {plotItem.plotStatus}
+            </Badge>}   
+            {plotItem.plotStatus === "Booked" && <FormLabel bg={"yellow"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
+            {/* {plotItem.plotStatus === "Registered" && <FormLabel bg={"yellow"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>} */}
+          </Td>
 
-                {status
-                  .filter(
-                    (book) =>
-                      book.projectName === plotItem.projectName &&
-                      book.blockName === plotItem.blockName &&
-                      book.plotNo === plotItem.plotNo
-                  )
-                  .map((book) => (
-                    <React.Fragment key={book.id}>
-                      <Td>{book.bookingDate}</Td>
-                      <Td>{book.customerName}</Td>
-                      <Td>{book.customerContact}</Td>
-                    </React.Fragment>
-                  ))}
-                <Td>
-                  {plotItem.plotStatus === "Registered" && (
-                    <span>
-                      {date.map((rd, index) => (
-                        <React.Fragment key={index}>
-                          <span>{rd.registryDate}</span>
-                          {index !== date.length - 1 && ", "}
-                        </React.Fragment>
-                      ))}
-                    </span>
-                  )}
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
+          {status
+            .filter(
+              (book) =>
+                book.projectName === plotItem.projectName &&
+                book.blockName === plotItem.blockName &&
+                book.plotNo === plotItem.plotNo
+            )
+            .map((book) => (
+              <React.Fragment key={book.id}>
+                <Td>{book.bookingDate}</Td>
+                <Td>{book.customerName}</Td>
+                <Td>{book.customerContact}</Td>
+              </React.Fragment>
+            ))
+            }
+          {/* <Td border={"1px solid red"}>
+            {plotItem.plotStatus === "Registered" && (
+              <span>
+                {date.map((rd, index) => (
+                  <React.Fragment key={index}>
+                    <span>{rd.registryDate}</span>
+                    {index !== date.length - 1 && ", "}
+                  </React.Fragment>
+                ))}
+              </span>
+            )}
+          </Td> */}
+        </Tr>
+      ))}
+    </Tbody>
+  </Table>
+  </Box></>
       )}
     </>
   );
