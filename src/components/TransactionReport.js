@@ -22,6 +22,8 @@ import {
   Button,
   FormLabel,
   Text,
+  Wrap,
+  Radio,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
@@ -34,10 +36,17 @@ const TransactionReport = () => {
   const [filteredBlocks, setFilteredBlocks] = useState([]);
   const [filteredPlots, setFilteredPlots] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  // For from
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStatusDate, setSelectedStatusDate] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(["All"]);
   const [talliedStatus, setTalliedStatus] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
+  const [selectPayment, setSelectPayment] = useState("All");
+
+  const [currentDate, setCurrentDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
@@ -46,9 +55,10 @@ const TransactionReport = () => {
       setter([...state, value]);
     }
   };
-  // const handleStatusChange = (status) => {
-  //   setSelectedStatus(status);
-  // };
+
+  const handlePaymentChange = (method) => {
+    setSelectPayment(method);
+  };
 
   const handleStatusChange = (status) => {
     if (selectedStatus.includes(status) && selectedStatus.length === 1) {
@@ -96,9 +106,11 @@ const TransactionReport = () => {
 
   const projectOptions = getUniqueValues("projectName");
   let temp = 0;
+
   const filteredBookings = transaction
-    .filter(
-      (item) =>
+    .filter((item) => {
+      const itemDate = new Date(item.date).toISOString().split("T")[0];
+      return (
         (!selectedProject.length ||
           selectedProject.includes("Select All") ||
           selectedProject.includes(item.projectName)) &&
@@ -108,14 +120,15 @@ const TransactionReport = () => {
         (!selectedPlot.length ||
           selectedPlot.includes("Select All") ||
           selectedPlot.includes(item.plotno)) &&
-        (!selectedDate ||
-          new Date(item.date).toISOString().split("T")[0] === selectedDate) &&
+        (!selectedDate || itemDate >= selectedDate) &&
+        (!selectedEndDate || itemDate <= selectedEndDate) &&
         (!selectedStatusDate ||
           new Date(item.statusDate).toISOString().split("T")[0] ===
             selectedStatusDate) &&
         (selectedStatus[0] === "All" ||
           selectedStatus.includes(item.transactionStatus))
-    )
+      );
+    })
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const clearFilters = () => {
@@ -125,6 +138,7 @@ const TransactionReport = () => {
     setSelectedDate(null);
     setSelectedStatusDate(null);
     setSelectedStatus(["All"]);
+    setSelectedEndDate(null);
   };
   useEffect(() => {
     const blocks = getUniqueValues("blockName").filter(
@@ -149,6 +163,7 @@ const TransactionReport = () => {
     );
     setFilteredPlots([...plots]);
   }, [selectedProject, transaction]);
+
   const totalAmount = filteredBookings.reduce(
     (total, booking) => total + parseFloat(booking.amount),
     0
@@ -159,12 +174,9 @@ const TransactionReport = () => {
     setTalliedStatus({ ...talliedStatus, [index]: true });
   };
 
-  // transaction.forEach((obj, index) => {
-  //   console.log(`Transaction[${index}]:`, obj);
-  // });
-
   return (
     <>
+      Method :- {selectPayment}
       <Center>
         <Heading size={"md"}>Transaction Report</Heading>
       </Center>
@@ -332,6 +344,40 @@ const TransactionReport = () => {
               </MenuItem>
             </MenuList>
           </Menu>
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Select Payment
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Radio
+                  isChecked={selectPayment === "All"}
+                  onChange={() => handlePaymentChange("All")}
+                  flexGrow={1}
+                >
+                  All
+                </Radio>
+              </MenuItem>
+              <MenuItem>
+                <Radio
+                  isChecked={selectPayment === "Bank"}
+                  onChange={() => handlePaymentChange("Bank")}
+                  flexGrow={1}
+                >
+                  Bank
+                </Radio>
+              </MenuItem>
+              <MenuItem>
+                <Radio
+                  isChecked={selectPayment === "Cash"}
+                  onChange={() => handlePaymentChange("Cash")}
+                  flexGrow={1}
+                >
+                  Cash
+                </Radio>
+              </MenuItem>
+            </MenuList>
+          </Menu>
           <Box display={"flex"}>
             <FormLabel
               textAlign={"center"}
@@ -341,22 +387,29 @@ const TransactionReport = () => {
             >
               Select Date:
             </FormLabel>
-            <Text display="flex" alignItems="center">
+            <Box display="flex" alignItems="center">
               <Text marginRight="4px">From</Text>
               <Text marginRight="4px">:</Text>
-            </Text>
+            </Box>
             <Input
               type="date"
               id="date"
               value={selectedDate || ""}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
-            <Text display={"flex"} alignItems={"center"}>
+            <Box display={"flex"} alignItems={"center"}>
               <Text mr={"4px"}>To</Text>
               <Text mr={"4px"}>:</Text>
-            </Text>
-            <Input type="date" />
+            </Box>
+            <Input
+              type="date"
+              value={selectedEndDate || currentDate}
+              onChange={(e) => setSelectedEndDate(e.target.value)}
+            />
           </Box>
+        </Flex>
+
+        <Flex justifyContent={"center"}>
           <Box display={"flex"}>
             <FormLabel
               textAlign={"center"}
@@ -366,6 +419,10 @@ const TransactionReport = () => {
             >
               Select Status Date:
             </FormLabel>
+            <Box display="flex" alignItems="center">
+              <Text marginRight="4px">From</Text>
+              <Text marginRight="4px">:</Text>
+            </Box>
             <Input
               type="date"
               id="statusDate"
