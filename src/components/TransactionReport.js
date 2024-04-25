@@ -169,7 +169,7 @@ const TransactionReport = () => {
         <Heading size={"md"}>Transaction Report</Heading>
       </Center>
       <Box maxW={"100%"} overflowX={"scroll"} marginTop={"2rem"}>
-        <Flex justifyContent={"space-evenly"} p={"30px"}>
+        <Flex justifyContent={"space-evenly"} p={"30px"} wrap={"wrap"}>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Select Projects
@@ -341,12 +341,21 @@ const TransactionReport = () => {
             >
               Select Date:
             </FormLabel>
+            <Text display="flex" alignItems="center">
+              <Text marginRight="4px">From</Text>
+              <Text marginRight="4px">:</Text>
+            </Text>
             <Input
               type="date"
               id="date"
               value={selectedDate || ""}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
+            <Text display={"flex"} alignItems={"center"}>
+              <Text mr={"4px"}>To</Text>
+              <Text mr={"4px"}>:</Text>
+            </Text>
+            <Input type="date" />
           </Box>
           <Box display={"flex"}>
             <FormLabel
