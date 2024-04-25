@@ -447,6 +447,47 @@ const TransactionReport = () => {
               _hover={{ cursor: "pointer" }}
             />
           </Box>
+          {
+            /* In Not working conding */
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<ChevronDownIcon />}
+                marginLeft={"20px"}
+              >
+                Select Tallied/Not
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                  <Radio
+                    // isChecked={selectPayment === "All"}
+                    // onChange={() => handlePaymentChange("All")}
+                    flexGrow={1}
+                  >
+                    All
+                  </Radio>
+                </MenuItem>
+                <MenuItem>
+                  <Radio
+                    // isChecked={selectPayment === "Bank"}
+                    // onChange={() => handlePaymentChange("Bank")}
+                    flexGrow={1}
+                  >
+                    Tallied
+                  </Radio>
+                </MenuItem>
+                <MenuItem>
+                  <Radio
+                    // isChecked={selectPayment === "Cash"}
+                    // onChange={() => handlePaymentChange("Cash")}
+                    flexGrow={1}
+                  >
+                    Not Tallied
+                  </Radio>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          }
           <Button ml={2} onClick={clearFilters} colorScheme="red">
             Clear Filters
           </Button>
