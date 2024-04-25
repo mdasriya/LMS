@@ -36,9 +36,9 @@ const TransactionReport = () => {
   const [filteredBlocks, setFilteredBlocks] = useState([]);
   const [filteredPlots, setFilteredPlots] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
-  // For from
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedStatusDate, setSelectedStatusDate] = useState(null);
+  const [selectedStatusEndDate, setSelectedStatusEndDate] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(["All"]);
   const [talliedStatus, setTalliedStatus] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
@@ -110,6 +110,8 @@ const TransactionReport = () => {
   const filteredBookings = transaction
     .filter((item) => {
       const itemDate = new Date(item.date).toISOString().split("T")[0];
+      const statusDate = new Date(item.statusDate).toISOString().split("T")[0];
+
       return (
         (!selectedProject.length ||
           selectedProject.includes("Select All") ||
@@ -122,11 +124,11 @@ const TransactionReport = () => {
           selectedPlot.includes(item.plotno)) &&
         (!selectedDate || itemDate >= selectedDate) &&
         (!selectedEndDate || itemDate <= selectedEndDate) &&
-        (!selectedStatusDate ||
-          new Date(item.statusDate).toISOString().split("T")[0] ===
-            selectedStatusDate) &&
+        (!selectedStatusDate || statusDate >= selectedStatusDate) &&
+        (!selectedStatusEndDate || statusDate <= selectedStatusEndDate) &&
         (selectedStatus[0] === "All" ||
-          selectedStatus.includes(item.transactionStatus))
+          selectedStatus.includes(item.transactionStatus)) &&
+        (selectPayment === "All" || item.paymentType === selectPayment)
       );
     })
     .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -139,6 +141,9 @@ const TransactionReport = () => {
     setSelectedStatusDate(null);
     setSelectedStatus(["All"]);
     setSelectedEndDate(null);
+    setSelectPayment("All");
+
+    setSelectedStatusEndDate(null);
   };
   useEffect(() => {
     const blocks = getUniqueValues("blockName").filter(
@@ -176,7 +181,6 @@ const TransactionReport = () => {
 
   return (
     <>
-      Method :- {selectPayment}
       <Center>
         <Heading size={"md"}>Transaction Report</Heading>
       </Center>
@@ -396,12 +400,14 @@ const TransactionReport = () => {
               id="date"
               value={selectedDate || ""}
               onChange={(e) => setSelectedDate(e.target.value)}
+              _hover={{ cursor: "pointer" }}
             />
             <Box display={"flex"} alignItems={"center"}>
               <Text mr={"4px"}>To</Text>
               <Text mr={"4px"}>:</Text>
             </Box>
             <Input
+              _hover={{ cursor: "pointer" }}
               type="date"
               value={selectedEndDate || currentDate}
               onChange={(e) => setSelectedEndDate(e.target.value)}
@@ -428,6 +434,17 @@ const TransactionReport = () => {
               id="statusDate"
               value={selectedStatusDate || ""}
               onChange={(e) => setSelectedStatusDate(e.target.value)}
+              _hover={{ cursor: "pointer" }}
+            />
+            <Box display="flex" alignItems="center">
+              <Text marginRight="4px">To</Text>
+              <Text marginRight="4px">:</Text>
+            </Box>
+            <Input
+              type="date"
+              value={selectedStatusEndDate || currentDate}
+              onChange={(e) => setSelectedStatusEndDate(e.target.value)}
+              _hover={{ cursor: "pointer" }}
             />
           </Box>
           <Button ml={2} onClick={clearFilters} colorScheme="red">
