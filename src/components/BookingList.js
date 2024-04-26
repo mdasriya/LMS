@@ -21,6 +21,7 @@ import {
   MenuItem,
   Input,
   FormLabel,
+  Radio,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
@@ -35,6 +36,11 @@ const BookingList = () => {
   const [selectedType, setSelectedType] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [plotsData, setPlotsData] = useState([]);
+  const [constructionApplicable, setConstructionApplicable] = useState("All");
+  const [constructors, setConstructors] = useState([]);
+
+  const [selectContructor, setSelectConstructor] = useState(["All"]);
+
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
       setter(state.filter((item) => item !== value));
@@ -55,6 +61,7 @@ const BookingList = () => {
 
       if (response && response.data) {
         if (response.data.phpresult) {
+          console.log("plot Data : ", response.data.phpresult);
           setPlotsData(response.data.phpresult);
         }
       }
@@ -88,7 +95,12 @@ const BookingList = () => {
         selectedPlot.includes("Select All") ||
         selectedPlot.includes(item.plotNo)) &&
       (!selectedDate ||
-        new Date(item.bookingDate).toISOString().split("T")[0] === selectedDate)
+        new Date(item.bookingDate).toISOString().split("T")[0] ===
+          selectedDate) &&
+      (constructionApplicable === "All" ||
+        item.constructionApplicable === constructionApplicable) &&
+      (selectContructor[0] === "All" ||
+        selectContructor.includes(item.constructionContractor))
   );
 
   const clearFilters = () => {
@@ -97,7 +109,25 @@ const BookingList = () => {
     setSelectedPlot([]);
     setSelectedDate(null);
     setSelectedType([]);
+    setConstructionApplicable("All");
   };
+
+  const handalSelectConstructore = (name) => {
+    if (selectContructor.includes(name) && selectContructor.length === 1) {
+      setSelectConstructor(["All"]);
+    } else if (selectContructor.includes(name) && name !== "All") {
+      setSelectConstructor(selectContructor.filter((item) => item !== name));
+    } else {
+      if (selectContructor.includes("All")) {
+        setSelectConstructor([name]);
+      } else if (name === "All") {
+        setSelectConstructor(["All"]);
+      } else {
+        setSelectConstructor([...selectContructor, name]);
+      }
+    }
+  };
+
   useEffect(() => {
     const blocks = getUniqueValues("blockName").filter(
       (block) =>
@@ -121,8 +151,26 @@ const BookingList = () => {
     );
     setFilteredPlots([...plots]);
   }, [selectedProject, plotsData]);
+
+  useEffect(() => {
+    const uniqueConstructors = new Set();
+
+    plotsData.forEach((data) => {
+      if (
+        data.constructionContractor &&
+        data.constructionContractor.trim() !== ""
+      ) {
+        uniqueConstructors.add(data.constructionContractor);
+      }
+    });
+
+    setConstructors(Array.from(uniqueConstructors));
+  }, [plotsData]);
+
+  console.log("Constructors : " + constructors);
   return (
     <>
+      Change Value = {selectContructor}
       <Center>
         <Heading size={"lg"}>Booking List</Heading>
       </Center>
@@ -277,6 +325,67 @@ const BookingList = () => {
               ))}
             </MenuList>
           </Menu>
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Select ConstructionApplicable
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Radio
+                  isChecked={constructionApplicable === "All"}
+                  onChange={() => setConstructionApplicable("All")}
+                >
+                  All
+                </Radio>
+              </MenuItem>
+              <MenuItem>
+                <Radio
+                  isChecked={constructionApplicable === "Yes"}
+                  onChange={() => setConstructionApplicable("Yes")}
+                >
+                  Yes
+                </Radio>
+              </MenuItem>
+              <MenuItem>
+                <Radio
+                  isChecked={constructionApplicable === "No"}
+                  onChange={() => setConstructionApplicable("No")}
+                >
+                  No
+                </Radio>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Select Contractor
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Checkbox
+                  isChecked={selectContructor.includes("All")}
+                  onChange={() => handalSelectConstructore("All")}
+                >
+                  Select All
+                </Checkbox>
+              </MenuItem>
+              {constructors.map((constructorname, index) => (
+                <MenuItem key={index}>
+                  <Checkbox
+                    isChecked={selectContructor.includes(constructorname)}
+                    value={constructorname}
+                    onChange={(e) => handalSelectConstructore(e.target.value)}
+                  >
+                    {constructorname}
+                  </Checkbox>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+        </Flex>
+
+        <Flex maxW={"100%"} overflowX={"scroll"}>
           <Box display={"flex"}>
             <FormLabel
               textAlign={"center"}
@@ -297,6 +406,7 @@ const BookingList = () => {
             Clear Filters
           </Button>
         </Flex>
+
         {loading ? (
           <Flex align="center" justify="center" h="70vh">
             <Spinner
