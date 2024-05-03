@@ -35,11 +35,19 @@ const BookingList = () => {
   const [selectedProject, setSelectedProject] = useState([]);
   const [selectedType, setSelectedType] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [plotsData, setPlotsData] = useState([]);
   const [constructionApplicable, setConstructionApplicable] = useState("All");
   const [constructors, setConstructors] = useState([]);
 
   const [selectContructor, setSelectConstructor] = useState(["All"]);
+
+  const [selectBroker, setSelectBroker] = useState(["All"]);
+  const [brokers, setBrokers] = useState([]);
+
+  const [currentDate, setCurrentDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
 
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
@@ -80,28 +88,38 @@ const BookingList = () => {
   const projectOptions = getUniqueValues("projectName");
   // const blockOptions = getUniqueValues("blockName");
   // const plotOptions = getUniqueValues("plotno");
-  const filteredBookings = plotsData.filter(
-    (item) =>
-      (!selectedProject.length ||
-        selectedProject.includes("Select All") ||
-        selectedProject.includes(item.projectName)) &&
-      (!selectedType.length ||
-        selectedType.includes("Select All") ||
-        selectedType.includes(item.plotType)) &&
-      (!selectedBlock.length ||
-        selectedBlock.includes("Select All") ||
-        selectedBlock.includes(item.blockName)) &&
-      (!selectedPlot.length ||
-        selectedPlot.includes("Select All") ||
-        selectedPlot.includes(item.plotNo)) &&
-      (!selectedDate ||
-        new Date(item.bookingDate).toISOString().split("T")[0] ===
-          selectedDate) &&
-      (constructionApplicable === "All" ||
-        item.constructionApplicable === constructionApplicable) &&
-      (selectContructor[0] === "All" ||
-        selectContructor.includes(item.constructionContractor))
-  );
+  const filteredBookings = plotsData
+    .filter((item) => {
+      let itemDate = null;
+      if (item.bookingDate) {
+        itemDate = new Date(item.bookingDate).toISOString().split("T")[0];
+      }
+
+      return (
+        (!selectedProject.length ||
+          selectedProject.includes("Select All") ||
+          selectedProject.includes(item.projectName)) &&
+        (!selectedType.length ||
+          selectedType.includes("Select All") ||
+          selectedType.includes(item.plotType)) &&
+        (!selectedBlock.length ||
+          selectedBlock.includes("Select All") ||
+          selectedBlock.includes(item.blockName)) &&
+        (!selectedPlot.length ||
+          selectedPlot.includes("Select All") ||
+          selectedPlot.includes(item.plotNo)) &&
+        (!selectedDate || !item.bookingDate || itemDate >= selectedDate) &&
+        (!selectedEndDate ||
+          !item.bookingDate ||
+          itemDate <= selectedEndDate) &&
+        (constructionApplicable === "All" ||
+          item.constructionApplicable === constructionApplicable) &&
+        (selectContructor[0] === "All" ||
+          selectContructor.includes(item.constructionContractor)) &&
+        (selectBroker[0] == "All" || selectBroker.includes(item.broker))
+      );
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const clearFilters = () => {
     setSelectedProject([]);
@@ -110,6 +128,8 @@ const BookingList = () => {
     setSelectedDate(null);
     setSelectedType([]);
     setConstructionApplicable("All");
+    setSelectConstructor(["All"]);
+    setSelectBroker(["All"]);
   };
 
   const handalSelectConstructore = (name) => {
@@ -124,6 +144,21 @@ const BookingList = () => {
         setSelectConstructor(["All"]);
       } else {
         setSelectConstructor([...selectContructor, name]);
+      }
+    }
+  };
+  const handalSelectBrokers = (name) => {
+    if (selectBroker.includes(name) && selectBroker.length === 1) {
+      setSelectBroker(["All"]);
+    } else if (selectBroker.includes(name) && name !== "All") {
+      setSelectBroker(selectBroker.filter((item) => item !== name));
+    } else {
+      if (selectBroker.includes("All")) {
+        setSelectBroker([name]);
+      } else if (name === "All") {
+        setSelectBroker(["All"]);
+      } else {
+        setSelectBroker([...selectContructor, name]);
       }
     }
   };
@@ -165,241 +200,309 @@ const BookingList = () => {
     });
 
     setConstructors(Array.from(uniqueConstructors));
+
+    const uniqueBrokers = new Set();
+
+    plotsData.forEach((data) => {
+      if (data.broker && data.broker.trim() !== "") {
+        uniqueBrokers.add(data.broker);
+      }
+    });
+
+    setBrokers(Array.from(uniqueBrokers));
   }, [plotsData]);
 
   console.log("Constructors : " + constructors);
   return (
     <>
-      Change Value = {selectContructor}
+      start - {selectedDate}
+      End - {selectedEndDate}
       <Center>
         <Heading size={"lg"}>Booking List</Heading>
       </Center>
       <Box maxW={"100%"} overflowX={"scroll"} marginTop={"3rem"}>
         <Flex
           justifyContent={"space-evenly"}
-          p={"30px"}
+          p={"40px"}
           pos={"sticky"}
           left={0}
+          flexWrap="wrap"
         >
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select Projects
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <Checkbox
-                  isChecked={selectedProject.includes("Select All")}
-                  onChange={() =>
-                    handleCheckboxChange(
-                      "Select All",
-                      selectedProject,
-                      setSelectedProject
-                    )
-                  }
-                >
-                  Select All
-                </Checkbox>
-              </MenuItem>
-              {projectOptions.map((project) => (
-                <MenuItem key={project}>
+          <Box mb={4}>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                Select Projects
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
                   <Checkbox
-                    isChecked={selectedProject.includes(project)}
+                    isChecked={selectedProject.includes("Select All")}
                     onChange={() =>
                       handleCheckboxChange(
-                        project,
+                        "Select All",
                         selectedProject,
                         setSelectedProject
                       )
                     }
                   >
-                    {project}
+                    Select All
                   </Checkbox>
                 </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select Blocks
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <Checkbox
-                  isChecked={selectedBlock.includes("Select All")}
-                  onChange={() =>
-                    handleCheckboxChange(
-                      "Select All",
-                      selectedBlock,
-                      setSelectedBlock
-                    )
-                  }
-                >
-                  Select All
-                </Checkbox>
-              </MenuItem>
-              {filteredBlocks.map((block) => (
-                <MenuItem key={block}>
+                {projectOptions.map((project) => (
+                  <MenuItem key={project}>
+                    <Checkbox
+                      isChecked={selectedProject.includes(project)}
+                      onChange={() =>
+                        handleCheckboxChange(
+                          project,
+                          selectedProject,
+                          setSelectedProject
+                        )
+                      }
+                    >
+                      {project}
+                    </Checkbox>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
+          <Box mb={4}>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                Select Blocks
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
                   <Checkbox
-                    isChecked={selectedBlock.includes(block)}
+                    isChecked={selectedBlock.includes("Select All")}
                     onChange={() =>
                       handleCheckboxChange(
-                        block,
+                        "Select All",
                         selectedBlock,
                         setSelectedBlock
                       )
                     }
                   >
-                    {block}
+                    Select All
                   </Checkbox>
                 </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select Plot Type
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <Checkbox
-                  isChecked={selectedType.includes("Select All")}
-                  onChange={() =>
-                    handleCheckboxChange(
-                      "Select All",
-                      selectedType,
-                      setSelectedType
-                    )
-                  }
-                >
-                  Select All
-                </Checkbox>
-              </MenuItem>
-              {getUniqueValues("plotType").map((plotType) => (
-                <MenuItem key={plotType}>
+                {filteredBlocks.map((block) => (
+                  <MenuItem key={block}>
+                    <Checkbox
+                      isChecked={selectedBlock.includes(block)}
+                      onChange={() =>
+                        handleCheckboxChange(
+                          block,
+                          selectedBlock,
+                          setSelectedBlock
+                        )
+                      }
+                    >
+                      {block}
+                    </Checkbox>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
+          <Box mb={4}>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                Select Plot Type
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
                   <Checkbox
-                    isChecked={selectedType.includes(plotType)}
+                    isChecked={selectedType.includes("Select All")}
                     onChange={() =>
                       handleCheckboxChange(
-                        plotType,
+                        "Select All",
                         selectedType,
                         setSelectedType
                       )
                     }
                   >
-                    {plotType}
+                    Select All
                   </Checkbox>
                 </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select Plots
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <Checkbox
-                  isChecked={selectedPlot.includes("Select All")}
-                  onChange={() =>
-                    handleCheckboxChange(
-                      "Select All",
-                      selectedPlot,
-                      setSelectedPlot
-                    )
-                  }
-                >
-                  Select All
-                </Checkbox>
-              </MenuItem>
-              {filteredPlots.map((plot) => (
-                <MenuItem key={plot}>
+                {getUniqueValues("plotType").map((plotType) => (
+                  <MenuItem key={plotType}>
+                    <Checkbox
+                      isChecked={selectedType.includes(plotType)}
+                      onChange={() =>
+                        handleCheckboxChange(
+                          plotType,
+                          selectedType,
+                          setSelectedType
+                        )
+                      }
+                    >
+                      {plotType}
+                    </Checkbox>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
+          <Box mb={4}>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                Select Plots
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
                   <Checkbox
-                    isChecked={selectedPlot.includes(plot)}
+                    isChecked={selectedPlot.includes("Select All")}
                     onChange={() =>
-                      handleCheckboxChange(plot, selectedPlot, setSelectedPlot)
+                      handleCheckboxChange(
+                        "Select All",
+                        selectedPlot,
+                        setSelectedPlot
+                      )
                     }
                   >
-                    {plot}
+                    Select All
                   </Checkbox>
                 </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select ConstructionApplicable
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <Radio
-                  isChecked={constructionApplicable === "All"}
-                  onChange={() => setConstructionApplicable("All")}
-                >
-                  All
-                </Radio>
-              </MenuItem>
-              <MenuItem>
-                <Radio
-                  isChecked={constructionApplicable === "Yes"}
-                  onChange={() => setConstructionApplicable("Yes")}
-                >
-                  Yes
-                </Radio>
-              </MenuItem>
-              <MenuItem>
-                <Radio
-                  isChecked={constructionApplicable === "No"}
-                  onChange={() => setConstructionApplicable("No")}
-                >
-                  No
-                </Radio>
-              </MenuItem>
-            </MenuList>
-          </Menu>
-
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select Contractor
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <Checkbox
-                  isChecked={selectContructor.includes("All")}
-                  onChange={() => handalSelectConstructore("All")}
-                >
-                  Select All
-                </Checkbox>
-              </MenuItem>
-              {constructors.map((constructorname, index) => (
-                <MenuItem key={index}>
-                  <Checkbox
-                    isChecked={selectContructor.includes(constructorname)}
-                    value={constructorname}
-                    onChange={(e) => handalSelectConstructore(e.target.value)}
+                {filteredPlots.map((plot) => (
+                  <MenuItem key={plot}>
+                    <Checkbox
+                      isChecked={selectedPlot.includes(plot)}
+                      onChange={() =>
+                        handleCheckboxChange(
+                          plot,
+                          selectedPlot,
+                          setSelectedPlot
+                        )
+                      }
+                    >
+                      {plot}
+                    </Checkbox>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
+          <Box mb={4}>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                Select ConstructionApplicable
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                  <Radio
+                    isChecked={constructionApplicable === "All"}
+                    onChange={() => setConstructionApplicable("All")}
                   >
-                    {constructorname}
+                    All
+                  </Radio>
+                </MenuItem>
+                <MenuItem>
+                  <Radio
+                    isChecked={constructionApplicable === "Yes"}
+                    onChange={() => setConstructionApplicable("Yes")}
+                  >
+                    Yes
+                  </Radio>
+                </MenuItem>
+                <MenuItem>
+                  <Radio
+                    isChecked={constructionApplicable === "No"}
+                    onChange={() => setConstructionApplicable("No")}
+                  >
+                    No
+                  </Radio>
+                </MenuItem>
+              </MenuList>
+            </Menu>{" "}
+          </Box>
+
+          <Box mb={4}>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                Select Contractor
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                  <Checkbox
+                    isChecked={selectContructor.includes("All")}
+                    onChange={() => handalSelectConstructore("All")}
+                  >
+                    Select All
                   </Checkbox>
                 </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-        </Flex>
+                {constructors.map((constructorname, index) => (
+                  <MenuItem key={index}>
+                    <Checkbox
+                      isChecked={selectContructor.includes(constructorname)}
+                      value={constructorname}
+                      onChange={(e) => handalSelectConstructore(e.target.value)}
+                    >
+                      {constructorname}
+                    </Checkbox>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
 
-        <Flex maxW={"100%"} overflowX={"scroll"}>
-          <Box display={"flex"}>
+          <Box mb={4}>
+            <Menu>
+              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                Select Broker
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                  <Checkbox
+                    isChecked={selectBroker.includes("All")}
+                    onChange={() => handalSelectBrokers("All")}
+                  >
+                    Select All
+                  </Checkbox>
+                </MenuItem>
+                {brokers.map((constructorname, index) => (
+                  <MenuItem key={index}>
+                    <Checkbox
+                      isChecked={selectBroker.includes(constructorname)}
+                      value={constructorname}
+                      onChange={(e) => handalSelectBrokers(e.target.value)}
+                    >
+                      {constructorname}
+                    </Checkbox>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </Box>
+          <Box display={"flex"} mb={4}>
             <FormLabel
               textAlign={"center"}
               fontSize={"17px"}
               minWidth={"fit-content"}
               mt={"5px"}
             >
-              Select Date:
+              Booking Date:
             </FormLabel>
+            <Box display="flex" alignItems="center">
+              <Text marginRight="4px">From</Text>
+              <Text marginRight="4px">:</Text>
+            </Box>
             <Input
               type="date"
               id="date"
               value={selectedDate || ""}
               onChange={(e) => setSelectedDate(e.target.value)}
+            />
+            <Box display={"flex"} alignItems={"center"}>
+              <Text mr={"4px"}>To</Text>
+              <Text mr={"4px"}>:</Text>
+            </Box>
+            <Input
+              type="date"
+              id="enddate"
+              value={selectedEndDate || currentDate}
+              onChange={(e) => setSelectedEndDate(e.target.value)}
             />
           </Box>
           <Button ml={2} onClick={clearFilters} colorScheme="red">
@@ -448,6 +551,9 @@ const BookingList = () => {
                   </Th>
                   <Th border="1px solid black" color={"white"}>
                     registryGender
+                  </Th>
+                  <Th border="1px solid black" color={"white"}>
+                    BrokerName
                   </Th>
                   <Th border="1px solid black" color={"white"}>
                     areaSqft
@@ -529,6 +635,7 @@ const BookingList = () => {
                     <Td border="1px solid black">{data.customerAddress}</Td>
                     <Td border="1px solid black">{data.customerContact}</Td>
                     <Td border="1px solid black">{data.registryGender}</Td>
+                    <Td border="1px solid black">{data.broker}</Td>
                     <Td border="1px solid black">{data.areaSqft}</Td>
                     <Td border="1px solid black">{data.rateAreaSqft}</Td>
                     <Td border="1px solid black">{data.totalAmount}</Td>
@@ -551,7 +658,14 @@ const BookingList = () => {
                     <Td border="1px solid black">{data.guidelineAmount}</Td>
                     <Td border="1px solid black">{data.registryPercent}</Td>
                     <Td border="1px solid black">{data.bankAmountPayable}</Td>
-                    <Td border="1px solid black">{data.bookingDate}</Td>
+                    <Td border="1px solid black">
+                      {data.bookingDate
+                        ? new Date(data.bookingDate)
+                            .toLocaleDateString("en-GB")
+                            .replace(/\//g, "-")
+                        : ""}
+                    </Td>
+
                     <Td border="1px solid black">{data.cashAmountPayable}</Td>
                     <Td border="1px solid black">{data.remarks}</Td>
                     {/* <Td>{data.registryDate}</Td> */}
