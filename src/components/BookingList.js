@@ -23,8 +23,9 @@ import {
   FormLabel,
   Radio,
 } from "@chakra-ui/react";
-import axios from "axios";
+import axios, { all } from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { isDisabled } from "@testing-library/user-event/dist/utils";
 
 const BookingList = () => {
   const [selectedBlock, setSelectedBlock] = useState([]);
@@ -39,15 +40,31 @@ const BookingList = () => {
   const [plotsData, setPlotsData] = useState([]);
   const [constructionApplicable, setConstructionApplicable] = useState("All");
   const [constructors, setConstructors] = useState([]);
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null);
 
   const [selectContructor, setSelectConstructor] = useState(["All"]);
 
   const [selectBroker, setSelectBroker] = useState(["All"]);
   const [brokers, setBrokers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const [currentDate, setCurrentDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+
+  const [allTotle, setAllTotle] = useState({
+    PlotCount: 0,
+    NetAmount: 0,
+    RegistryAmount: 0,
+    ServiceAmount: 0,
+    MaintenanceAmount: 0,
+    MiscAmount: 0,
+    GrandTotal: 0,
+    ConstructionAmount: 0,
+    TotalAmountPayable: 0,
+    BankAmountPayable: 0,
+    CashAmountPayable: 0,
+  });
 
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
@@ -81,6 +98,7 @@ const BookingList = () => {
   useEffect(() => {
     loadBooking();
   }, []);
+
   const getUniqueValues = (key) => {
     return [...new Set(plotsData.map((item) => item[key]))];
   };
@@ -130,6 +148,7 @@ const BookingList = () => {
     setConstructionApplicable("All");
     setSelectConstructor(["All"]);
     setSelectBroker(["All"]);
+    setCurrentPage(0);
   };
 
   const handalSelectConstructore = (name) => {
@@ -212,18 +231,53 @@ const BookingList = () => {
     setBrokers(Array.from(uniqueBrokers));
   }, [plotsData]);
 
-  console.log("Constructors : " + constructors);
+  let PlotCount = 0,
+    netAmount = 0,
+    registryAmount = 0,
+    serviceAmount = 0,
+    maintenanceAmount = 0,
+    miscAmount = 0,
+    grandTotal = 0,
+    constructionAmount = 0,
+    totalAmountPayable = 0,
+    bankAmountPayable = 0,
+    cashAmountPayable = 0;
+
+  filteredBookings.map((data, index) => {
+    PlotCount += 1;
+    netAmount += Number(data.netAmount);
+    registryAmount += Number(data.registryAmount);
+    serviceAmount += Number(data.serviceAmount);
+    maintenanceAmount += Number(data.maintenanceAmount);
+    miscAmount += Number(data.miscAmount);
+    grandTotal += Number(data.grandTotal);
+    constructionAmount += Number(data.constructionAmount);
+    totalAmountPayable += Number(data.totalAmountPayable);
+    bankAmountPayable += Number(data.bankAmountPayable);
+    cashAmountPayable += Number(data.cashAmountPayable);
+  });
+  allTotle.PlotCount = PlotCount;
+  allTotle.NetAmount = netAmount;
+  allTotle.RegistryAmount = registryAmount;
+  allTotle.ServiceAmount = serviceAmount;
+  allTotle.MaintenanceAmount = maintenanceAmount;
+  allTotle.MiscAmount = miscAmount;
+  allTotle.GrandTotal = grandTotal;
+  allTotle.ConstructionAmount = constructionAmount;
+  allTotle.TotalAmountPayable = totalAmountPayable;
+  allTotle.BankAmountPayable = bankAmountPayable;
+  allTotle.CashAmountPayable = cashAmountPayable;
+
+  console.log("All Totle : ", allTotle);
   return (
     <>
-      start - {selectedDate}
-      End - {selectedEndDate}
       <Center>
         <Heading size={"lg"}>Booking List</Heading>
       </Center>
-      <Box maxW={"100%"} overflowX={"scroll"} marginTop={"3rem"}>
+      <Box maxW={"100%"} overflowX={"scroll"} marginTop={"0.1rem"}>
         <Flex
           justifyContent={"space-evenly"}
-          p={"40px"}
+          p={"30px"}
           pos={"sticky"}
           left={0}
           flexWrap="wrap"
@@ -233,7 +287,7 @@ const BookingList = () => {
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                 Select Projects
               </MenuButton>
-              <MenuList>
+              <MenuList zIndex={999}>
                 <MenuItem>
                   <Checkbox
                     isChecked={selectedProject.includes("Select All")}
@@ -345,7 +399,7 @@ const BookingList = () => {
               </MenuList>
             </Menu>
           </Box>
-          <Box mb={4}>
+          {/* <Box mb={4}>
             <Menu>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                 Select Plots
@@ -383,7 +437,7 @@ const BookingList = () => {
                 ))}
               </MenuList>
             </Menu>
-          </Box>
+          </Box> */}
           <Box mb={4}>
             <Menu>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -521,163 +575,268 @@ const BookingList = () => {
             />
           </Flex>
         ) : (
-          <Table variant="simple">
-            <TableContainer>
-              <Thead>
-                <Tr border="1px solid black" bg={"#121212"}>
-                  <Th border="1px solid black" color={"white"}>
-                    SrNo
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    projectName
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    blockName
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    plotNo
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    plotType
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    custName
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    customerAddress
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    customerContact
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    registryGender
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    BrokerName
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    areaSqft
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    rateAreaSqft
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    totalAmount
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    discountApplicable
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    discountPercent
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    netAmount
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    registryAmount
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    serviceAmount
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    maintenanceAmount
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    miscAmount
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    grandTotal
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    constructionApplicable
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    constructionContractor
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    constructionAmount
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    totalAmountPayable
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    guidelineAmount
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    registryPercent
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    bankAmountPayable
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    bookingDate
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    cashAmountPayable
-                  </Th>
-                  <Th border="1px solid black" color={"white"}>
-                    remarks
-                  </Th>
-                  {/* <Th>registryDate</Th>
+          <>
+            <Flex
+              justifyContent={"space-evenly"}
+              p={"30px"}
+              left={0}
+              flexWrap="wrap"
+            >
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>Count - {allTotle.PlotCount}</Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Net Amount - {allTotle.NetAmount}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Registry Amount - {allTotle.RegistryAmount}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Service Amount - {allTotle.ServiceAmount}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Maintenance Amount - {allTotle.MaintenanceAmount}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Misc Amount - {allTotle.MiscAmount}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Grand Total - {allTotle.GrandTotal}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Construction Amount - {allTotle.ConstructionAmount}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Total Amount Payable - {allTotle.TotalAmountPayable}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Bank Amount Payable - {allTotle.BankAmountPayable}
+                </Text>
+              </Box>
+              <Box pl={"20px"} pr={"20px"} pb={"20px"}>
+                <Text fontWeight={"bold"}>
+                  Cash Amount Payable - {allTotle.CashAmountPayable}
+                </Text>
+              </Box>
+            </Flex>
+            <Table variant="simple">
+              <TableContainer>
+                <Thead>
+                  <Tr border="1px solid black" bg={"#121212"}>
+                    <Th border="1px solid black" color={"white"}>
+                      SrNo
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      projectName
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      blockName
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      plotNo
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      plotType
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      custName
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      customerAddress
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      customerContact
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      registryGender
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      BrokerName
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      areaSqft
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      rateAreaSqft
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      totalAmount
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      discountApplicable
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      discountPercent
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      netAmount
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      registryAmount
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      serviceAmount
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      maintenanceAmount
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      miscAmount
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      grandTotal
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      constructionApplicable
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      constructionContractor
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      constructionAmount
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      totalAmountPayable
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      guidelineAmount
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      registryPercent
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      bankAmountPayable
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      bookingDate
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      cashAmountPayable
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      remarks
+                    </Th>
+                    {/* <Th>registryDate</Th>
                 <Th>Action</Th>
                 <Th>Status</Th> */}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {filteredBookings.map((data, index) => (
-                  <Tr key={data.srNo}>
-                    <Td border="1px solid black">{index + 1}</Td>
-                    <Td border="1px solid black">{data.projectName}</Td>
-                    <Td border="1px solid black">{data.blockName}</Td>
-                    <Td border="1px solid black">{data.plotNo}</Td>
-                    <Td border="1px solid black">{data.plotType}</Td>
-                    <Td border="1px solid black">{data.customerName}</Td>
-                    <Td border="1px solid black">{data.customerAddress}</Td>
-                    <Td border="1px solid black">{data.customerContact}</Td>
-                    <Td border="1px solid black">{data.registryGender}</Td>
-                    <Td border="1px solid black">{data.broker}</Td>
-                    <Td border="1px solid black">{data.areaSqft}</Td>
-                    <Td border="1px solid black">{data.rateAreaSqft}</Td>
-                    <Td border="1px solid black">{data.totalAmount}</Td>
-                    <Td border="1px solid black">{data.discountApplicable}</Td>
-                    <Td border="1px solid black">{data.discountPercent}</Td>
-                    <Td border="1px solid black">{data.netAmount}</Td>
-                    <Td border="1px solid black">{data.registryAmount}</Td>
-                    <Td border="1px solid black">{data.serviceAmount}</Td>
-                    <Td border="1px solid black">{data.maintenanceAmount}</Td>
-                    <Td border="1px solid black">{data.miscAmount}</Td>
-                    <Td border="1px solid black">{data.grandTotal}</Td>
-                    <Td border="1px solid black">
-                      {data.constructionApplicable}
-                    </Td>
-                    <Td border="1px solid black">
-                      {data.constructionContractor}
-                    </Td>
-                    <Td border="1px solid black">{data.constructionAmount}</Td>
-                    <Td border="1px solid black">{data.totalAmountPayable}</Td>
-                    <Td border="1px solid black">{data.guidelineAmount}</Td>
-                    <Td border="1px solid black">{data.registryPercent}</Td>
-                    <Td border="1px solid black">{data.bankAmountPayable}</Td>
-                    <Td border="1px solid black">
-                      {data.bookingDate
-                        ? new Date(data.bookingDate)
-                            .toLocaleDateString("en-GB")
-                            .replace(/\//g, "-")
-                        : ""}
-                    </Td>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {filteredBookings.map((data, index) => {
+                    if (index < currentPage || index >= currentPage + 10) {
+                      return;
+                    }
+                    return (
+                      <Tr
+                        key={data.srNo}
+                        onClick={() => setSelectedRowIndex(index)}
+                        bg={
+                          selectedRowIndex === index
+                            ? "green.200"
+                            : "transparent"
+                        }
+                      >
+                        <Td border="1px solid black">{index + 1}</Td>
+                        <Td border="1px solid black">{data.projectName}</Td>
+                        <Td border="1px solid black">{data.blockName}</Td>
+                        <Td border="1px solid black">{data.plotNo}</Td>
+                        <Td border="1px solid black">{data.plotType}</Td>
+                        <Td border="1px solid black">{data.customerName}</Td>
+                        <Td border="1px solid black">{data.customerAddress}</Td>
+                        <Td border="1px solid black">{data.customerContact}</Td>
+                        <Td border="1px solid black">{data.registryGender}</Td>
+                        <Td border="1px solid black">{data.broker}</Td>
+                        <Td border="1px solid black">{data.areaSqft}</Td>
+                        <Td border="1px solid black">{data.rateAreaSqft}</Td>
+                        <Td border="1px solid black">{data.totalAmount}</Td>
+                        <Td border="1px solid black">
+                          {data.discountApplicable}
+                        </Td>
+                        <Td border="1px solid black">{data.discountPercent}</Td>
+                        <Td border="1px solid black">{data.netAmount}</Td>
+                        <Td border="1px solid black">{data.registryAmount}</Td>
+                        <Td border="1px solid black">{data.serviceAmount}</Td>
+                        <Td border="1px solid black">
+                          {data.maintenanceAmount}
+                        </Td>
+                        <Td border="1px solid black">{data.miscAmount}</Td>
+                        <Td border="1px solid black">{data.grandTotal}</Td>
+                        <Td border="1px solid black">
+                          {data.constructionApplicable}
+                        </Td>
+                        <Td border="1px solid black">
+                          {data.constructionContractor}
+                        </Td>
+                        <Td border="1px solid black">
+                          {data.constructionAmount}
+                        </Td>
+                        <Td border="1px solid black">
+                          {data.totalAmountPayable}
+                        </Td>
+                        <Td border="1px solid black">{data.guidelineAmount}</Td>
+                        <Td border="1px solid black">{data.registryPercent}</Td>
+                        <Td border="1px solid black">
+                          {data.bankAmountPayable}
+                        </Td>
+                        <Td border="1px solid black">
+                          {data.bookingDate
+                            ? new Date(data.bookingDate)
+                                .toLocaleDateString("en-GB")
+                                .replace(/\//g, "-")
+                            : ""}
+                        </Td>
 
-                    <Td border="1px solid black">{data.cashAmountPayable}</Td>
-                    <Td border="1px solid black">{data.remarks}</Td>
-                    {/* <Td>{data.registryDate}</Td> */}
-                    {/* <Td>
+                        <Td border="1px solid black">
+                          {data.cashAmountPayable}
+                        </Td>
+                        <Td border="1px solid black">{data.remarks}</Td>
+                        {/* <Td>{data.registryDate}</Td> */}
+                        {/* <Td>
                     <Button colorScheme="teal">Tally</Button>
                   </Td>
                   <Td>{data.status}</Td> */}
-                  </Tr>
-                ))}
-              </Tbody>
-            </TableContainer>
-          </Table>
+                      </Tr>
+                    );
+                  })}
+                </Tbody>
+              </TableContainer>
+            </Table>
+
+            <Box display={"flex"} justifyContent={"center"} mt={10}>
+              <Button
+                onClick={() => setCurrentPage(currentPage - 10)}
+                isDisabled={currentPage == 0}
+                mr={10}
+              >
+                Prev
+              </Button>
+
+              <Button
+                onClick={() => setCurrentPage(currentPage + 10)}
+                isDisabled={filteredBookings.length - 10 < currentPage}
+                ml={10}
+              >
+                Next
+              </Button>
+            </Box>
+          </>
         )}
       </Box>
     </>
