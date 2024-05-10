@@ -62,7 +62,13 @@ const Nav = ({ isLoggedIn, handleLogout }) => {
             alignItems="center"
             justifyContent="center" // Center the menu items
           >
-            <Text fontWeight={"600"} mr={"15px"} cursor={"pointer"} as={Link} to="/">
+            <Text
+              fontWeight={"600"}
+              mr={"15px"}
+              cursor={"pointer"}
+              as={Link}
+              to="/"
+            >
               DashBoard
             </Text>
             <Menu>
@@ -195,6 +201,9 @@ const Nav = ({ isLoggedIn, handleLogout }) => {
                 </MenuItem>
               </MenuList>
             </Menu>
+            <Box>
+              <Text fontWeight={"bold"}>Hello User</Text>
+            </Box>
           </HStack>
 
           {/* Conditionally render the hamburger icon on mobile devices */}

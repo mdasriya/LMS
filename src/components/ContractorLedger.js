@@ -100,6 +100,14 @@ const ContractorLedger = () => {
     setSelectedPlot([]);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
   useEffect(() => {
     const blocks = getUniqueValues("blockName").filter(
       (block) =>
@@ -328,12 +336,12 @@ const ContractorLedger = () => {
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"22px"}>
                       Total Amt Bal
+                    </Th>{" "}
+                    <Th border="1px solid black" color={"white"} p={"22px"}>
+                      Date
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"22px"}>
                       Amount
-                    </Th>
-                    <Th border="1px solid black" color={"white"} p={"22px"}>
-                      Date
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"22px"}>
                       Remarks
@@ -350,12 +358,13 @@ const ContractorLedger = () => {
                       <Td border="1px solid black">{data.plotNo}</Td>
                       <Td border="1px solid black">{data.constAmt}</Td>
                       <Td border="1px solid black">{data.lessPercent}</Td>
-
                       <Td border="1px solid black">{data.totalPayable}</Td>
                       <Td border="1px solid black">{data.totalPaid}</Td>
                       <Td border="1px solid black">{data.totalBalance}</Td>
+                      <Td border="1px solid black">
+                        {formatDate(data.transactionDate)}
+                      </Td>
                       <Td border="1px solid black">{data.amount}</Td>
-                      <Td border="1px solid black">{data.transactionDate}</Td>
                       <Td border="1px solid black">{data.remarks}</Td>
                     </Tr>
                   ))}

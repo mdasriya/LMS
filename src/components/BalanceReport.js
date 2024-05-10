@@ -36,7 +36,7 @@ import { useReactToPrint } from "react-to-print";
 
 const BalanceReport = () => {
   const [buttonClicked, setButtonClicked] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("All");
   const [transaction, setTransaction] = useState([]);
   const [plotSatus, setPlotStatus] = useState([]);
   const [booking, setBooking] = useState([]);
@@ -78,6 +78,7 @@ const BalanceReport = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           setTransaction(response.data.phpresult);
+          console.log("trans : ",response.data.phpresult);
         }
       }
       setLoading(false);
@@ -235,6 +236,7 @@ const BalanceReport = () => {
   });
   return (
     <>
+      Status - {selectedStatus}
       <Center>
         <Heading size={"md"}>Balance Report</Heading>
       </Center>
@@ -357,6 +359,14 @@ const BalanceReport = () => {
               Select Status
             </MenuButton>
             <MenuList>
+              <MenuItem>
+                <Checkbox
+                  onChange={() => handleStatusChange("All")}
+                  isChecked={selectedStatus === "All"}
+                >
+                  All
+                </Checkbox>
+              </MenuItem>
               {statusOptions.map((status) => (
                 <MenuItem key={status}>
                   <Checkbox

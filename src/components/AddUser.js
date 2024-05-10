@@ -187,8 +187,8 @@ const AddUser = () => {
           </GridItem>
 
           <GridItem colSpan={1}>
-            <FormControl>
-              <FormLabel> Rights (Admin/User)</FormLabel>
+            <FormControl isRequired>
+              <FormLabel> Rights (Admin/User) (Mandatory)</FormLabel>
               <Select
                 name="userRights"
                 value={formData.userRights}

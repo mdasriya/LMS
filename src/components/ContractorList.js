@@ -352,6 +352,9 @@ const url = 'https://lkgexcel.com/backend/setQuery.php';
           <Table>
             <Thead>
               <Tr>
+              <Th bg="blue.500" color="white" fontSize="16px">
+                  Sr. No.
+                </Th>
                 <Th bg="blue.500" color="white" fontSize="16px">
                   Contractor ID
                 </Th>
@@ -382,8 +385,9 @@ const url = 'https://lkgexcel.com/backend/setQuery.php';
               </Tr>
             </Thead>
             <Tbody>
-              {contractorData.map((contractor) => (
+              {contractorData.map((contractor,index) => (
                 <Tr key={contractor.id}>
+                  <Td>{index +1}</Td>
                   <Td>{contractor.id}</Td>
                   <Td>{contractor.companyName}</Td>
                   <Td>{contractor.contractorName}</Td>

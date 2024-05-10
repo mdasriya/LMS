@@ -56,12 +56,22 @@ const Admin = ({ onLogin }) => {
     }
   };
 
+  const handleKeyPressFromEmail = (event) => {
+    if (event.key === "Enter") {
+      document.getElementById("password").focus();
+    }
+  };
+  const handleKeyPressFromPass = (event) => {
+    if (event.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <Container maxW="7xl" p={{ base: 5, md: 10 }}>
       <Center>
         <Stack spacing={4}>
           <Heading fontSize="2xl" textAlign={"center"}>
-            {" "}
             Welcome to Layout Management System
             <br />
             Admin Login
@@ -84,6 +94,7 @@ const Admin = ({ onLogin }) => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={handleKeyPressFromEmail}
                 />
               </FormControl>
               <FormControl id="password">
@@ -94,6 +105,7 @@ const Admin = ({ onLogin }) => {
                     type={show ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleKeyPressFromPass}
                   />
                   <InputRightElement width="4.5rem">
                     <Button

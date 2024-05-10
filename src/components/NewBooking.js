@@ -12,6 +12,7 @@ import {
   Heading,
   GridItem,
   useToast,
+  Textarea,
 } from "@chakra-ui/react";
 //import { getFormSubmissionInfo } from "react-router-dom/dist/dom";
 
@@ -1065,7 +1066,7 @@ const NewBooking = () => {
               </FormControl>
               <FormControl>
                 <FormLabel>Remarks</FormLabel>
-                <Input
+                <Textarea
                   onChange={updateOnChange}
                   id="remarks"
                   type="text"
@@ -1073,7 +1074,9 @@ const NewBooking = () => {
                   //onChange={handleChange}
                   required
                   width={"320px"}
+                  rows={2}
                 />
+                
               </FormControl>
 
            
