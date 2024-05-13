@@ -325,9 +325,9 @@ const ContractorLedger = () => {
                     <Th border="1px solid black" color={"white"} p={"22px"}>
                       Const Amt
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"22px"}>
+                    {/* <Th border="1px solid black" color={"white"} p={"22px"}>
                       Less (%)
-                    </Th>
+                    </Th> */}
                     <Th border="1px solid black" color={"white"} p={"22px"}>
                       Total Amt Payable
                     </Th>
@@ -357,7 +357,7 @@ const ContractorLedger = () => {
                       <Td border="1px solid black">{data.blockName}</Td>
                       <Td border="1px solid black">{data.plotNo}</Td>
                       <Td border="1px solid black">{data.constAmt}</Td>
-                      <Td border="1px solid black">{data.lessPercent}</Td>
+                      {/* <Td border="1px solid black">{data.lessPercent}</Td> */}
                       <Td border="1px solid black">{data.totalPayable}</Td>
                       <Td border="1px solid black">{data.totalPaid}</Td>
                       <Td border="1px solid black">{data.totalBalance}</Td>
