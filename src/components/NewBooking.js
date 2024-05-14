@@ -19,6 +19,7 @@ import {
 import axios from "axios";
 
 const NewBooking = () => {
+
   const [projectName, setProjectName] = useState("");
   const [blockName, setBlockname] = useState("");
   const [plotName, setPlotName] = useState("");
@@ -135,11 +136,13 @@ const NewBooking = () => {
       "', '" +
       document.getElementById("remarks").value +
       "')";
-
-    console.log(query);
     let fData = new FormData();
     fData.append("query", query);
-
+    // let projectName1 = document.getElementById("projectName").value;
+    // let blockName1 = document.getElementById("blockName").value;
+    // let plotNo1 = document.getElementById("plotNo").value;
+    let plotType1 = document.getElementById("plotType").value;
+    console.log(plotType1);
     try {
       const response = await axios.post(url, fData);
       console.log(response);

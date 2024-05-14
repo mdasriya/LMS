@@ -78,7 +78,7 @@ const BalanceReport = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           setTransaction(response.data.phpresult);
-          console.log("trans : ",response.data.phpresult);
+          // console.log("trans : ",response.data.phpresult);
         }
       }
       setLoading(false);
@@ -169,6 +169,69 @@ const BalanceReport = () => {
         new Date(item.statusDate).toISOString().split("T")[0] ===
           selectedStatusDate)
   );
+  
+  let totBalance;
+  let info = [...filteredBookings];
+console.log('aaaaaaa',info)
+  let netBalanceArr = [];
+  info.forEach((obj) => {
+    let netBalance = parseInt(obj.totalBalance);
+    netBalanceArr.push(netBalance);
+    totBalance = netBalanceArr.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+    //  console.log('yyyyyyyyy', totBalance);
+  });
+let bankBalance;
+  let netBankBalanceArr = [];
+  info.forEach((obj) => {
+    let netBankBalance = parseInt(obj.totalBalance);
+    netBankBalanceArr.push(netBankBalance);
+    bankBalance = netBankBalanceArr.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+    // console.log("yyyyyyyyy", bankBalance);
+  });
+  let cashBalance;
+  let netCashBalanceArr = [];
+  info.forEach((obj) => {
+    let netCashBalance = parseInt(obj.cashBalance);
+    netCashBalanceArr.push(netCashBalance);
+    cashBalance = netCashBalanceArr.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+    console.log("yyyyyyyyy", cashBalance);
+  });
+  let totalRec;
+  let netTotalRecArr = [];
+  info.forEach((obj) => {
+    let netTotalRac = parseInt(obj.totalReceived);
+    netTotalRecArr.push(netTotalRac);
+    totalRec = netTotalRecArr.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+    console.log("yyyyyyyyy", totalRec);
+  });
+   let bankRec;
+  let netBankRecArr = [];
+  info.forEach((obj) => {
+    let netBankRac = parseInt(obj.totalReceived);
+    netBankRecArr.push(netBankRac);
+    bankRec = netBankRecArr.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+    console.log("yyyyyyyyy", bankRec);
+  });
+  let cashRec;
+  let netcashRecArr = [];
+  info.forEach((obj) => {
+    let netcashRac = parseInt(obj.totalReceived);
+    netcashRecArr.push(netcashRac);
+    cashRec = netcashRecArr.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    }, 0);
+    console.log("yyyyyyyyy", cashRec);
+  });
 
   const clearFilters = () => {
     setSelectedProject([]);
@@ -510,7 +573,23 @@ const BalanceReport = () => {
                       p={"11px"}
                       textAlign={"center"}
                     >
-                      Total Bal
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Bal</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{totBalance}</p>
+                      </div>
                     </Th>
                     <Th
                       border="1px solid black"
@@ -519,7 +598,23 @@ const BalanceReport = () => {
                       className="print"
                       textAlign={"center"}
                     >
-                      Bank Bal
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Bank Bal</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{bankBalance}</p>
+                      </div>
                     </Th>
                     <Th
                       border="1px solid black"
@@ -528,7 +623,23 @@ const BalanceReport = () => {
                       p={"11px"}
                       textAlign={"center"}
                     >
-                      Cash Bal
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Cash Bal</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{cashBalance}</p>
+                      </div>
                     </Th>
                     <Th
                       border="1px solid black"
@@ -537,7 +648,23 @@ const BalanceReport = () => {
                       className="print"
                       textAlign={"center"}
                     >
-                      Total Rec
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Rac</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{totalRec}</p>
+                      </div>
                     </Th>{" "}
                     <Th
                       border="1px solid black"
@@ -546,7 +673,23 @@ const BalanceReport = () => {
                       p={"11px"}
                       textAlign={"center"}
                     >
-                      Bank Rec
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Bal</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{bankRec}</p>
+                      </div>
                     </Th>{" "}
                     <Th
                       border="1px solid black"
@@ -555,7 +698,23 @@ const BalanceReport = () => {
                       p={"11px"}
                       textAlign={"center"}
                     >
-                      Cash Rec
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Bal</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        > 
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{cashRec}</p>
+                      </div>
                     </Th>{" "}
                     <Th
                       border="1px solid black"
@@ -564,7 +723,7 @@ const BalanceReport = () => {
                       p={"11px"}
                       textAlign={"center"}
                     >
-                      Status Date
+                      Booking Date
                     </Th>
                     <Th
                       border="1px solid black"
