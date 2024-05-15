@@ -140,40 +140,22 @@ const BrokerLedger = () => {
     setFilteredPlots([...plots]);
   }, [selectedProject, transaction]);
 
-let finalBalance;
-let finalPable;
-let finalPaid;
+  let finalBalance = 0;
+  let finalPable = 0;
+  let finalPaid = 0;
 
-console.log('aaaaaaaaaaaaa',filteredBookings)
-  let info = [...filteredBookings];
-  let netBalanceArr = [];
-  info.forEach((obj) => {
-   let netBalance = parseInt(obj.totalBalance);
-   netBalanceArr.push(netBalance);
-   finalBalance = netBalanceArr.reduce((accumulator, currentValue) => {
-     return accumulator + currentValue
-   }, 0);
-  //  console.log('yyyyyyyyy', finalBalance);
- })
-  // let info1 = [...filteredBookings];
-  let netPableArr = [];
-  info.forEach((obj) => {
-   let netPable = parseInt(obj.totalPayable);
-   netPableArr.push(netPable);
-   finalPable = netPableArr.reduce((accumulator, currentValue) => {
-     return accumulator + currentValue
-   }, 0);
- })
-  // let info2 = [...filteredBookings];
-  let netPaidArr = [];
-  info.forEach((obj) => {
-   let netPaid = parseInt(obj.totalPaid);
-   netPaidArr.push(netPaid);
-   finalPaid = netPaidArr.reduce((accumulator, currentValue) => {
-     return accumulator + currentValue
-   }, 0);
-   console.log('yyyyyyyyy', finalPaid);
- })
+  console.log("aaaaaaaaaaaaa", filteredBookings);
+
+  filteredBookings.forEach((obj) => {
+    finalBalance += parseInt(obj.totalBalance);
+    finalPable += parseInt(obj.totalPayable);
+    finalPaid += parseInt(obj.totalPaid);
+  });
+
+  console.log("Final Balance:", finalBalance);
+  console.log("Final Payable:", finalPable);
+  console.log("Final Paid:", finalPaid);
+
   return (
     <>
       <Center>
