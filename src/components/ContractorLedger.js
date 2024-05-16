@@ -17,9 +17,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Input,
   Button,
-  FormLabel,
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -71,6 +69,7 @@ const ContractorLedger = () => {
   const getUniqueValues = (key) => {
     return [...new Set(transaction.map((item) => item[key]))];
   };
+
   const getUniqueContractor = (key) => {
     return [...new Set(transaction.map((item) => item[key]))];
   };
@@ -100,13 +99,13 @@ const ContractorLedger = () => {
     setSelectedPlot([]);
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
+  // const formatDate = (dateString) => {
+  //   const date = new Date(dateString);
+  //   const day = String(date.getDate()).padStart(2, "0");
+  //   const month = String(date.getMonth() + 1).padStart(2, "0");
+  //   const year = date.getFullYear();
+  //   return `${day}-${month}-${year}`;
+  // };
 
   useEffect(() => {
     const blocks = getUniqueValues("blockName").filter(
@@ -132,6 +131,14 @@ const ContractorLedger = () => {
     setFilteredPlots([...plots]);
   }, [selectedProject, transaction]);
 
+useEffect(()=> {
+  const totalSum = filteredBookings.reduce((accumulator, currentValue) => {
+    return accumulator + parseInt(currentValue.totalPayable);
+  }, 0);
+
+  console.log("totalSum",totalSum)
+},[selectedProject,transaction])
+
   return (
     <>
       <Center>
@@ -139,6 +146,47 @@ const ContractorLedger = () => {
       </Center>
       <Box maxW={"100%"} overflowX={"scroll"} marginTop={"2rem"}>
         <Flex justifyContent={"space-evenly"}>
+
+  {/* contractor select tag */}
+  <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Select Contractors
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Checkbox
+                  isChecked={selectedContractor.includes("Select All")}
+                  onChange={() =>
+                    handleCheckboxChange(
+                      "Select All",
+                      selectedContractor,
+                      setSelectedContractor
+                    )
+                  }
+                >
+                  Select All
+                </Checkbox>
+              </MenuItem>
+              {contractorOptions.map((contractor) => (
+                <MenuItem key={contractor}>
+                  <Checkbox
+                    isChecked={selectedContractor.includes(contractor)}
+                    onChange={() =>
+                      handleCheckboxChange(
+                        contractor,
+                        selectedContractor,
+                        setSelectedContractor
+                      )
+                    }
+                  >
+                    {contractor}
+                  </Checkbox>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+           {/* contractor select tag */}
+
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Select Projects
@@ -176,43 +224,7 @@ const ContractorLedger = () => {
               ))}
             </MenuList>
           </Menu>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select Contractors
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <Checkbox
-                  isChecked={selectedContractor.includes("Select All")}
-                  onChange={() =>
-                    handleCheckboxChange(
-                      "Select All",
-                      selectedContractor,
-                      setSelectedContractor
-                    )
-                  }
-                >
-                  Select All
-                </Checkbox>
-              </MenuItem>
-              {contractorOptions.map((contractor) => (
-                <MenuItem key={contractor}>
-                  <Checkbox
-                    isChecked={selectedContractor.includes(contractor)}
-                    onChange={() =>
-                      handleCheckboxChange(
-                        contractor,
-                        selectedContractor,
-                        setSelectedContractor
-                      )
-                    }
-                  >
-                    {contractor}
-                  </Checkbox>
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
+        
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Select Blocks
@@ -300,9 +312,9 @@ const ContractorLedger = () => {
         ) : (
           <>
             <Text p={5} fontWeight={"bold"}>
-              Count :- {filteredBookings.length}
+          {selectedContractor.length>0 &&  <div>Count :- {filteredBookings.length}</div>}   
             </Text>
-            <Table variant="simple" size={"md"}>
+            <Table variant="simple" >
               <TableContainer>
                 <Thead>
                   <Tr border="1px solid black" bg={"#121212"}>
@@ -337,19 +349,13 @@ const ContractorLedger = () => {
                     <Th border="1px solid black" color={"white"} p={"22px"}>
                       Total Amt Bal
                     </Th>{" "}
-                    <Th border="1px solid black" color={"white"} p={"22px"}>
-                      Date
-                    </Th>
-                    <Th border="1px solid black" color={"white"} p={"22px"}>
-                      Amount
-                    </Th>
-                    <Th border="1px solid black" color={"white"} p={"22px"}>
-                      Remarks
-                    </Th>
+                   
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {filteredBookings.map((data, index) => (
+                
+                  {selectedContractor.length>0 &&  filteredBookings.map((data, index) => (
+
                     <Tr key={data.srNo}>
                       <Td border="1px solid black">{index + 1}</Td>
                       <Td border="1px solid black">{data.contractor}</Td>
@@ -361,11 +367,7 @@ const ContractorLedger = () => {
                       <Td border="1px solid black">{data.totalPayable}</Td>
                       <Td border="1px solid black">{data.totalPaid}</Td>
                       <Td border="1px solid black">{data.totalBalance}</Td>
-                      <Td border="1px solid black">
-                        {formatDate(data.transactionDate)}
-                      </Td>
-                      <Td border="1px solid black">{data.amount}</Td>
-                      <Td border="1px solid black">{data.remarks}</Td>
+                     
                     </Tr>
                   ))}
                 </Tbody>

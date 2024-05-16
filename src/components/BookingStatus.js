@@ -20,6 +20,7 @@ import {
   MenuItem,
   Select,
   FormLabel,
+  Heading,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -43,6 +44,19 @@ const BookingStatus = () => {
   const [count, setCount] = useState(null)
  
  
+// render no project function 
+function initialFunction (){
+return (
+  <>
+  <Heading>No Project Selected</Heading>
+  </>
+)
+}
+if(selectedProject.length>0){
+  initialFunction()
+}
+
+
   const handleCheckboxChange = (value, state, setter) => {
     if (state.includes(value)) {
       setter(state.filter((item) => item !== value));
@@ -92,9 +106,13 @@ const BookingStatus = () => {
       const response = await axios.post(url, fData);
 
       if (response && response.data) {
-        if (response.data.phpresult) {
-          setDate(response.data.phpresult);
-        }
+        const formattedData = response.data.phpresult.map(item => {
+          return {
+            ...item,
+            registryDate: new Date(item.registryDate).toLocaleDateString('en-GB')
+          };
+        });
+        setDate(formattedData)
       }
     } catch (error) {
       console.error("Error fetching booking data:", error);
@@ -159,13 +177,13 @@ const plotStatus = getUniqueValues("plotStatus");
 
 
   const clearFilters = () => {
+    setSelectedFromDate("");
+    setSelectedToDate("");
     setSelectedProject([]);
     setSelectedBlock([]);
     setSelectedPlot([]);
     setSelectedPlottype([]);
-    setSelectedPlotstatus([]);
-    setSelectedFromDate("");
-    setSelectedToDate("");
+    setSelectedPlotstatus([]);  
     setHighlightedRow(null);
   };
 
@@ -380,9 +398,6 @@ console.log("component render")
               ))}
             </MenuList>
           </Menu>
-
-
-
           <Box display={"flex"}>
             <Text mt={2}>From:</Text>
             <Input
@@ -396,6 +411,7 @@ console.log("component render")
             <Text mt={2} ml={2}>To:</Text>
             <Input
               type="date"
+              // value={selectedToDate}
               placeholder="Search to Date"
               w={"auto"}
               ml={"2%"}
@@ -421,8 +437,8 @@ console.log("component render")
             color="blue.500"
           />
         </Center>
-      ) : (
-    <> <FormLabel fontWeight={700} >Total Booking : ({filteredBookings.length})</FormLabel> <Box border={"1px solid blue"} w={"100%"}> <Table variant="simple" border={"1px solid red"} w={"100%"} colorScheme="blue">
+      ) : !selectedProject.length>0 ? <Heading textAlign={"center"} position={"relative"} top={100}>Select Project first</Heading> :  (
+    <> <FormLabel fontWeight={700} >Total Booking : ({filteredBookings.length})</FormLabel> <Box  w={"100%"}> <Table variant="simple"  w={"100%"} colorScheme="blue">
     <Thead>
       <Tr bg="gray.800" >
         <Th color="white">ProjectName</Th>
@@ -456,19 +472,19 @@ console.log("component render")
           <Td>{plotItem.areaSqmt}</Td>
           <Td>{plotItem.plotType}</Td>
           <Td>
-        {plotItem.plotStatus !== "Booked" &&  <Badge
+        {/* {plotItem.plotStatus !== "Booked" &&  <Badge
               colorScheme={
                 plotItem.plotStatus === "Available"
                   ? "black"
-                  : plotItem.plotStatus === "Registered"
-                  ? "green"
                   : "gray"
               }
             >
               {plotItem.plotStatus}
-            </Badge>}   
-            {plotItem.plotStatus === "Booked" && <FormLabel bg={"yellow"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
-            {/* {plotItem.plotStatus === "Registered" && <FormLabel bg={"yellow"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>} */}
+            </Badge>}    */}
+            {plotItem.plotStatus === "Booked" && <FormLabel bg={"yellow"} textAlign={"center"} p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
+            {plotItem.plotStatus === "Available" && <FormLabel p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
+            {plotItem.plotStatus === "Registered" && <FormLabel bg={"green"} p={"1px"} color={"white"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
+         
           </Td>
 
           {status
@@ -486,7 +502,7 @@ console.log("component render")
               </React.Fragment>
             ))
             }
-          {/* <Td border={"1px solid red"}>
+           <Td>
             {plotItem.plotStatus === "Registered" && (
               <span>
                 {date.map((rd, index) => (
@@ -497,7 +513,7 @@ console.log("component render")
                 ))}
               </span>
             )}
-          </Td> */}
+          </Td> 
         </Tr>
       ))}
     </Tbody>

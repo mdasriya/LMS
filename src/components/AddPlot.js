@@ -25,12 +25,14 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Text,
 } from "@chakra-ui/react";
 import axios from "axios";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 
 import PaginationControl from "./PaginationControl";
 const AddPlot = () => {
+ const [finalPlot, setFinalPlot] = useState([])
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -105,17 +107,16 @@ const AddPlot = () => {
     }
   };
 
-  useEffect(() => {
-    fetchDataProject();
-    fetchDataPlot();
-    fetchDataBlock();
-  }, []);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prevData) => ({ ...prevData, [name]: value }));
 
+const result = plot.filter((item) => item.projectName == value)
+if(result.length>0){
+  setFinalPlot(result)
+}
     if (name === "projectName") {
       setSelectedProject(value);
     }
@@ -155,6 +156,20 @@ const AddPlot = () => {
     fData.append("plotType", formData.plotType);
     fData.append("plotStatus", formData.plotStatus);
 
+const found = plot.filter((item)=> {
+  if(item.projectName == formData.projectName && item.plotNo == formData.plotNo){
+
+  return item
+  } 
+})
+if(found.length>0){
+   toast({
+      title: `Plot already Exist`,
+      status: "error",
+      isClosable: true,
+    })
+    return;
+}
     try {
       await axios.post(url, fData);
       toast({
@@ -305,6 +320,13 @@ const AddPlot = () => {
     }
   };
 
+  useEffect(() => {
+    fetchDataProject();
+    fetchDataPlot();
+    fetchDataBlock();
+  }, []);
+
+  console.log("plotttt",plot)
   return (
     <>
       <Box p={4} width="100%">
@@ -492,6 +514,9 @@ const AddPlot = () => {
               </Th>
               <Th bg="blue.500" color="white" fontSize="13px">
                 Plot Type
+              </Th>
+              <Th bg="blue.500" color="white" fontSize="13px">
+              plot Status
               </Th>{" "}
               <Th bg="blue.500" color="white" fontSize="14px">
                 Action
@@ -510,6 +535,12 @@ const AddPlot = () => {
                 <Td>{plotItem.areaSqmt}</Td>
                 <Td>{plotItem.ratePerSqft}</Td>
                 <Td>{plotItem.plotType}</Td>
+                <Td>
+                {plotItem.plotStatus === "Booked" && <Text fontWeight={500} bg={"yellow"} textAlign={"center"} p={"1px"} >{plotItem.plotStatus.toUpperCase()}</Text>}
+            {plotItem.plotStatus === "Available" && <Text fontWeight={500} p={"1px"} >{plotItem.plotStatus.toUpperCase()}</Text>}
+            {plotItem.plotStatus === "Registered" && <Text fontWeight={500} bg={"green"} p={"1px"} color={"white"} >{plotItem.plotStatus.toUpperCase()}</Text>}
+         
+                </Td>
 
                 <Td>
                   <HStack>
