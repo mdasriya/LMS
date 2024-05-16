@@ -215,8 +215,22 @@ const AddBlock = () => {
   };
 
   const handleEditBlockSubmit = async (e) => {
-    setEditLoading(true);
     e.preventDefault();
+    setEditLoading(true);
+    const findBlock = block.find(
+      (element) => editFormData.projectName === element.projectName && editFormData.blockName === element.blockName
+    );
+    if (findBlock) {
+      toast({
+        title: `Block Already exist`,
+        status: "warning",
+        position: "top-right",
+        isClosable: true,
+      });
+      setEditLoading(false);
+      return;
+    }
+    
     const url = "https://lkgexcel.com/backend/editblock.php";
 
     try {
@@ -490,7 +504,7 @@ const AddBlock = () => {
                         loadingDel={delLoading}
                       />
                       <Button
-                        colorScheme="teal"
+                        colorScheme="green"
                         onClick={() => {
                           setIsModalOpen(true);
                           setEditFormData({
