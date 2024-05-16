@@ -475,7 +475,7 @@ const BrokerTransaction = () => {
           <Thead>
             <Tr bg={"#121212"} color={"whitesmoke"}>
               <Th color={"white"} border="1px solid black">
-                Contractor
+                Broker
               </Th>
               <Th color={"white"} border="1px solid black">
                 Project

@@ -496,6 +496,7 @@ console.log("component render")
             )
             .map((book) => (
               <React.Fragment key={book.id}>
+                {console.log(book.bookingDate)}
                 <Td>{book.bookingDate}</Td>
                 <Td>{book.customerName}</Td>
                 <Td>{book.customerContact}</Td>
