@@ -26,12 +26,15 @@ import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const BrokerLedger = () => {
+
   const [transaction, setTransaction] = useState([]);
   const [selectedProject, setSelectedProject] = useState([]);
   const [selectedContractor, setSelectedContractor] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedBlock, setSelectedBlock] = useState([]);
   const [selectedPlot, setSelectedPlot] = useState([]);
+  const [plotStatus, setplotStatus] = useState([]);
+  const [filterplotStatus, setfilterplotStatus] = useState([]);
   const [filteredBlocks, setFilteredBlocks] = useState([]);
   const [filteredPlots, setFilteredPlots] = useState([]);
 
@@ -42,6 +45,15 @@ const BrokerLedger = () => {
       setter([...state, value]);
     }
   };
+
+   const formatDate = (dateString) => {
+     const date = new Date(dateString);
+     const day = String(date.getDate()).padStart(2, "0");
+     const month = String(date.getMonth() + 1).padStart(2, "0");
+     const year = date.getFullYear();
+     console.log('xxxxxxxxx',day,month,year)
+     return `${day}-${month}-${year}`;
+   };
 
   const loadTransaction = async () => {
     let query = "SELECT * FROM brokerTransaction;";
@@ -90,7 +102,10 @@ const BrokerLedger = () => {
         selectedBlock.includes(item.blockName)) &&
       (!selectedPlot.length ||
         selectedPlot.includes("Select All") ||
-        selectedPlot.includes(item.plotNo))
+        selectedPlot.includes(item.plotNo))    &&
+      (!plotStatus.length ||
+        plotStatus.includes("Select All") ||
+        plotStatus.includes(item.plotNo))
   );
 
   const clearFilters = () => {
@@ -98,6 +113,7 @@ const BrokerLedger = () => {
     setSelectedContractor([]);
     setSelectedBlock([]);
     setSelectedPlot([]);
+    setplotStatus([]);
   };
 
   useEffect(() => {
@@ -124,6 +140,22 @@ const BrokerLedger = () => {
     setFilteredPlots([...plots]);
   }, [selectedProject, transaction]);
 
+  let finalBalance = 0;
+  let finalPable = 0;
+  let finalPaid = 0;
+
+  console.log("aaaaaaaaaaaaa", filteredBookings);
+
+  filteredBookings.forEach((obj) => {
+    finalBalance += parseInt(obj.totalBalance);
+    finalPable += parseInt(obj.totalPayable);
+    finalPaid += parseInt(obj.totalPaid);
+  });
+
+  console.log("Final Balance:", finalBalance);
+  console.log("Final Payable:", finalPable);
+  console.log("Final Paid:", finalPaid);
+
   return (
     <>
       <Center>
@@ -131,43 +163,6 @@ const BrokerLedger = () => {
       </Center>
       <Box maxW={"100%"} overflowX={"scroll"} marginTop={"2rem"}>
         <Flex justifyContent={"space-evenly"}>
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select Projects
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <Checkbox
-                  isChecked={selectedProject.includes("Select All")}
-                  onChange={() =>
-                    handleCheckboxChange(
-                      "Select All",
-                      selectedProject,
-                      setSelectedProject
-                    )
-                  }
-                >
-                  Select All
-                </Checkbox>
-              </MenuItem>
-              {projectOptions.map((project) => (
-                <MenuItem key={project}>
-                  <Checkbox
-                    isChecked={selectedProject.includes(project)}
-                    onChange={() =>
-                      handleCheckboxChange(
-                        project,
-                        selectedProject,
-                        setSelectedProject
-                      )
-                    }
-                  >
-                    {project}
-                  </Checkbox>
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Select Broker
@@ -205,6 +200,44 @@ const BrokerLedger = () => {
               ))}
             </MenuList>
           </Menu>
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Select Projects
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Checkbox
+                  isChecked={selectedProject.includes("Select All")}
+                  onChange={() =>
+                    handleCheckboxChange(
+                      "Select All",
+                      selectedProject,
+                      setSelectedProject
+                    )
+                  }
+                >
+                  Select All
+                </Checkbox>
+              </MenuItem>
+              {projectOptions.map((project) => (
+                <MenuItem key={project}>
+                  <Checkbox
+                    isChecked={selectedProject.includes(project)}
+                    onChange={() =>
+                      handleCheckboxChange(
+                        project,
+                        selectedProject,
+                        setSelectedProject
+                      )
+                    }
+                  >
+                    {project}
+                  </Checkbox>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Select Blocks
@@ -275,6 +308,39 @@ const BrokerLedger = () => {
               ))}
             </MenuList>
           </Menu>
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Plot Status
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Checkbox
+                  isChecked={plotStatus.includes("Select All")}
+                  onChange={() =>
+                    handleCheckboxChange(
+                      "Select All",
+                      plotStatus,
+                      setplotStatus
+                    )
+                  }
+                >
+                  Select All
+                </Checkbox>
+              </MenuItem>
+              {filterplotStatus.map((plot) => (
+                <MenuItem key={plot}>
+                  <Checkbox
+                    isChecked={plotStatus.includes(plot)}
+                    onChange={() =>
+                      handleCheckboxChange(plot, plotStatus, setplotStatus)
+                    }
+                  >
+                    {plot}
+                  </Checkbox>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
           <Button ml={2} onClick={clearFilters} colorScheme="red">
             Clear Filters
           </Button>
@@ -303,6 +369,9 @@ const BrokerLedger = () => {
                       SrNo
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
+                      Broker
+                    </Th>
+                    <Th border="1px solid black" color={"white"} p={"26px"}>
                       Project
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
@@ -312,59 +381,117 @@ const BrokerLedger = () => {
                       Plot
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
-                      Broker
+                      Plot Status
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
+                      Registry Date
+                    </Th>
+                    {/* <Th border="1px solid black" color={"white"} p={"26px"}>
+                      Date
+                    </Th> */}
+                    {/* <Th border="1px solid black" color={"white"} p={"26px"}>
                       Net Amt
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
                       Brokerage
-                    </Th>
-                    <Th border="1px solid black" color={"white"} p={"26px"}>
+                    </Th> */}
+                    {/* <Th border="1px solid black" color={"white"} p={"26px"}>
                       Amt
-                    </Th>
+                    </Th> */}
                     <Th border="1px solid black" color={"white"} p={"26px"}>
-                      Total Payable
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Payable</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{finalPable}</p>
+                      </div>
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
                       {" "}
-                      Total Paid
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Paid</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{finalPaid}</p>
+                      </div>
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
                       {" "}
-                      Total Bal
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Bal</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        <p style={{ color: "yellow" }}>{finalBalance}</p>
+                      </div>
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"26px"}>
+                    {/* <Th border="1px solid black" color={"white"} p={"26px"}>
                       Cheq
-                    </Th>
-                    <Th border="1px solid black" color={"white"} p={"26px"}>
-                      Date
                     </Th>
                     <Th border="1px solid black" color={"white"} p={"26px"}>
                       {" "}
                       Remakrs
-                    </Th>{" "}
+                    </Th>{" "} */}
                   </Tr>
                 </Thead>
                 <Tbody>
                   {filteredBookings.map((data, index) => (
                     <Tr key={data.srNo}>
                       <Td border="1px solid black">{index + 1}</Td>
+                      <Td border="1px solid black">{data.broker}</Td>
                       <Td border="1px solid black">{data.projectName}</Td>
                       <Td border="1px solid black">{data.blockName}</Td>
                       <Td border="1px solid black">{data.plotNo}</Td>
-                      <Td border="1px solid black">{data.broker}</Td>
+                      <Td border="1px solid black">{data.plotstatus}</Td>
+                      <Td border="1px solid black">
+                        {formatDate(data.transactionDate)}
+                      </Td>
 
-                      <Td border="1px solid black">{data.netAmount}</Td>
-                      <Td border="1px solid black">{data.brokerage}</Td>
+                      {/* <Td border="1px solid black">
+                        {formatDate(data.transactionDate)}
+                      </Td> */}
+                      {/* <Td border="1px solid black">{data.netAmount}</Td>
+                      <Td border="1px solid black">{data.brokerage}</Td> */}
 
-                      <Td border="1px solid black">{data.amount}</Td>
+                      {/* <Td border="1px solid black">{data.amount}</Td> */}
                       <Td border="1px solid black">{data.totalPayable}</Td>
                       <Td border="1px solid black">{data.totalPaid}</Td>
                       <Td border="1px solid black">{data.totalBalance}</Td>
-                      <Td border="1px solid black">{data.cheq}</Td>
-                      <Td border="1px solid black">{data.date}</Td>
-                      <Td border="1px solid black">{data.remarks}</Td>
+                      {/* <Td border="1px solid black">{data.cheq}</Td> */}
+
+                      {/* <Td border="1px solid black">{data.remarks}</Td> */}
                     </Tr>
                   ))}
                 </Tbody>
