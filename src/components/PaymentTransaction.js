@@ -35,7 +35,9 @@ import { useData } from "../Context";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { Link } from "react-router-dom";
 const PaymentTransaction = () => {
-
+  
+  const previousData = JSON.parse(localStorage.getItem("data"))
+  console.log("previos", previousData)
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const { constructionData, setConstructionData } = useData();
   const [displa, setdisplay] = useState(false);
@@ -49,7 +51,7 @@ const PaymentTransaction = () => {
   const [blockName, setBlockname] = useState("");
   const [plotName, setPlotName] = useState("");
   const [contractorName, setcontractorName] = useState("");
-  const [brokerName, setbrokerName] = useState(" ");
+  const [brokerName, setbrokerName] = useState("");
   const [brokerData, setbrokerData] = useState([]);
   const [showButtons, setShowButtons] = useState(true);
   const [showPayment, setShowPayment] = useState(true);
@@ -80,6 +82,8 @@ const PaymentTransaction = () => {
   const [transferAllBlock, setTransferAllBlock] = useState([]);
   const [transferAllPlot, setTransferAllPlot] = useState([]);
   const [AllPlot, setAllPlot] = useState([]);
+ 
+ 
   useEffect(() => {
     const updatedTransactionData = transactionData.map((res, index) => {
       if (transferredRows.includes(index)) {
@@ -1669,6 +1673,22 @@ const PaymentTransaction = () => {
     navigate("/brokertransaction", { state: { constructionData } });
   };
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("data");
+    console.log("sfdgjkfd", storedData)
+    if (storedData) {
+      const { projectName, blockName, plotNo, plotType } = JSON.parse(
+        storedData
+      );
+      setProjectName(projectName);
+      setBlockname(blockName);
+      // setPlotNo(plotNo);
+      // setPlotType(plotType);
+    }
+  }, []);
+
   return (
     <Box display={"flex"} height={"100vh"} maxW={"100vw"} ref={componentRef}>
       <Box flex={"20%"} borderRight={"1px solid grey"}>
@@ -1695,12 +1715,12 @@ const PaymentTransaction = () => {
                   return (
                     <option
                       key={project.projectName}
-                      value={project.projectName}
+                      value={ project.projectName}
                     >
-                      {project.projectName}
+                      { project.projectName}
                     </option>
                   );
-                })}
+                })} 
               </Select>
             </Flex>
           </FormControl>
@@ -1725,7 +1745,7 @@ const PaymentTransaction = () => {
               >
                 {blockData.map((block) => {
                   return (
-                    <option key={block.blockName} value={block.blockName}>
+                    <option key={block.blockName} value={previousData.blockName ||  block.blockName}>
                       {block.blockName}
                     </option>
                   );

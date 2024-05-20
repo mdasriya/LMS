@@ -19,12 +19,14 @@ import {
   MenuItem,
   Button,
   Text,
+  Select,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const ContractorLedger = () => {
   const [transaction, setTransaction] = useState([]);
+  const [temp, setTemp] = useState([]);
   const [selectedProject, setSelectedProject] = useState([]);
   const [selectedContractor, setSelectedContractor] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +56,7 @@ const ContractorLedger = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           setTransaction(response.data.phpresult);
+          setTemp(response.data.phpresult);
         }
       }
       setLoading(false);
@@ -108,14 +111,14 @@ const ContractorLedger = () => {
   //   return `${day}-${month}-${year}`;
   // };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    console.log('zzzzzzzzzzzzzz',day,month,year)
-    return `${day}-${month}-${year}`;
-  };
+  // const formatDate = (dateString) => {
+  //   const date = new Date(dateString);
+  //   const day = String(date.getDate()).padStart(2, "0");
+  //   const month = String(date.getMonth() + 1).padStart(2, "0");
+  //   const year = date.getFullYear();
+  //   console.log('zzzzzzzzzzzzzz',day,month,year)
+  //   return `${day}-${month}-${year}`;
+  // };
 
 
   useEffect(() => {
@@ -143,6 +146,22 @@ const ContractorLedger = () => {
   }, [selectedProject, transaction]);
   
 
+  const  handleBalance = (val) => {
+    if(val === "0"){
+
+      const newTransction = temp.filter((item)=> item.totalBalance == "0")
+      console.log("newTran", newTransction)
+      setTransaction(newTransction)
+    }else{
+      const newTransction = temp.filter((item)=> item.totalBalance != "0")
+      console.log("newTran", newTransction)
+      setTransaction(newTransction)
+    }
+   
+  }
+
+
+
 useEffect(()=> {
   const totalSum = filteredBookings.reduce((accumulator, currentValue) => {
     return accumulator + parseInt(currentValue.totalPayable);
@@ -150,6 +169,27 @@ useEffect(()=> {
 
   console.log("totalSum",totalSum)
 },[selectedProject,transaction])
+
+
+
+
+let finalBalance = 0;
+  let finalPable = 0;
+  let finalPaid = 0;
+
+  console.log("aaaaaaaaaaaaa", filteredBookings);
+
+  filteredBookings.forEach((obj) => {
+    finalBalance += parseInt(obj.totalBalance);
+    finalPable += parseInt(obj.totalPayable);
+    finalPaid += parseInt(obj.totalPaid);
+  });
+
+  console.log("Final Balance:", finalBalance);
+  console.log("Final Payable:", finalPable);
+  console.log("Final Paid:", finalPaid);
+
+
 
   return (
     <>
@@ -307,6 +347,14 @@ useEffect(()=> {
               ))}
             </MenuList>
           </Menu>
+          <Select width={"200px"} onChange={(e)=>handleBalance(e.target.value)} placeholder='Select Total Amt Balance'>
+  <option value='0'>Zero</option>
+  <option value='nonZero'>Non-Zero</option>
+  
+</Select>
+
+
+
           <Button ml={2} onClick={clearFilters} colorScheme="red">
             Clear Filters
           </Button>
@@ -352,16 +400,72 @@ useEffect(()=> {
                     {/* <Th border="1px solid black" color={"white"} p={"22px"}>
                       Less (%)
                     </Th> */}
-                    <Th border="1px solid black" color={"white"} p={"22px"}>
-                      Total Amt Payable
+                     <Th border="1px solid black" color={"white"} p={"26px"}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Amt Payable</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                       
+                        {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPable}</p> : "0"} 
+                        
+                      </div>
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"22px"}>
-                      Total Amt Paid
+                  
+                  
+                    <Th border="1px solid black" color={"white"} p={"26px"}>
+                      {" "}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Amt Paid</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+                        {/* <p style={{ color: "yellow" }}>{finalPaid}</p> */}
+                        {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalPaid}</p> : "0"}    
+                      </div>
                     </Th>
-                    <Th border="1px solid black" color={"white"} p={"22px"}>
-                      Total Amt Bal
-                    </Th>{" "}
                    
+                   
+                    <Th border="1px solid black" color={"white"} p={"26px"}>
+                      {" "}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <p>Total Amt Bal</p>
+                        <p
+                          style={{
+                            margin: "0 10px 0 10px",
+                          }}
+                        >
+                          :-
+                        </p>
+             {selectedContractor.length>0 ? <p style={{ color: "yellow" }}>{finalBalance}</p> : "0"}          
+                      </div>
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody>

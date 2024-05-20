@@ -27,6 +27,7 @@ import { useData } from "../Context";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useReactToPrint } from "react-to-print";
+import { useNavigate } from "react-router-dom";
 
 const ContractorTransaction = () => {
   const { constructionData } = useData();
@@ -50,15 +51,18 @@ const ContractorTransaction = () => {
     date: "",
   });
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-    onBeforeGetContent: () => {
-      setIsPrinting(false);
-    },
-    onAfterPrint: () => {
-      setIsPrinting(true);
-    },
-  });
+
+
+
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current,
+  //   onBeforeGetContent: () => {
+  //     setIsPrinting(false);
+  //   },
+  //   onAfterPrint: () => {
+  //     setIsPrinting(true);
+  //   },
+  // });
   const loadAmounts = async () => {
     const { projectName, blockName, contractor, plotNo } = constructionData;
 
@@ -229,6 +233,13 @@ const ContractorTransaction = () => {
     }
   };
 
+  const navigate = useNavigate();
+
+  const handlePrevious = () => {
+    localStorage.setItem("data", JSON.stringify(constructionData))
+    navigate("/PaymentTransaction")
+  }
+
   // Calculate total payable only once when the component mounts
   useEffect(() => {
     const amtPayable =
@@ -322,10 +333,15 @@ const ContractorTransaction = () => {
       console.error("Error updating contractor transaction:", error.message);
     }
   };
+ 
+
   useEffect(() => {
     loadData();
     loadAmounts();
   }, []);
+
+
+
   return (
     <Box display={"flex"} height={"100vh"} maxW={"100vw"} ref={componentRef}>
       <Box flex={"22%"} borderRight={"1px solid grey"}>
@@ -370,6 +386,13 @@ const ContractorTransaction = () => {
           <Text fontSize={"18px"} fontWeight={"semibold"}>
             Bal :- {totalBalance}
           </Text>{" "}
+            {/* go to previous */}
+        <Box>
+        <Button colorScheme='blue' variant='outline' ml={5} onClick={handlePrevious}>
+    Go To Previous
+  </Button>
+        </Box>
+          {/* go to previous */}
         </VStack>
       </Box>
       <Box flex={"80%"} maxW={"80%"}>

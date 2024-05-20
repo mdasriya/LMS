@@ -25,13 +25,14 @@ import {
 import { useData } from "../Context";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const BrokerTransaction = () => {
   const { constructionData } = useData();
   const toast = useToast();
   const [fetchData, setFetchData] = useState([]);
   const [masterData, setMasterData] = useState([]);
-
+  const [paymentSubmitLoading, setPaymentSubmitLOading] = useState(false);
   const [netAmount, setNetAmount] = useState(0);
   const [brokerageValue, setBrokerageValue] = useState(0);
   const [totalPayable, setTotalPayable] = useState(0);
@@ -132,6 +133,7 @@ const BrokerTransaction = () => {
   }, [netAmount, brokerageValue, totalPaid]); // Make sure totalPaid is in the dependency array
 
   const handlePaymentSubmit = async () => {
+    setPaymentSubmitLOading(true);
     try {
       const paidAmount = parseFloat(amount);
       const updatedTotalPaid = Number(totalPaid) + paidAmount;
@@ -174,9 +176,11 @@ const BrokerTransaction = () => {
 
       if (response.status === 200) {
         console.log("Payment transaction saved successfully:", response.data);
+        setPaymentSubmitLOading(false);
         // Optionally, you can update state variables or perform any additional actions after successful submission
       } else {
         console.error("Failed to save payment transaction:", response.data);
+        setPaymentSubmitLOading(false);
       }
       setTotalPaid(updatedTotalPaid);
       setAmountBalance(updatedAmountBalance);
@@ -188,6 +192,7 @@ const BrokerTransaction = () => {
       setRemarks("");
       setAmount("");
     } catch (error) {
+      setPaymentSubmitLOading(false);
       console.error("Error submitting payment:", error.message);
     }
   };
@@ -206,8 +211,8 @@ const BrokerTransaction = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           setFetchData(response.data.phpresult);
-          console.log("data coming");
-          console.log(response.data.phpresult);
+          // console.log();
+          console.log("data coming", response.data.phpresult);
         }
       }
     } catch (error) {
@@ -370,6 +375,12 @@ const BrokerTransaction = () => {
       console.error("Error updating contractor transaction:", error.message);
     }
   };
+
+
+
+
+
+
   useEffect(() => {
     loadData();
     loadMasterData();
@@ -408,7 +419,13 @@ const BrokerTransaction = () => {
           <Text fontSize={"18px"} fontWeight={"semibold"}>
             Amount Balance :- {amountBalance}
           </Text>
+         
         </VStack>
+
+
+     
+
+
       </Box>
       <Box flex={"85%"} maxW={"80%"}>
         <Text marginLeft={"10px"}>Broker Transaction</Text>
@@ -459,16 +476,30 @@ const BrokerTransaction = () => {
                 onChange={(e) => setRemarks(e.target.value)} // Update state onChange
               />
             </FormControl>
-            <Button
-              colorScheme="telegram"
-              alignSelf={"flex-end"}
-              size={"md"}
-              w={"60%"}
-              mt={"30px"}
-              onClick={handlePaymentSubmit}
-            >
-              Submit
-            </Button>
+            {paymentSubmitLoading ? (
+              <Button
+                isLoading
+                colorScheme="telegram"
+                alignSelf={"flex-end"}
+                size={"md"}
+                w={"60%"}
+                mt={"30px"}
+                // onClick={handlePaymentSubmit}
+              >
+                Submit
+              </Button>
+            ) : (
+              <Button
+                colorScheme="telegram"
+                alignSelf={"flex-end"}
+                size={"md"}
+                w={"60%"}
+                mt={"30px"}
+                onClick={handlePaymentSubmit}
+              >
+                Submit
+              </Button>
+            )}
           </HStack>
         </Box>
         <Table variant="simple" marginTop={"20px"} size="sm">

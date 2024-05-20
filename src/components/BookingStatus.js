@@ -39,6 +39,7 @@ const BookingStatus = () => {
   const [selectedPlotstatus, setSelectedPlotstatus] = useState([]);
   const [selectedFromDate, setSelectedFromDate] = useState("");
   const [selectedToDate, setSelectedToDate] = useState("");
+  
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(null)
@@ -134,14 +135,19 @@ if(selectedProject.length>0){
     }
   };
 
-const handleFind = () => {
-  console.log("fro",(selectedFromDate))
-  console.log("to",(selectedToDate))
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+  };
 
-  const filterArray = status.filter(item => item.bookingDate>= selectedFromDate && item.bookingDate<= selectedToDate)
- 
-setBooking(filterArray)
-}
+  const handleFind = () => {
+    console.log("From Date:", formatDate(selectedFromDate));
+    console.log("To Date:", formatDate(selectedToDate));
+console.log("status",status)
+    // Example filter logic (commented out)
+    const filterArray = status.filter(item => item.bookingDate >= selectedFromDate && item.bookingDate <= selectedToDate);
+    setBooking(filterArray);
+  };
 
 
 
@@ -194,21 +200,11 @@ const plotStatus = getUniqueValues("plotStatus");
     loadDate();
     setSelectedFromDate("")
     setSelectedToDate("")
-  }, [selectedFromDate]);
+  }, []);
 
- console.log("181 filter", filteredBookings)
-// console.log("bookings", bookings)
-// console.log("filter", bookings)
-console.log("component render")
+ console.log("render")
+ console.log("select", selectedFromDate)
 
-
-// setCount(filteredBookings.length)
-
-// console.log(filteredBookings.length)
-console.log("component render")
-// useEffect(()=> {
-//   console.log("inside useEffect")
-//   },[bookings])
   return (
     <>
    
@@ -496,7 +492,7 @@ console.log("component render")
             )
             .map((book) => (
               <React.Fragment key={book.id}>
-                {console.log(book.bookingDate)}
+                
                 <Td>{book.bookingDate}</Td>
                 <Td>{book.customerName}</Td>
                 <Td>{book.customerContact}</Td>
