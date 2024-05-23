@@ -21,6 +21,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaChevronDown } from "react-icons/fa";
 import { RiFlashlightFill } from "react-icons/ri";
+import ProfileDropdown from "./components/ProfileDropdown";
 
 const Nav = ({ isLoggedIn, handleLogout }) => {
   const navigate = useNavigate();
@@ -219,21 +220,7 @@ const Nav = ({ isLoggedIn, handleLogout }) => {
         </HStack>
 
         {/* Render the Logout button on the right side */}
-        <Box ml="auto">
-          {!isMobile && (
-            <Button
-              bg={"blue.500"}
-              color={"white"}
-              _hover={{
-                background: "blue.400",
-                color: "white",
-              }}
-              onClick={handleLogoutClick}
-            >
-              Logout
-            </Button>
-          )}
-        </Box>
+        <ProfileDropdown handleLogout={handleLogout}/>
       </Flex>
 
       {/* Mobile Screen Links */}
