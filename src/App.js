@@ -30,6 +30,7 @@ import ContractorLedger from "./components/ContractorLedger";
 import BrokerLedger from "./components/BrokerLedger";
 import ContractorTransaction from "./components/ContractorTransaction";
 import BrokerTransaction from "./components/BrokerTransaction";
+import Profile from "./components/Profile";
 
 const App = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -386,6 +387,19 @@ const App = () => {
                     handleLogout={handleLogout}
                   />{" "}
                   <BrokerTransaction />{" "}
+                </>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <>
+                  {" "}
+                  <Nav
+                    isLoggedIn={isLoggedIn}
+                    handleLogout={handleLogout}
+                  />{" "}
+                  <Profile />{" "}
                 </>
               }
             />

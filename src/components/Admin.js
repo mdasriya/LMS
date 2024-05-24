@@ -32,7 +32,8 @@ const Admin = ({ onLogin }) => {
 
     if (email === validEmail && password === validPassword) {
       const adminData = {
-        email: validEmail,
+        email: email,
+        
       };
       localStorage.setItem("adminData", JSON.stringify(adminData));
 
