@@ -437,6 +437,8 @@ const plotStatus = getUniqueValues("plotStatus");
     <> <FormLabel fontWeight={700} >Total Booking : ({filteredBookings.length})</FormLabel> <Box  w={"100%"}> <Table variant="simple"  w={"100%"} colorScheme="blue">
     <Thead>
       <Tr bg="gray.800" >
+
+        <Th color="white">Sr No.</Th>
         <Th color="white">ProjectName</Th>
         <Th color="white">BlockName</Th>
         <Th color="white">PlotNo.</Th>
@@ -461,6 +463,7 @@ const plotStatus = getUniqueValues("plotStatus");
             cursor: "pointer",
           }}
         >
+          <Td>{index+1}</Td>
           <Td fontWeight={700}>{plotItem.projectName}</Td>
           <Td>{plotItem.blockName}</Td>
           <Td>{plotItem.plotNo}</Td>
@@ -478,7 +481,7 @@ const plotStatus = getUniqueValues("plotStatus");
               {plotItem.plotStatus}
             </Badge>}    */}
             {plotItem.plotStatus === "Booked" && <FormLabel bg={"yellow"} textAlign={"center"} p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
-            {plotItem.plotStatus === "Available" && <Box display={"flex"}> <FormLabel p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel> {plotItem.plotStatus === "Available" ? <Button size={"xs"} colorScheme='green'>Change Hold</Button> : <Button size={"xs"} colorScheme="black">Change Available</Button>}   </Box>}
+            {plotItem.plotStatus === "Available" && <Box> <FormLabel p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel> {plotItem.plotStatus === "Available" ? <Button size={"xs"} colorScheme='green'>Change Hold</Button> : <Button size={"xs"} colorScheme="black">Change Available</Button>}   </Box>}
             {plotItem.plotStatus === "Registered" && <FormLabel bg={"green"} p={"1px"} color={"white"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
          
           </Td>

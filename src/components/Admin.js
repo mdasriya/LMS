@@ -31,9 +31,10 @@ const Admin = ({ onLogin }) => {
     const validPassword = "admin123";
 
     if (email === validEmail && password === validPassword) {
+     
       const adminData = {
         email: email,
-        
+        rights:"admin"
       };
       localStorage.setItem("adminData", JSON.stringify(adminData));
 
@@ -89,7 +90,7 @@ const Admin = ({ onLogin }) => {
           >
             <VStack spacing={4} w="100%">
               <FormControl id="email">
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Enter Your ID</FormLabel>
                 <Input
                   rounded="md"
                   type="email"

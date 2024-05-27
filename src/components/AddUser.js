@@ -63,6 +63,7 @@ const AddUser = () => {
     userAddress: "",
     userCity: "",
     userState: "",
+    userStatus:"active"
   });
   const passwordMatch = formData.password === formData.confirmPassword;
   const handleChange = (e) => {
@@ -97,9 +98,11 @@ const AddUser = () => {
     formDataObject.append("userAddress", formData.userAddress);
     formDataObject.append("userCity", formData.userCity);
     formDataObject.append("userState", formData.userState);
+    formDataObject.append("userStatus", formData.userStatus);
 
     // Add your logic for making an API request to add the user
     try {
+    
       const response = await fetch("https://lkgexcel.com/backend/adduser.php", {
         method: "POST",
         body: formDataObject,

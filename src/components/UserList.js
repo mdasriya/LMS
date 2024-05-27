@@ -33,6 +33,9 @@ const UserList = () => {
   const toast = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editFormData, setEditFormData] = useState({});
+const [loginState, setState] = useState(false)
+
+
 
   const fetchData = async () => {
     try {
@@ -152,6 +155,11 @@ const UserList = () => {
     }
   };
 
+
+ const handleUserStatus = (userDetails) => {
+console.log("userDetails", userDetails)
+  }
+
   return (
     <>
       <Box p={4} width="100%" margin="auto">
@@ -167,27 +175,30 @@ const UserList = () => {
           </Center>
         ) : (
           <Table variant="simple">
-            <Thead>
+            <Thead bg={"black"}>
               <Tr>
-                <Th bg="blue.500" color="white" fontSize="14px">
+                <Th bg="black" color="white" fontSize="14px">
                   ID
                 </Th>
-                <Th bg="blue.500" color="white" fontSize="14px">
+                <Th bg="black" color="white" fontSize="14px">
                   Name
                 </Th>
-                <Th bg="blue.500" color="white" fontSize="14px">
+                <Th bg="black" color="white" fontSize="14px">
                   Email
                 </Th>
-                <Th bg="blue.500" color="white" fontSize="14px">
+                <Th bg="black" color="white" fontSize="14px">
                   Address
                 </Th>
-                <Th bg="blue.500" color="white" fontSize="14px">
+                <Th bg="black" color="white" fontSize="14px">
                   City
                 </Th>
-                <Th bg="blue.500" color="white" fontSize="14px">
+                <Th bg="black" color="white" fontSize="14px">
                   State
                 </Th>
-                <Th bg="blue.500" color="white" fontSize="14px">
+                <Th bg="black" color="white" fontSize="14px">
+                  Login Status
+                </Th>
+                <Th bg="black" color="white" fontSize="14px">
                   Actions
                 </Th>
               </Tr>
@@ -202,6 +213,14 @@ const UserList = () => {
                     <Td>{user.userAddress}</Td>
                     <Td>{user.userCity}</Td>
                     <Td>{user.userState}</Td>
+                 
+                  
+                   {loginState ? <Td> <Button colorScheme='green' size='sm' onClick={()=>handleUserStatus(user)}>
+    Active
+  </Button> </Td> : <Td> <Button colorScheme='red' size='sm' onClick={()=>handleUserStatus(user)}>
+   In Active
+  </Button> </Td>}
+                  
                     <Td>
                       <HStack>
                         <Button

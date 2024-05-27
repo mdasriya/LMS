@@ -44,6 +44,10 @@ const AddPlot = () => {
   const [getblock, setBlock] = useState([]);
   const [plot, setPlot] = useState([]);
   const [selectedProject, setSelectedProject] = useState("");
+const [availableRateUpdate, setAvailableRateUpdate] = useState([])
+
+
+
 
   const [formData, setFormData] = useState({
     projectName: "",
@@ -73,6 +77,10 @@ const AddPlot = () => {
     plotType: "",
     plotStatus: "Available",
   });
+const [updatePlotRate, setUpadtePlotRate] = useState("")
+const [editPlotLoading, setEditLoading] = useState(false)
+
+
 
   const fetchDataProject = async () => {
     try {
@@ -111,12 +119,48 @@ const AddPlot = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
 
+
+    // console.log("inside function")
+    //  if(name === "blockName"){
+    //   console.log("inside block if")
+    //   setBlockSelect(value)
+    //  }
+     if(name === "projectName"){
+      console.log("inside project if")
+      const result = plot.filter((item) => item.projectName == value)
+      setAvailableRateUpdate(result)
+      setFilteredMaster(result)
+     
+     }
+     if(name === "blockName" ){
+      console.log("inside block if")
+      const result = availableRateUpdate.filter((item) => item.blockName == value)
+      setAvailableRateUpdate(result)
+      setFilteredMaster(result)
+     }
+    //  if(blockSelect && plotSelect){
+    //   console.log("condition")
+    // const result = plot.filter((item) => item.blockName == blockSelect  && item.projectName == plotSelect)
+    // console.log("final filter", result) 
+    //  }
+
+
+
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
 const result = plot.filter((item) => item.projectName == value)
 if(result.length>0){
   setFinalPlot(result)
+  //  setFilteredMaster(result)
+  // console.log("re", result)
 }
+
+if(!value){
+  setFilteredMaster(plot)
+}
+
+
+
     if (name === "projectName") {
       setSelectedProject(value);
     }
@@ -141,6 +185,7 @@ if(result.length>0){
       setEditableRatePerSqft(matchCase.ratePerSqft || "");
     }
   };
+ 
 
   const onAddPlot = async (e) => {
     e.preventDefault();
@@ -264,6 +309,7 @@ if(found.length>0){
   }, [formData.blockName, formData.projectName, getblock]);
 
   const handleEditPlotSubmit = async (e) => {
+    setEditLoading(true)
     e.preventDefault();
 
     const url = "https://lkgexcel.com/backend/editplot.php";
@@ -284,7 +330,7 @@ if(found.length>0){
 
       if (response && response.data && response.data.status === "success") {
         console.log("Plot updated successfully:", response.data.message);
-
+        setEditLoading(false)
         toast({
           title: "Plot updated successfully!",
           status: "success",
@@ -296,7 +342,7 @@ if(found.length>0){
         fetchDataPlot();
       } else {
         console.error("Error updating plot:", response.data.message);
-
+        setEditLoading(false)
         toast({
           title: "Error updating plot",
           status: "error",
@@ -308,7 +354,7 @@ if(found.length>0){
       }
     } catch (error) {
       console.error("Error in handleEditPlotSubmit:", error);
-
+      setEditLoading(false)
       toast({
         title: "Error updating plot",
         status: "error",
@@ -320,13 +366,23 @@ if(found.length>0){
     }
   };
 
+const handleupdatePlotRate = () =>{
+   console.log("updated plot rate", updatePlotRate)
+setUpadtePlotRate("")
+  const AvailablePlot = filteredMaster.filter((item) => item.plotStatus === "Available")
+// console.log("filter", AvailablePlot)
+
+const newfilter = AvailablePlot.map((item) => item.ratePerSqft = updatePlotRate)
+console.log(newfilter)
+}
+
   useEffect(() => {
     fetchDataProject();
     fetchDataPlot();
     fetchDataBlock();
   }, []);
 
-  console.log("plotttt",plot)
+  // console.log("plotttt",plot)
   return (
     <>
       <Box p={4} width="100%">
@@ -466,13 +522,14 @@ if(found.length>0){
               Add Plot
             </Button>
           </Grid>
-          <Center></Center>
+        
         </form>
       </Box>
       <Box>
-        <Center mb={"15px"}>
+        <hr />
+        <Box mb={"15px"} mt={5} p={"0px 10px"} display={"flex"} justifyContent={"space-between"}>
           <VStack>
-            <Heading fontSize={"25px"}>Plot Details</Heading>
+            {/* <Heading fontSize={"25px"}>Plot Details</Heading> */}
             <Input
               type="text"
               w={"100%"}
@@ -480,14 +537,34 @@ if(found.length>0){
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <PaginationControl
+          </VStack>
+
+{/* update plot rate start */}
+<Box display={"flex"} gap={5}>
+            
+            <Input
+              type="number"
+              w={"100%"}
+              placeholder="Enter Plot Rate"
+              value={updatePlotRate}
+              onChange={(e)=> setUpadtePlotRate(e.target.value)}
+            />
+           <Button bg={"black"} colorScheme="none" color={"white"} onClick={handleupdatePlotRate}>Upadte</Button> 
+          </Box>
+
+
+{/* update plot rate end */}
+<Box>
+<PaginationControl
               changePage={changePage}
               page={currentPage}
               total={totalItems}
               limit={itemsPerPage}
             />
-          </VStack>
-        </Center>
+</Box>
+
+
+        </Box>
         <Table variant="simple" colorScheme="blue">
           <Thead>
             <Tr>
@@ -565,6 +642,7 @@ if(found.length>0){
                           blockName: plotItem.blockName,
                           areaSqft: plotItem.areaSqft,
                           areaSqmt: plotItem.areaSqmt,
+                          plotNo: plotItem.plotNo,
                           ratePerSqft: plotItem.ratePerSqft,
                           plotType: plotItem.plotType,
                           plotStatus: plotItem.plotStatus,
@@ -688,9 +766,11 @@ if(found.length>0){
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" type="submit">
+            {editPlotLoading ?   <Button colorScheme=" blue" isLoading>
                 Save Changes
-              </Button>
+              </Button> :   <Button colorScheme="blue" type="submit">
+                Save Changes
+              </Button>}
               <Button onClick={() => setIsModalOpen(false)} ml={4}>
                 Cancel
               </Button>

@@ -41,7 +41,7 @@ const App = () => {
   const handleLogin = () => {
     const adminData = {
       email: "admin@example.com",
-      password: "admin123",
+      rights:"admin"
     };
   
     // Set adminData in localStorage

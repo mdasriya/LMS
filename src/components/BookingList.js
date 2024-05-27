@@ -269,6 +269,11 @@ const BookingList = () => {
   allTotle.CashAmountPayable = cashAmountPayable;
 
   console.log("All Totle : ", allTotle);
+
+  const handleTally = (props) => {
+    console.log("tallydata", props);
+  };
+
   return (
     <>
       <Center>
@@ -733,9 +738,15 @@ const BookingList = () => {
                     <Th border="1px solid black" color={"white"}>
                       remarks
                     </Th>
-                    {/* <Th>registryDate</Th>
-                <Th>Action</Th>
-                <Th>Status</Th> */}
+                    <Th border="1px solid black" color={"white"}>
+                      registryDate
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      Tallied / not
+                    </Th>
+                    <Th border="1px solid black" color={"white"}>
+                      Action
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -752,66 +763,100 @@ const BookingList = () => {
                             ? "green.200"
                             : "transparent"
                         }
+                      
                       >
-                        <Td border="1px solid black">{index + 1}</Td>
-                        <Td border="1px solid black">{data.projectName}</Td>
-                        <Td border="1px solid black">{data.blockName}</Td>
-                        <Td border="1px solid black">{data.plotNo}</Td>
-                        <Td border="1px solid black">{data.plotType}</Td>
-                        <Td border="1px solid black">{data.customerName}</Td>
-                        <Td border="1px solid black">{data.customerAddress}</Td>
-                        <Td border="1px solid black">{data.customerContact}</Td>
-                        <Td border="1px solid black">{data.registryGender}</Td>
-                        <Td border="1px solid black">{data.broker}</Td>
-                        <Td border="1px solid black">{data.areaSqft}</Td>
-                        <Td border="1px solid black">{data.rateAreaSqft}</Td>
-                        <Td border="1px solid black">{data.totalAmount}</Td>
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{index + 1}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.projectName}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.blockName}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.plotNo}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.plotType}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.customerName}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.customerAddress}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.customerContact}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.registryGender}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }}>{data.broker}</Td>
+                        <Td border="1px solid black" sx={{ padding: "0 8px" }} textAlign={"right"}>
+                          {data.areaSqft}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.rateAreaSqft}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.totalAmount}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"center"}>
                           {data.discountApplicable}
                         </Td>
-                        <Td border="1px solid black">{data.discountPercent}</Td>
-                        <Td border="1px solid black">{data.netAmount}</Td>
-                        <Td border="1px solid black">{data.registryAmount}</Td>
-                        <Td border="1px solid black">{data.serviceAmount}</Td>
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.discountPercent}%
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.netAmount}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.registryAmount}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.serviceAmount}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
                           {data.maintenanceAmount}
                         </Td>
-                        <Td border="1px solid black">{data.miscAmount}</Td>
-                        <Td border="1px solid black">{data.grandTotal}</Td>
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.miscAmount}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.grandTotal}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"center"}>
                           {data.constructionApplicable}
                         </Td>
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" textAlign={"center"}>
                           {data.constructionContractor}
                         </Td>
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" textAlign={"right"}>
                           {data.constructionAmount}
                         </Td>
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" textAlign={"right"}>
                           {data.totalAmountPayable}
                         </Td>
-                        <Td border="1px solid black">{data.guidelineAmount}</Td>
-                        <Td border="1px solid black">{data.registryPercent}</Td>
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.guidelineAmount}
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
+                          {data.registryPercent}%
+                        </Td>
+                        <Td border="1px solid black" textAlign={"right"}>
                           {data.bankAmountPayable}
                         </Td>
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" textAlign={"right"}>
                           {data.bookingDate
                             ? new Date(data.bookingDate)
                                 .toLocaleDateString("en-GB")
-                                .replace(/\//g, "-")
+                                .replace(/\//g, "/")
                             : ""}
                         </Td>
 
-                        <Td border="1px solid black">
+                        <Td border="1px solid black" textAlign={"right"}>
                           {data.cashAmountPayable}
                         </Td>
                         <Td border="1px solid black">{data.remarks}</Td>
-                        {/* <Td>{data.registryDate}</Td> */}
-                        {/* <Td>
-                    <Button colorScheme="teal">Tally</Button>
-                  </Td>
-                  <Td>{data.status}</Td> */}
+                        <Td color={"white"} border="1px solid black">
+                          {data.registryDate}
+                        </Td>
+
+                        <Td border="1px solid black" color={"red"}>
+                          {"Not Tallied"}
+                        </Td>
+
+                        <Td border="1px solid black">
+                          <Button
+                            colorScheme="teal"
+                            onClick={() => handleTally(data)}
+                          >
+                            Tally
+                          </Button>
+                        </Td>
                       </Tr>
                     );
                   })}

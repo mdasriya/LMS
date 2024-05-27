@@ -43,6 +43,7 @@ const TransactionReport = () => {
   const [talliedStatus, setTalliedStatus] = useState({});
   const [selectedRowIndex, setSelectedRowIndex] = useState(null);
   const [selectPayment, setSelectPayment] = useState("All");
+  const [selectTally, setSelectTally] = useState("All");
 
   const [currentDate, setCurrentDate] = useState(
     new Date().toISOString().split("T")[0]
@@ -58,6 +59,9 @@ const TransactionReport = () => {
 
   const handlePaymentChange = (method) => {
     setSelectPayment(method);
+  };
+  const handleTalliedChange = (method) => {
+    setSelectTally(method);
   };
 
   const handleStatusChange = (status) => {
@@ -89,6 +93,8 @@ const TransactionReport = () => {
 
       if (response && response.data) {
         if (response.data.phpresult) {
+
+      //  console.log(response.data.phpresult)   
           setTransaction(response.data.phpresult);
           console.log("Tansactions : ", response.data.phpresult);
         }
@@ -101,6 +107,8 @@ const TransactionReport = () => {
   useEffect(() => {
     loadTransaction();
   }, []);
+
+
   const getUniqueValues = (key) => {
     return [...new Set(transaction.map((item) => item[key]))];
   };
@@ -129,7 +137,8 @@ const TransactionReport = () => {
         (!selectedStatusEndDate || statusDate <= selectedStatusEndDate) &&
         (selectedStatus[0] === "All" ||
           selectedStatus.includes(item.transactionStatus)) &&
-        (selectPayment === "All" || item.paymentType === selectPayment)
+        (selectPayment === "All" || item.paymentType === selectPayment) &&
+        (selectTally === "All" || item.tallyStatus === selectTally)
       );
     })
     .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -143,6 +152,7 @@ const TransactionReport = () => {
     setSelectedStatus(["All"]);
     setSelectedEndDate(null);
     setSelectPayment("All");
+    setSelectTally("All");
 
     setSelectedStatusEndDate(null);
   };
@@ -349,6 +359,7 @@ const TransactionReport = () => {
               </MenuItem>
             </MenuList>
           </Menu>
+          {/* select paymeny filter start*/}
           <Menu>
             <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
               Select Payment
@@ -383,6 +394,51 @@ const TransactionReport = () => {
               </MenuItem>
             </MenuList>
           </Menu>
+{/* select paymeny filter end*/}
+
+
+
+          {/* select tally filter start*/}
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Select Tally/Not
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Radio
+                  isChecked={selectTally === "All"}
+                  onChange={() => handleTalliedChange("All")}
+                  flexGrow={1}
+                >
+                  All
+                </Radio>
+              </MenuItem>
+              <MenuItem>
+                <Radio
+                  isChecked={selectTally === "tally"}
+                  onChange={() => handleTalliedChange("tallied")}
+                  flexGrow={1}
+                >
+                  Tallied
+                </Radio>
+              </MenuItem>
+              <MenuItem>
+                <Radio
+                  isChecked={selectTally === "notTallied"}
+                  onChange={() => handleTalliedChange("notTallied")}
+                  flexGrow={1}
+                >
+                  Not Tallied
+                </Radio>
+              </MenuItem>
+            </MenuList>
+          </Menu>
+{/* select tally filter end*/}
+
+
+
+
+
           <Box display={"flex"}>
             <FormLabel
               textAlign={"center"}
@@ -450,44 +506,48 @@ const TransactionReport = () => {
           </Box>
           {
             /* In Not working conding */
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<ChevronDownIcon />}
-                marginLeft={"20px"}
-              >
-                Select Tallied/Not
-              </MenuButton>
-              <MenuList>
-                <MenuItem>
-                  <Radio
-                    // isChecked={selectPayment === "All"}
-                    // onChange={() => handlePaymentChange("All")}
-                    flexGrow={1}
-                  >
-                    All
-                  </Radio>
-                </MenuItem>
-                <MenuItem>
-                  <Radio
-                    // isChecked={selectPayment === "Bank"}
-                    // onChange={() => handlePaymentChange("Bank")}
-                    flexGrow={1}
-                  >
-                    Tallied
-                  </Radio>
-                </MenuItem>
-                <MenuItem>
-                  <Radio
-                    // isChecked={selectPayment === "Cash"}
-                    // onChange={() => handlePaymentChange("Cash")}
-                    flexGrow={1}
-                  >
-                    Not Tallied
-                  </Radio>
-                </MenuItem>
-              </MenuList>
-            </Menu>
+            // <Menu>
+            //   <MenuButton
+            //     as={Button}
+            //     rightIcon={<ChevronDownIcon />}
+            //     marginLeft={"20px"}
+            //   >
+            //     Select Tallied/Not
+            //   </MenuButton>
+            //   <MenuList>
+            //     <MenuItem>
+            //       <Radio
+            //         // isChecked={selectPayment === "All"}
+            //         // onChange={() => handlePaymentChange("All")}
+            //         flexGrow={1}
+            //       >
+            //         All
+            //       </Radio>
+            //     </MenuItem>
+            //     <MenuItem>
+            //       <Radio
+            //         // isChecked={selectPayment === "Bank"}
+            //         // onChange={() => handlePaymentChange("Bank")}
+            //         flexGrow={1}
+            //       >
+            //         Tallied
+            //       </Radio>
+            //     </MenuItem>
+            //     <MenuItem>
+            //       <Radio
+            //         // isChecked={selectPayment === "Cash"}
+            //         // onChange={() => handlePaymentChange("Cash")}
+            //         flexGrow={1}
+            //       >
+            //         Not Tallied
+            //       </Radio>
+            //     </MenuItem>
+            //   </MenuList>
+            // </Menu>
+
+
+
+
           }
           <Button ml={2} onClick={clearFilters} colorScheme="red">
             Clear Filters
@@ -670,7 +730,10 @@ const TransactionReport = () => {
                         {data.plotno}
                       </Td>
                       <Td border="1px solid black" p={"10px"}>
-                        {data.date}
+                        {data.date ? new Date(data.date)
+                                .toLocaleDateString("en-GB")
+                                .replace(/\//g, "/")
+                            : ""}
                       </Td>
                       <Td border="1px solid black" p={"10px"}>
                         {data.paymentType}
@@ -719,7 +782,11 @@ const TransactionReport = () => {
                       </Td>
 
                       <Td border="1px solid black" p={"10px"}>
-                        {data.statusDate}
+                        {/* {data.statusDate } */}
+                        {data.statusDate ? new Date(data.statusDate)
+                                .toLocaleDateString("en-GB")
+                                .replace(/\//g, "/")
+                            : ""}
                       </Td>
                       <Td border="1px solid black" p={"10px"}>
                         {data.remarks}

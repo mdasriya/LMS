@@ -206,7 +206,7 @@ const Nav = ({ isLoggedIn, handleLogout }) => {
               </MenuList>
             </Menu>
             <Box>
-              <Text fontWeight={"bold"}>Hello User</Text>
+              <Text fontWeight={"bold"}>Hello Admin</Text>
             </Box>
           </HStack>
 

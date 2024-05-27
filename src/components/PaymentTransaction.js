@@ -2673,7 +2673,10 @@ const PaymentTransaction = () => {
                               : "none",
                         }}
                       >
-                        {res.date}
+                        {res.date ? new Date(res.date)
+                                .toLocaleDateString("en-GB")
+                                .replace(/\//g, "/")
+                            : ""}
                       </Td>
                       <Td
                         border="1px solid black"
@@ -2807,7 +2810,10 @@ const PaymentTransaction = () => {
                               : "none",
                         }}
                       >
-                        {res.statusDate}
+                        {res.statusDate ? new Date(res.statusDate)
+                                .toLocaleDateString("en-GB")
+                                .replace(/\//g, "/")
+                            : ""}
                       </Td>
                       <Td
                         border="1px solid black"

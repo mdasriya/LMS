@@ -463,6 +463,9 @@ const ContractorTransaction = () => {
           <Thead>
             <Tr bg={"#121212"} color={"whitesmoke"}>
               <Th color={"white"} border="1px solid black">
+SR NO.
+              </Th>
+              <Th color={"white"} border="1px solid black">
                 Contractor
               </Th>
               <Th color={"white"} border="1px solid black">
@@ -475,20 +478,21 @@ const ContractorTransaction = () => {
                 Plot
               </Th>
               <Th color={"white"} border="1px solid black">
-                Amount
+                Date
               </Th>
               <Th color={"white"} border="1px solid black">
-                Less(%)
+                Amount
               </Th>
+              {/* <Th color={"white"} border="1px solid black">
+                Less(%)
+              </Th> */}
               <Th color={"white"} border="1px solid black">
                 Cheque
               </Th>{" "}
               <Th color={"white"} border="1px solid black">
                 Remarks
               </Th>
-              <Th color={"white"} border="1px solid black">
-                Date
-              </Th>
+            
               <Th color={"white"} border="1px solid black">
                 Action
               </Th>
@@ -503,15 +507,19 @@ const ContractorTransaction = () => {
                 constructionData.contractor === data.contractor &&
                 constructionData.plotNo === data.plotNo && (
                   <Tr key={index}>
+                    <Td border="1px solid black">{index+1}</Td>
                     <Td border="1px solid black">{data.contractor}</Td>
                     <Td border="1px solid black">{data.projectName}</Td>
                     <Td border="1px solid black">{data.blockName}</Td>
                     <Td border="1px solid black">{data.plotNo}</Td>
+                    <Td border="1px solid black">{data.transactionDate ? new Date(data.transactionDate)
+                                .toLocaleDateString("en-GB")
+                                .replace(/\//g, "/")
+                            : ""}</Td>
                     <Td border="1px solid black">{data.amount}</Td>
-                    <Td border="1px solid black">{data.lessPercent}</Td>
+                    {/* <Td border="1px solid black">{data.lessPercent}</Td> */}
                     <Td border="1px solid black">{data.cheqNo}</Td>
                     <Td border="1px solid black">{data.remarks}</Td>
-                    <Td border="1px solid black">{data.transactionDate}</Td>
                     {isPrinting && (
                       <>
                         <Td
