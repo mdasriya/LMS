@@ -72,6 +72,7 @@ const states = [
 const projectTypes = [
   "Residential Plotting",
   "Residential Multi",
+  "Residential Cum Commercial",
   "Commercial Plotting",
   "Commercial Multi",
 ];
@@ -514,10 +515,10 @@ console.log("component")
                 <Td>{project.city}</Td>
                 <Td>{project.state}</Td>
                 <Td>{project.projectType}</Td>
-
-                <Td textAlign={"center"}>{project.totalLandArea}</Td>
+                {/* <Td textAlign={"center"}>{project.totalLandArea}</Td>
+                 */}
+                 <Td textAlign={"center"}>{project.totalLandArea ? Number(project.totalLandArea).toFixed(2) : '0.00'}</Td>
                 <Td textAlign={"center"}>{project.totalSalableArea}</Td>
-
                 <Td>
                   <HStack>
                     <Button

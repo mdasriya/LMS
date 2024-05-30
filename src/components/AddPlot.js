@@ -554,14 +554,14 @@ console.log(newfilter)
 
 
 {/* update plot rate end */}
-<Box>
+{/* <Box>
 <PaginationControl
               changePage={changePage}
               page={currentPage}
               total={totalItems}
               limit={itemsPerPage}
             />
-</Box>
+</Box> */}
 
 
         </Box>
@@ -671,13 +671,13 @@ console.log(newfilter)
                   name="projectName"
                   value={editFormData.projectName || ""}
                   onChange={handleEditPlotChange}
-                  placeholder="Select Project"
-                >
-                  {projects.map((project) => (
+                  placeholder={editFormData.projectName}
+                >{editFormData.projectName}
+                  {/* {projects.map((project) => (
                     <option key={project.id} value={project.projectName}>
                       {project.projectName}
                     </option>
-                  ))}
+                  ))} */}
                 </Select>
               </FormControl>
               <FormControl mb={4}>

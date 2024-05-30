@@ -43,6 +43,7 @@ const AddBlock = () => {
   const toast = useToast();
   const [projects, setProjects] = useState([]);
   const [block, setBlock] = useState([]);
+  const [editState, setEditState] = useState(false) 
 
   const [formData, setFormData] = useState({
     projectName: "",
@@ -83,6 +84,12 @@ const AddBlock = () => {
 
   //   fetchData();
   // }, []);
+
+const handleCloseModel = () => {                      
+  setIsModalOpen(false)
+  setEditState(false)
+}
+
   const fetchData = async () => {
     setTableLoading(true);
     try {
@@ -211,16 +218,21 @@ const AddBlock = () => {
 
   const handleEditBlockChange = (e) => {
     const { name, value } = e.target;
+
+
     setEditFormData((prevData) => ({ ...prevData, [name]: value }));
   };
+
+
 
   const handleEditBlockSubmit = async (e) => {
     e.preventDefault();
     setEditLoading(true);
     const findBlock = block.find(
-      (element) => editFormData.projectName === element.projectName && editFormData.blockName === element.blockName
+      (element) => editFormData.projectName === element.projectName && editFormData.blockName === !element.blockName
     );
     if (findBlock) {
+  
       toast({
         title: `Block Already exist`,
         status: "warning",
@@ -326,6 +338,9 @@ const AddBlock = () => {
     fetchData();
     fetchProject();
   }, []);
+
+
+
 
   return (
     <>
@@ -527,7 +542,7 @@ const AddBlock = () => {
           )}
         </Table>
       </Box>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModel}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Edit Block</ModalHeader>
@@ -539,14 +554,14 @@ const AddBlock = () => {
                 <Select
                   name="projectName"
                   value={editFormData.projectName || ""}
-                  onChange={handleEditBlockChange}
-                  placeholder="Select Project"
+                  // onChange={handleEditBlockChange}
+                  placeholder={editFormData.projectName}
                 >
-                  {projects.map((project) => (
-                    <option key={project.id} value={project.projectName}>
-                      {project.projectName}
-                    </option>
-                  ))}
+               
+               
+                      {editFormData.projectName}
+              
+               
                 </Select>
               </FormControl>
               <FormControl mb={4}>
