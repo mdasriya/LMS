@@ -80,17 +80,15 @@ const projectTypes = [
 const AddProject = () => {
   // const [searchQuery, setSearchQuery] = useState("");
   // const [filteredMaster, setFilteredMaster] = useState([]);
-  const [tableloading, setLoading] = useState(false)
-  const [delloading, setDelLoading] = useState(false)
-  const [addloading, setAddLoading] = useState(false)
-  const [editloading, setEditLoading] = useState(false)
+  const [tableloading, setLoading] = useState(false);
+  const [delloading, setDelLoading] = useState(false);
+  const [addloading, setAddLoading] = useState(false);
+  const [editloading, setEditLoading] = useState(false);
   const toast = useToast();
 
   const [projects, setProjects] = useState([]); //this state use for fetching
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState(null);
-
-
 
   //this use for fecthing projects
 
@@ -106,19 +104,19 @@ const AddProject = () => {
   //   }
   // };
 
-  const fetchData = async() => {
-    setLoading(true)
+  const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "https://lkgexcel.com/backend/getprojects.php"
       );
       // console.log(response.data); // Log the response data
-      if(response.data){
+      if (response.data) {
         setProjects(response.data);
-        setLoading(false)
+        setLoading(false);
       }
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -140,10 +138,9 @@ const AddProject = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-
   const onAdd = async (e) => {
     e.preventDefault();
-    setAddLoading(true)
+    setAddLoading(true);
     const isProjectNameExists = projects.some(
       (project) => project.projectName === formData.projectName
     );
@@ -157,7 +154,7 @@ const AddProject = () => {
         position: "top",
         isClosable: true,
       });
-      setAddLoading(false)
+      setAddLoading(false);
       return;
     }
     const url = "https://lkgexcel.com/backend/addproject.php";
@@ -184,7 +181,7 @@ const AddProject = () => {
         ...projects,
         { ...response.data, id: response.data.projectId },
       ]);
-setAddLoading(false)
+      setAddLoading(false);
       // Clear the form data after successful submission
       setFormData({
         projectName: "",
@@ -195,15 +192,12 @@ setAddLoading(false)
         totalLandArea: "",
         totalSalableArea: "",
       });
-      fetchData()
+      fetchData();
     } catch (error) {
       console.log(error.toJSON());
-      setAddLoading(false)
+      setAddLoading(false);
     }
   };
-
-
-
 
   const handleDelete = (projectId) => {
     setProjectIdToDelete(projectId);
@@ -211,35 +205,35 @@ setAddLoading(false)
   };
 
   const confirmDelete = async () => {
-    setDelLoading(true)
+    setDelLoading(true);
     try {
       // Make a DELETE request to your API endpoint for deleting a project
-      await axios.delete(
-        `https://lkgexcel.com/backend/deleteproject.php?id=${projectIdToDelete}`
-      )
-      .then((res) => {
-        console.log(res.data)
-        toast({
-          title: "Project deleted successfully!",
-           status: "success",
-          duration: 3000,
-          position: "top-right",
-          isClosable: true,
+      await axios
+        .delete(
+          `https://lkgexcel.com/backend/deleteproject.php?id=${projectIdToDelete}`
+        )
+        .then((res) => {
+          console.log(res.data);
+          toast({
+            title: "Project deleted successfully!",
+            status: "success",
+            duration: 3000,
+            position: "top-right",
+            isClosable: true,
+          });
+          setDelLoading(false);
+          fetchData();
         });
-        setDelLoading(false)
-        fetchData()
-      })
       // Update the projects state after successful deletion
       // setProjects(
       //   projects.filter((project) => project.id !== projectIdToDelete)
       // );
-      
     } catch (error) {
       console.error("Error deleting project:", error);
-      setDelLoading(false)
+      setDelLoading(false);
     } finally {
       // Reset the state after handling delete
-      setDelLoading(false)
+      setDelLoading(false);
       setIsDeleteDialogOpen(false);
       setProjectIdToDelete(null);
     }
@@ -277,7 +271,7 @@ setAddLoading(false)
   };
 
   const handleEditSubmit = async (e) => {
-    setEditLoading(true)
+    setEditLoading(true);
     e.preventDefault();
     const url = "https://lkgexcel.com/backend/editproject.php";
 
@@ -297,7 +291,7 @@ setAddLoading(false)
       if (response && response.data && response.data.status === "success") {
         // Close the modal after successful submission
         setIsModalOpen(false);
-setEditLoading(false)
+        setEditLoading(false);
         // Fetch updated projects data (make sure this function is implemented correctly)
         fetchData();
 
@@ -311,7 +305,7 @@ setEditLoading(false)
       } else {
         // Handle error response
         console.error("Error updating project. Response:", response);
-setEditLoading(false)
+        setEditLoading(false);
         // Show an error toast message
         toast({
           title: "Error updating project",
@@ -324,7 +318,7 @@ setEditLoading(false)
     } catch (error) {
       // Handle network or other errors
       console.error("Error in handleEditSubmit:", error);
-setEditLoading(false)
+      setEditLoading(false);
       // Show an error toast message
       toast({
         title: "Error updating project",
@@ -335,12 +329,11 @@ setEditLoading(false)
     }
   };
 
-  
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, []);
 
-console.log("component")
+  console.log("component");
   return (
     <>
       <Box p={4} width="100%">
@@ -437,11 +430,15 @@ console.log("component")
                 required
               />
             </FormControl>
-          {addloading ? <Button colorScheme="blue" mt={8}>
-         <Spinner size='md' color="white"/>
-            </Button> : <Button colorScheme="blue" type="submit" mt={8}>
-              Add Project
-            </Button>}  
+            {addloading ? (
+              <Button colorScheme="blue" mt={8}>
+                <Spinner size="md" color="white" />
+              </Button>
+            ) : (
+              <Button colorScheme="blue" type="submit" mt={8}>
+                Add Project
+              </Button>
+            )}
           </Grid>
           <Center></Center>
         </form>
@@ -485,67 +482,86 @@ console.log("component")
               </Th>
             </Tr>
           </Thead>
-{tableloading ?   <Tbody>
-            {projects.map((project, index) => (
-              <Tr key={project.id}>
-              
-                  <Td><Skeleton height='20px' /></Td>
-                  <Td><Skeleton height='20px' /></Td>
-                  <Td><Skeleton height='20px' /></Td>
-                  <Td><Skeleton height='20px' /></Td>
-                  <Td><Skeleton height='20px' /></Td>
-                  <Td><Skeleton height='20px' /></Td>
-
-                  <Td textAlign={"center"}><Skeleton height='20px' /></Td>
-                  <Td textAlign={"center"}><Skeleton height='20px' /></Td>
-
-                
+          {tableloading ? (
+            <Tbody>
+              {projects.map((project, index) => (
+                <Tr key={project.id}>
                   <Td>
-                <Skeleton height='20px' />
-                </Td>
-                
-              </Tr>
-            ))}
-          </Tbody> :   <Tbody>
-            {projects.map((project, index) => (
-              <Tr key={project.id}>
-                <Td>{index + 1}</Td>
-                <Td>{project.projectName}</Td>
-                <Td>{project.location}</Td>
-                <Td>{project.city}</Td>
-                <Td>{project.state}</Td>
-                <Td>{project.projectType}</Td>
-                {/* <Td textAlign={"center"}>{project.totalLandArea}</Td>
-                 */}
-                 <Td textAlign={"center"}>{project.totalLandArea ? Number(project.totalLandArea).toFixed(2) : '0.00'}</Td>
-                <Td textAlign={"center"}>{project.totalSalableArea}</Td>
-                <Td>
-                  <HStack>
-                    <Button
-                      colorScheme="red"
-                      onClick={() => handleDelete(project.id)}
-                    >
-                      Delete
-                    </Button>
-                    <DeleteConfirmationDialog
-                      isOpen={isDeleteDialogOpen}
-                      loadingDel={delloading}
-                      onClose={() => setIsDeleteDialogOpen(false)}
-                      onConfirm={confirmDelete}
-                    />
-                    <Button
-                      colorScheme="teal"
-                      onClick={() => handleEditClick(project)}
-                    >
-                      Edit
-                    </Button>
-                  </HStack>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>}
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
 
-        
+                  <Td textAlign={"center"}>
+                    <Skeleton height="20px" />
+                  </Td>
+                  <Td textAlign={"center"}>
+                    <Skeleton height="20px" />
+                  </Td>
+
+                  <Td>
+                    <Skeleton height="20px" />
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          ) : (
+            <Tbody>
+              {projects.map((project, index) => (
+                <Tr key={project.id}>
+                  <Td>{index + 1}</Td>
+                  <Td>{project.projectName}</Td>
+                  <Td>{project.location}</Td>
+                  <Td>{project.city}</Td>
+                  <Td>{project.state}</Td>
+                  <Td>{project.projectType}</Td>
+                  {/* <Td textAlign={"center"}>{project.totalLandArea}</Td>
+                   */}
+                  <Td textAlign={"center"}>
+                    {project.totalLandArea
+                      ? Number(project.totalLandArea).toFixed(2)
+                      : "0.00"}
+                  </Td>
+                  <Td textAlign={"center"}>{project.totalSalableArea}</Td>
+                  <Td>
+                    <HStack>
+                      <Button
+                        colorScheme="red"
+                        onClick={() => handleDelete(project.id)}
+                      >
+                        Delete
+                      </Button>
+                      <DeleteConfirmationDialog
+                        isOpen={isDeleteDialogOpen}
+                        loadingDel={delloading}
+                        onClose={() => setIsDeleteDialogOpen(false)}
+                        onConfirm={confirmDelete}
+                      />
+                      <Button
+                        colorScheme="teal"
+                        onClick={() => handleEditClick(project)}
+                      >
+                        Edit
+                      </Button>
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          )}
         </Table>
       </Box>
 
@@ -637,16 +653,20 @@ console.log("component")
               </FormControl>
             </ModalBody>
             <ModalFooter>
-         {editloading ?  <Button
-    isLoading
-    loadingText='Submitting'
-    colorScheme='teal'
-    variant='outline'
-  >
-    Submit
-  </Button> : <Button colorScheme="blue" type="submit">
-                Save Changes
-              </Button>}     
+              {editloading ? (
+                <Button
+                  isLoading
+                  loadingText="Submitting"
+                  colorScheme="teal"
+                  variant="outline"
+                >
+                  Submit
+                </Button>
+              ) : (
+                <Button colorScheme="blue" type="submit">
+                  Save Changes
+                </Button>
+              )}
               <Button onClick={() => setIsModalOpen(false)} ml={4}>
                 Cancel
               </Button>

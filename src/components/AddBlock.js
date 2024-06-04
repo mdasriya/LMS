@@ -34,6 +34,7 @@ import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { warning } from "framer-motion";
 
 const AddBlock = () => {
+  const [show, setShow] = useState("");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState(null);
   const [tableLoading, setTableLoading] = useState(false);
@@ -43,8 +44,8 @@ const AddBlock = () => {
   const toast = useToast();
   const [projects, setProjects] = useState([]);
   const [block, setBlock] = useState([]);
-  const [editState, setEditState] = useState(false) 
-
+  const [editState, setEditState] = useState(false);
+  const [temp, setTemp] = useState([]);
   const [formData, setFormData] = useState({
     projectName: "",
     blockName: "",
@@ -70,25 +71,10 @@ const AddBlock = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "https://lkgexcel.com/backend/getblock.php"
-  //       );
-  //       setBlock(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-const handleCloseModel = () => {                      
-  setIsModalOpen(false)
-  setEditState(false)
-}
+  const handleCloseModel = () => {
+    setIsModalOpen(false);
+    setEditState(false);
+  };
 
   const fetchData = async () => {
     setTableLoading(true);
@@ -98,7 +84,7 @@ const handleCloseModel = () => {
       );
 
       setBlock(response.data);
-
+      setTemp(response.data);
       if (response.data) {
         setTableLoading(false);
       }
@@ -111,6 +97,15 @@ const handleCloseModel = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    if (value) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+    if (name === "projectName") {
+      const result = temp.filter((item) => item.projectName == value);
+      setBlock(result);
+    }
   };
 
   const onAddBlock = async (e) => {
@@ -123,8 +118,11 @@ const handleCloseModel = () => {
     fData.append("areaSqft", formData.areaSqft);
     fData.append("areaSqmt", formData.areaSqmt);
     fData.append("ratePerSqft", formData.ratePerSqft);
+
     const findProject = block.find(
-      (element) => formData.projectName === element.projectName && formData.blockName === element.blockName
+      (element) =>
+        formData.projectName === element.projectName &&
+        formData.blockName === element.blockName
     );
     if (findProject) {
       toast({
@@ -218,21 +216,22 @@ const handleCloseModel = () => {
 
   const handleEditBlockChange = (e) => {
     const { name, value } = e.target;
-
-
     setEditFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-
-
 
   const handleEditBlockSubmit = async (e) => {
     e.preventDefault();
     setEditLoading(true);
+    console.log("edit Project", editFormData.projectName);
+    console.log("edit block", editFormData.blockName);
     const findBlock = block.find(
-      (element) => editFormData.projectName === element.projectName && editFormData.blockName === !element.blockName
+      (element) =>
+        editFormData.projectName === element.projectName &&
+        editFormData.blockName != element.blockName
     );
     if (findBlock) {
-  
+      console.log("found", findBlock);
+      console.log("if call");
       toast({
         title: `Block Already exist`,
         status: "warning",
@@ -242,7 +241,7 @@ const handleCloseModel = () => {
       setEditLoading(false);
       return;
     }
-    
+
     const url = "https://lkgexcel.com/backend/editblock.php";
 
     try {
@@ -338,9 +337,6 @@ const handleCloseModel = () => {
     fetchData();
     fetchProject();
   }, []);
-
-
-
 
   return (
     <>
@@ -465,7 +461,11 @@ const handleCloseModel = () => {
               </Th>
             </Tr>
           </Thead>
-          {tableLoading ? (
+          {!show ? (
+            <Box width={"500px"} top={50} position={"relative"} left={"600px"}>
+              <Heading>Select Your Project First</Heading>
+            </Box>
+          ) : tableLoading ? (
             <Tbody>
               {block.map((blockItem, index) => (
                 <Tr key={blockItem.id}>
@@ -557,11 +557,7 @@ const handleCloseModel = () => {
                   // onChange={handleEditBlockChange}
                   placeholder={editFormData.projectName}
                 >
-               
-               
-                      {editFormData.projectName}
-              
-               
+                  {editFormData.projectName}
                 </Select>
               </FormControl>
               <FormControl mb={4}>

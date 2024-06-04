@@ -32,7 +32,7 @@ import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 
 import PaginationControl from "./PaginationControl";
 const AddPlot = () => {
- const [finalPlot, setFinalPlot] = useState([])
+  const [finalPlot, setFinalPlot] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -44,10 +44,7 @@ const AddPlot = () => {
   const [getblock, setBlock] = useState([]);
   const [plot, setPlot] = useState([]);
   const [selectedProject, setSelectedProject] = useState("");
-const [availableRateUpdate, setAvailableRateUpdate] = useState([])
-
-
-
+  const [availableRateUpdate, setAvailableRateUpdate] = useState([]);
 
   const [formData, setFormData] = useState({
     projectName: "",
@@ -59,7 +56,7 @@ const [availableRateUpdate, setAvailableRateUpdate] = useState([])
     plotType: "",
     plotStatus: "Available",
   });
-
+  const [show, setShow] = useState(false);
   const [editableAreaSqft, setEditableAreaSqft] = useState("");
   const [editableAreaSqmt, setEditableAreaSqmt] = useState("");
   const [editableRatePerSqft, setEditableRatePerSqft] = useState("");
@@ -77,10 +74,8 @@ const [availableRateUpdate, setAvailableRateUpdate] = useState([])
     plotType: "",
     plotStatus: "Available",
   });
-const [updatePlotRate, setUpadtePlotRate] = useState("")
-const [editPlotLoading, setEditLoading] = useState(false)
-
-
+  const [updatePlotRate, setUpadtePlotRate] = useState("");
+  const [editPlotLoading, setEditLoading] = useState(false);
 
   const fetchDataProject = async () => {
     try {
@@ -115,51 +110,48 @@ const [editPlotLoading, setEditLoading] = useState(false)
     }
   };
 
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-
+    if (value) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
     // console.log("inside function")
     //  if(name === "blockName"){
     //   console.log("inside block if")
     //   setBlockSelect(value)
     //  }
-     if(name === "projectName"){
-      console.log("inside project if")
-      const result = plot.filter((item) => item.projectName == value)
-      setAvailableRateUpdate(result)
-      setFilteredMaster(result)
-     
-     }
-     if(name === "blockName" ){
-      console.log("inside block if")
-      const result = availableRateUpdate.filter((item) => item.blockName == value)
-      setAvailableRateUpdate(result)
-      setFilteredMaster(result)
-     }
+    if (name === "projectName") {
+      const result = plot.filter((item) => item.projectName == value);
+      setAvailableRateUpdate(result);
+      setFilteredMaster(result);
+    }
+    if (name === "blockName") {
+      console.log("inside block if");
+      const result = availableRateUpdate.filter(
+        (item) => item.blockName == value
+      );
+      setAvailableRateUpdate(result);
+      setFilteredMaster(result);
+    }
     //  if(blockSelect && plotSelect){
     //   console.log("condition")
     // const result = plot.filter((item) => item.blockName == blockSelect  && item.projectName == plotSelect)
-    // console.log("final filter", result) 
+    // console.log("final filter", result)
     //  }
 
-
-
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-const result = plot.filter((item) => item.projectName == value)
-if(result.length>0){
-  setFinalPlot(result)
-  //  setFilteredMaster(result)
-  // console.log("re", result)
-}
+    const result = plot.filter((item) => item.projectName == value);
+    if (result.length > 0) {
+      setFinalPlot(result);
+      //  setFilteredMaster(result)
+      // console.log("re", result)
+    }
 
-if(!value){
-  setFilteredMaster(plot)
-}
-
-
+    if (!value) {
+      setFilteredMaster(plot);
+    }
 
     if (name === "projectName") {
       setSelectedProject(value);
@@ -185,7 +177,6 @@ if(!value){
       setEditableRatePerSqft(matchCase.ratePerSqft || "");
     }
   };
- 
 
   const onAddPlot = async (e) => {
     e.preventDefault();
@@ -201,20 +192,22 @@ if(!value){
     fData.append("plotType", formData.plotType);
     fData.append("plotStatus", formData.plotStatus);
 
-const found = plot.filter((item)=> {
-  if(item.projectName == formData.projectName && item.plotNo == formData.plotNo){
-
-  return item
-  } 
-})
-if(found.length>0){
-   toast({
-      title: `Plot already Exist`,
-      status: "error",
-      isClosable: true,
-    })
-    return;
-}
+    const found = plot.filter((item) => {
+      if (
+        item.projectName == formData.projectName &&
+        item.plotNo == formData.plotNo
+      ) {
+        return item;
+      }
+    });
+    if (found.length > 0) {
+      toast({
+        title: `Plot already Exist`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
     try {
       await axios.post(url, fData);
       toast({
@@ -256,9 +249,9 @@ if(found.length>0){
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredMaster.slice(indexOfFirstItem, indexOfLastItem);
 
-  const changePage = (newPage) => {
-    setCurrentPage(newPage);
-  };
+  // const changePage = (newPage) => {
+  //   setCurrentPage(newPage);
+  // };
 
   const handleDelete = (projectId) => {
     setProjectIdToDelete(projectId);
@@ -309,7 +302,7 @@ if(found.length>0){
   }, [formData.blockName, formData.projectName, getblock]);
 
   const handleEditPlotSubmit = async (e) => {
-    setEditLoading(true)
+    setEditLoading(true);
     e.preventDefault();
 
     const url = "https://lkgexcel.com/backend/editplot.php";
@@ -330,7 +323,7 @@ if(found.length>0){
 
       if (response && response.data && response.data.status === "success") {
         console.log("Plot updated successfully:", response.data.message);
-        setEditLoading(false)
+        setEditLoading(false);
         toast({
           title: "Plot updated successfully!",
           status: "success",
@@ -342,7 +335,7 @@ if(found.length>0){
         fetchDataPlot();
       } else {
         console.error("Error updating plot:", response.data.message);
-        setEditLoading(false)
+        setEditLoading(false);
         toast({
           title: "Error updating plot",
           status: "error",
@@ -354,7 +347,7 @@ if(found.length>0){
       }
     } catch (error) {
       console.error("Error in handleEditPlotSubmit:", error);
-      setEditLoading(false)
+      setEditLoading(false);
       toast({
         title: "Error updating plot",
         status: "error",
@@ -366,15 +359,19 @@ if(found.length>0){
     }
   };
 
-const handleupdatePlotRate = () =>{
-   console.log("updated plot rate", updatePlotRate)
-setUpadtePlotRate("")
-  const AvailablePlot = filteredMaster.filter((item) => item.plotStatus === "Available")
-// console.log("filter", AvailablePlot)
+  const handleupdatePlotRate = () => {
+    console.log("updated plot rate", updatePlotRate);
+    setUpadtePlotRate("");
+    const AvailablePlot = filteredMaster.filter(
+      (item) => item.plotStatus === "Available"
+    );
+    // console.log("filter", AvailablePlot)
 
-const newfilter = AvailablePlot.map((item) => item.ratePerSqft = updatePlotRate)
-console.log(newfilter)
-}
+    const newfilter = AvailablePlot.map(
+      (item) => (item.ratePerSqft = updatePlotRate)
+    );
+    console.log(newfilter);
+  };
 
   useEffect(() => {
     fetchDataProject();
@@ -522,14 +519,18 @@ console.log(newfilter)
               Add Plot
             </Button>
           </Grid>
-        
         </form>
       </Box>
       <Box>
         <hr />
-        <Box mb={"15px"} mt={5} p={"0px 10px"} display={"flex"} justifyContent={"space-between"}>
-          <VStack>
-            {/* <Heading fontSize={"25px"}>Plot Details</Heading> */}
+        <Box
+          mb={"15px"}
+          mt={5}
+          p={"0px 10px"}
+          display={"flex"}
+          justifyContent={"space-between"}
+        >
+          {/* <VStack>
             <Input
               type="text"
               w={"100%"}
@@ -537,24 +538,29 @@ console.log(newfilter)
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </VStack>
+          </VStack> */}
 
-{/* update plot rate start */}
-<Box display={"flex"} gap={5}>
-            
+          {/* update plot rate start */}
+          <Box display={"flex"} gap={5}>
             <Input
               type="number"
               w={"100%"}
               placeholder="Enter Plot Rate"
               value={updatePlotRate}
-              onChange={(e)=> setUpadtePlotRate(e.target.value)}
+              onChange={(e) => setUpadtePlotRate(e.target.value)}
             />
-           <Button bg={"black"} colorScheme="none" color={"white"} onClick={handleupdatePlotRate}>Upadte</Button> 
+            <Button
+              bg={"black"}
+              colorScheme="none"
+              color={"white"}
+              onClick={handleupdatePlotRate}
+            >
+              Upadte
+            </Button>
           </Box>
 
-
-{/* update plot rate end */}
-{/* <Box>
+          {/* update plot rate end */}
+          {/* <Box>
 <PaginationControl
               changePage={changePage}
               page={currentPage}
@@ -562,8 +568,6 @@ console.log(newfilter)
               limit={itemsPerPage}
             />
 </Box> */}
-
-
         </Box>
         <Table variant="simple" colorScheme="blue">
           <Thead>
@@ -593,7 +597,7 @@ console.log(newfilter)
                 Plot Type
               </Th>
               <Th bg="blue.500" color="white" fontSize="13px">
-              plot Status
+                plot Status
               </Th>{" "}
               <Th bg="blue.500" color="white" fontSize="14px">
                 Action
@@ -601,60 +605,92 @@ console.log(newfilter)
             </Tr>
           </Thead>
           <Tbody>
-            {currentItems.map((plotItem, index) => (
-              <Tr key={plotItem.id}>
-                <Td>{index + 1}</Td>
-                <Td>{plotItem.projectName}</Td>
-                <Td>{plotItem.blockName}</Td>
-                <Td>{plotItem.plotNo}</Td>
+            {!show ? (
+              <Box
+                width={"500px"}
+                top={50}
+                position={"relative"}
+                left={"600px"}
+              >
+                <Heading>Select Your Project First</Heading>
+              </Box>
+            ) : (
+              currentItems.map((plotItem, index) => (
+                <Tr key={plotItem.id}>
+                  <Td>{index + 1}</Td>
+                  <Td>{plotItem.projectName}</Td>
+                  <Td>{plotItem.blockName}</Td>
+                  <Td>{plotItem.plotNo}</Td>
 
-                <Td>{plotItem.areaSqft}</Td>
-                <Td>{plotItem.areaSqmt}</Td>
-                <Td>{plotItem.ratePerSqft}</Td>
-                <Td>{plotItem.plotType}</Td>
-                <Td>
-                {plotItem.plotStatus === "Booked" && <Text fontWeight={500} bg={"yellow"} textAlign={"center"} p={"1px"} >{plotItem.plotStatus.toUpperCase()}</Text>}
-            {plotItem.plotStatus === "Available" && <Text fontWeight={500} p={"1px"} >{plotItem.plotStatus.toUpperCase()}</Text>}
-            {plotItem.plotStatus === "Registered" && <Text fontWeight={500} bg={"green"} p={"1px"} color={"white"} >{plotItem.plotStatus.toUpperCase()}</Text>}
-         
-                </Td>
+                  <Td>{plotItem.areaSqft}</Td>
+                  <Td>{plotItem.areaSqmt}</Td>
+                  <Td>{plotItem.ratePerSqft}</Td>
+                  <Td>{plotItem.plotType}</Td>
+                  <Td>
+                    {plotItem.plotStatus === "Booked" && (
+                      <Text
+                        fontWeight={500}
+                        bg={"yellow"}
+                        textAlign={"center"}
+                        p={"1px"}
+                      >
+                        {plotItem.plotStatus.toUpperCase()}
+                      </Text>
+                    )}
+                    {plotItem.plotStatus === "Available" && (
+                      <Text fontWeight={500} p={"1px"}>
+                        {plotItem.plotStatus.toUpperCase()}
+                      </Text>
+                    )}
+                    {plotItem.plotStatus === "Registered" && (
+                      <Text
+                        fontWeight={500}
+                        bg={"green"}
+                        p={"1px"}
+                        color={"white"}
+                      >
+                        {plotItem.plotStatus.toUpperCase()}
+                      </Text>
+                    )}
+                  </Td>
 
-                <Td>
-                  <HStack>
-                    <Button
-                      colorScheme="red"
-                      onClick={() => handleDelete(plotItem.id)}
-                    >
-                      Delete
-                    </Button>
-                    <DeleteConfirmationDialog
-                      isOpen={isDeleteDialogOpen}
-                      onClose={() => setIsDeleteDialogOpen(false)}
-                      onConfirm={confirmDelete}
-                    />
-                    <Button
-                      colorScheme="teal"
-                      onClick={() => {
-                        setIsModalOpen(true);
-                        setEditFormData({
-                          id: plotItem.id,
-                          projectName: plotItem.projectName,
-                          blockName: plotItem.blockName,
-                          areaSqft: plotItem.areaSqft,
-                          areaSqmt: plotItem.areaSqmt,
-                          plotNo: plotItem.plotNo,
-                          ratePerSqft: plotItem.ratePerSqft,
-                          plotType: plotItem.plotType,
-                          plotStatus: plotItem.plotStatus,
-                        });
-                      }}
-                    >
-                      Edit
-                    </Button>
-                  </HStack>
-                </Td>
-              </Tr>
-            ))}
+                  <Td>
+                    <HStack>
+                      <Button
+                        colorScheme="red"
+                        onClick={() => handleDelete(plotItem.id)}
+                      >
+                        Delete
+                      </Button>
+                      <DeleteConfirmationDialog
+                        isOpen={isDeleteDialogOpen}
+                        onClose={() => setIsDeleteDialogOpen(false)}
+                        onConfirm={confirmDelete}
+                      />
+                      <Button
+                        colorScheme="teal"
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setEditFormData({
+                            id: plotItem.id,
+                            projectName: plotItem.projectName,
+                            blockName: plotItem.blockName,
+                            areaSqft: plotItem.areaSqft,
+                            areaSqmt: plotItem.areaSqmt,
+                            plotNo: plotItem.plotNo,
+                            ratePerSqft: plotItem.ratePerSqft,
+                            plotType: plotItem.plotType,
+                            plotStatus: plotItem.plotStatus,
+                          });
+                        }}
+                      >
+                        Edit
+                      </Button>
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))
+            )}
           </Tbody>
         </Table>
       </Box>
@@ -672,7 +708,8 @@ console.log(newfilter)
                   value={editFormData.projectName || ""}
                   onChange={handleEditPlotChange}
                   placeholder={editFormData.projectName}
-                >{editFormData.projectName}
+                >
+                  {editFormData.projectName}
                   {/* {projects.map((project) => (
                     <option key={project.id} value={project.projectName}>
                       {project.projectName}
@@ -766,11 +803,15 @@ console.log(newfilter)
               </FormControl>
             </ModalBody>
             <ModalFooter>
-            {editPlotLoading ?   <Button colorScheme=" blue" isLoading>
-                Save Changes
-              </Button> :   <Button colorScheme="blue" type="submit">
-                Save Changes
-              </Button>}
+              {editPlotLoading ? (
+                <Button colorScheme=" blue" isLoading>
+                  Save Changes
+                </Button>
+              ) : (
+                <Button colorScheme="blue" type="submit">
+                  Save Changes
+                </Button>
+              )}
               <Button onClick={() => setIsModalOpen(false)} ml={4}>
                 Cancel
               </Button>

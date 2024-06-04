@@ -453,7 +453,7 @@ const plotStatus = getUniqueValues("plotStatus");
       </Tr>
     </Thead>
     <Tbody>
-      {filteredBookings.map((plotItem, index) => (
+      {  filteredBookings.map((plotItem, index) => (
         <Tr
           key={plotItem.id}
           onClick={() => setHighlightedRow(index)}
