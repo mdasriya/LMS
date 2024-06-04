@@ -208,6 +208,11 @@ const AddPlot = () => {
       });
       return;
     }
+
+
+
+  
+
     try {
       await axios.post(url, fData);
       toast({
@@ -317,6 +322,24 @@ const AddPlot = () => {
     formData.append("ratePerSqft", editFormData.ratePerSqft);
     formData.append("plotType", editFormData.plotType);
     formData.append("plotStatus", editFormData.plotStatus);
+
+    const foundPlotNo = currentItems.filter((item) => {
+      if (
+        item.projectName == editFormData.projectName && editFormData.blockName &&
+        item.plotNo == editFormData.plotNo
+      ) {
+        return item;
+      }
+    });
+    console.log(foundPlotNo)
+    if (foundPlotNo.length > 0) {
+      toast({
+        title: `Plot Number already Exist`,
+        status: "error",
+        isClosable: true,
+      });
+      return;
+    }
 
     try {
       const response = await axios.post(url, formData);
@@ -798,7 +821,7 @@ const AddPlot = () => {
                   required
                 >
                   <option value="Available">Available</option>
-                  <option value="Not Available">Not Available</option>
+                  {/* <option value="Not Available" disabled>Not Available</option> */}
                 </Select>
               </FormControl>
             </ModalBody>
