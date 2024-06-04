@@ -72,7 +72,7 @@ const AddPlot = () => {
     areaSqmt: "",
     ratePerSqft: "",
     plotType: "",
-    plotStatus: "Available",
+    plotStatus: "",
   });
   const [updatePlotRate, setUpadtePlotRate] = useState("");
   const [editPlotLoading, setEditLoading] = useState(false);
@@ -307,8 +307,9 @@ const AddPlot = () => {
   }, [formData.blockName, formData.projectName, getblock]);
 
   const handleEditPlotSubmit = async (e) => {
-    setEditLoading(true);
     e.preventDefault();
+    setEditLoading(true);
+    console.log(currentItems)
 
     const url = "https://lkgexcel.com/backend/editplot.php";
     const formData = new FormData();
@@ -323,23 +324,16 @@ const AddPlot = () => {
     formData.append("plotType", editFormData.plotType);
     formData.append("plotStatus", editFormData.plotStatus);
 
-    const foundPlotNo = currentItems.filter((item) => {
-      if (
-        item.projectName == editFormData.projectName && editFormData.blockName &&
-        item.plotNo == editFormData.plotNo
-      ) {
-        return item;
-      }
-    });
-    console.log(foundPlotNo)
-    if (foundPlotNo.length > 0) {
-      toast({
-        title: `Plot Number already Exist`,
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
+   
+   
+    // if (foundPlotNo.length > 0) {
+    //   toast({
+    //     title: `Plot Number already Exist`,
+    //     status: "error",
+    //     isClosable: true,
+    //   });
+    //   return;
+    // }
 
     try {
       const response = await axios.post(url, formData);
@@ -402,7 +396,7 @@ const AddPlot = () => {
     fetchDataBlock();
   }, []);
 
-  // console.log("plotttt",plot)
+  console.log("plotttt",editFormData)
   return (
     <>
       <Box p={4} width="100%">
@@ -749,11 +743,11 @@ const AddPlot = () => {
                   placeholder="Select Block"
                   required
                 >
-                  {getblock.map((block) => (
-                    <option key={block.id} value={block.blockName}>
-                      {block.blockName}
+                  
+                    <option  value={editFormData.blockName}>
+                      {editFormData.blockName}
                     </option>
-                  ))}
+              
                 </Select>
               </FormControl>
               <FormControl mb={4}>
@@ -762,7 +756,7 @@ const AddPlot = () => {
                   type="text"
                   name="plotNo"
                   value={editFormData.plotNo || ""}
-                  onChange={handleEditPlotChange}
+                  // onChange={handleEditPlotChange}
                   required
                 />
               </FormControl>
@@ -805,9 +799,7 @@ const AddPlot = () => {
                   placeholder="Select Plot Type"
                   required
                 >
-                  {/* Populate the dropdown with plot types */}
-                  <option value="Normal">Normal</option>
-                  <option value="EWS">EWS</option>
+                  <option value={editFormData.plotType}>{editFormData.plotType}</option>
                   {/* Add more options as needed */}
                 </Select>
               </FormControl>
@@ -820,7 +812,7 @@ const AddPlot = () => {
                   placeholder="Select Plot Status"
                   required
                 >
-                  <option value="Available">Available</option>
+                  <option value={editFormData.plotStatus}>{editFormData.plotStatus}</option>
                   {/* <option value="Not Available" disabled>Not Available</option> */}
                 </Select>
               </FormControl>
