@@ -241,6 +241,8 @@
         setButtonClicked(false); // Reset button clicked to false after print is done
       },
     });
+
+
     return (
       <>
         Status - {selectedStatus}

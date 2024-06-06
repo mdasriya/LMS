@@ -43,7 +43,8 @@ const BookingStatus = () => {
   const [highlightedRow, setHighlightedRow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(null)
- 
+ const [totalArea, setTotalArea] = useState(0)
+ const [totalAreamt, setTotalAreamt] = useState(0)
  
 // render no project function 
 function initialFunction (){
@@ -202,8 +203,21 @@ const plotStatus = getUniqueValues("plotStatus");
     setSelectedToDate("")
   }, []);
 
- console.log("render")
- console.log("select", selectedFromDate)
+
+  useEffect(()=> {
+    const totalSQFT = filteredBookings.reduce((accumulator, currentItem) => {
+      return accumulator + Number(currentItem.areaSqft);
+    }, 0);
+    setTotalArea(totalSQFT)
+    const totalSMT = filteredBookings.reduce((accumulator, currentItem) => {
+      return accumulator + Number(currentItem.areaSqmt);
+    }, 0);
+    setTotalAreamt(totalSMT)
+  },[filteredBookings])
+
+ 
+  console.log(filteredBookings)
+
 
   return (
     <>
@@ -435,9 +449,23 @@ const plotStatus = getUniqueValues("plotStatus");
         </Center>
       ) : !selectedProject.length>0 ? <Heading textAlign={"center"} position={"relative"} top={100}>Select Project first</Heading> :  (
     <> <FormLabel fontWeight={700} >Total Booking : ({filteredBookings.length})</FormLabel> <Box  w={"100%"}> <Table variant="simple"  w={"100%"} colorScheme="blue">
+  
+
+  <Thead>
+      <Tr bg="gray.800" >
+      <Th color="white" bg={"white"}></Th>
+      <Th color="white"  bg={"white"}></Th>
+      <Th color="white" bg={"white"}></Th>
+      <Th color="white" bg={"white"}></Th>
+        <Th color="white">{totalArea}</Th>
+        <Th color="white">{totalAreamt}</Th>
+      
+      </Tr>
+    </Thead>
+    
     <Thead>
       <Tr bg="gray.800" >
-
+     
         <Th color="white">Sr No.</Th>
         <Th color="white">ProjectName</Th>
         <Th color="white">BlockName</Th>
