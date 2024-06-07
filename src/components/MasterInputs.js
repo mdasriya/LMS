@@ -351,7 +351,7 @@ const MasterInputs = () => {
             <FormControl>
               <FormLabel>Guideline (Per Sqmt)</FormLabel>
               <Input
-                type="text"
+                type="number"
                 name="guideline"
                 value={formData.guideline}
                 onChange={handleChange}
@@ -362,7 +362,7 @@ const MasterInputs = () => {
             <FormControl>
               <FormLabel>Registry Male (%)</FormLabel>
               <Input
-                type="text"
+                type="number"
                 name="registryMalePercent"
                 value={formData.registryMalePercent}
                 onChange={handleChange}
@@ -373,7 +373,7 @@ const MasterInputs = () => {
             <FormControl>
               <FormLabel>Registry Female (%)</FormLabel>
               <Input
-                type="text"
+                type="number"
                 name="registryFemalePercent"
                 value={formData.registryFemalePercent}
                 onChange={handleChange}
@@ -453,8 +453,27 @@ const MasterInputs = () => {
               />
             </FormControl>
 
+
+
             <FormControl>
-              <FormLabel>Brokerage %</FormLabel>
+              <FormLabel>Brokerage type</FormLabel>
+              <Select
+                name="miscType"
+                value={formData.miscType}
+                onChange={handleChange}
+                placeholder="Select Type"
+              >
+                <option value="percent">Percent</option>
+                <option value="Lumpsum">Lumpsum</option>
+                {/* Add misc type options here */}
+              </Select>
+            </FormControl>
+
+
+
+
+            <FormControl>
+              <FormLabel>Brokerage value</FormLabel>
               <Input
                 type="number"
                 name="brokerageValue"
@@ -581,7 +600,7 @@ const MasterInputs = () => {
                 fontSize="0.8rem"
                 style={{ padding: "9px" }}
               >
-                Brokerage %
+                Brokerage value
               </Th>
               <Th
                 bg="blue.500"
@@ -638,6 +657,9 @@ const MasterInputs = () => {
           </Tbody>
         </Table>
       </Box>
+
+
+
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <ModalOverlay />
         <ModalContent>
@@ -651,7 +673,7 @@ const MasterInputs = () => {
                   type="text"
                   value={editFormData.projectName || ""}
                   name="projectName"
-                  onChange={handleEditChange}
+                  
                 />
               </FormControl>
               <FormControl>
@@ -754,6 +776,23 @@ const MasterInputs = () => {
                   onChange={handleEditChange}
                 />
               </FormControl>
+
+              <FormControl>
+                <FormLabel>Brokerage Type</FormLabel>
+                <Select
+                  name="brokerageType"
+                  value={editFormData.brokerageType || ""}
+                  onChange={handleEditChange}
+                  placeholder="Select Type"
+                >
+                  <option value="Percent">Percent</option>
+                  <option value="Lumpsum">Lumpsum</option>
+                  {/* Add more options as needed */}
+                </Select>
+              </FormControl>
+
+
+
 
               <FormControl>
                 <FormLabel>Brokerage %</FormLabel>

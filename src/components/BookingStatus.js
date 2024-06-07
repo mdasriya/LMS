@@ -510,6 +510,7 @@ const plotStatus = getUniqueValues("plotStatus");
             </Badge>}    */}
             {plotItem.plotStatus === "Booked" && <FormLabel bg={"yellow"} textAlign={"center"} p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
             {plotItem.plotStatus === "Available" && <Box> <FormLabel p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel> {plotItem.plotStatus === "Available" ? <Button size={"xs"} colorScheme='blue'>Change Hold</Button> : <Button size={"xs"} colorScheme="black">Change Available</Button>}   </Box>}
+            {plotItem.plotStatus === "Hold" && <Box> <FormLabel p={"1px"} >{plotItem.plotStatus.toUpperCase()}</FormLabel> {plotItem.plotStatus === "Hold" ? <Button size={"xs"} colorScheme='blue'>Release</Button> : <Button size={"xs"} colorScheme="black">Change Available</Button>}   </Box>}
             {plotItem.plotStatus === "Registered" && <FormLabel bg={"green"} p={"1px"} color={"white"} >{plotItem.plotStatus.toUpperCase()}</FormLabel>}
          
           </Td>

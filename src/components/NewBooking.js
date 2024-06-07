@@ -367,8 +367,10 @@ const NewBooking = () => {
 
           if (response1 && response1.data) {
             if (response1.data.phpresult) {
-              setMaster("masterData : ", response1.data.phpresult);
-
+              setMaster(response1.data.phpresult);
+              
+              console.log("Response 1",response1.data.phpresult)
+              
               document.getElementById("registryGender").value = "Male";
 
               // document.getElementById('plotType').style.backgroundColor = 'gray';
@@ -596,6 +598,8 @@ const NewBooking = () => {
     loadContractor();
     loadBroker();
   }, []);
+  
+console.log("master", master)
 
   return (
     <Box p={4} width="100%" position={"relative"} bottom={"0rem"} >

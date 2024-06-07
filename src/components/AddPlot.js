@@ -517,6 +517,7 @@ const AddPlot = () => {
                 <option value="3BHK">3BHK</option>
                 <option value="4BHK">4BHK</option>
                 <option value="5BHK">5BHK</option>
+                <option value="shop">Shop</option>
                 {/* Add more options as needed */}
               </Select>
             </FormControl>
