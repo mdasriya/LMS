@@ -35,7 +35,7 @@ import { useData } from "../Context";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { Link } from "react-router-dom";
 const PaymentTransaction = () => {
-
+const [currentDate, setCurrentDate] = useState("")
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const { constructionData, setConstructionData } = useData();
   const [displa, setdisplay] = useState(false);
@@ -1669,6 +1669,24 @@ const PaymentTransaction = () => {
     navigate("/brokertransaction", { state: { constructionData } });
   };
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const fetchDate = async () => {
+      try {
+        const response = await fetch('http://worldtimeapi.org/api/timezone/Etc/UTC');
+        const data = await response.json();
+        const utcDate = new Date(data.utc_datetime);
+        const formattedDate = utcDate.toISOString().split('T')[0];
+        setCurrentDate(formattedDate);
+      } catch (error) {
+        console.error('Error fetching date:', error);
+      }
+    };
+
+    fetchDate();
+  }, []);
+
   return (
     <Box display={"flex"} height={"100vh"} maxW={"100vw"} ref={componentRef}>
       <Box flex={"20%"} borderRight={"1px solid grey"}>
@@ -2276,7 +2294,7 @@ const PaymentTransaction = () => {
                     // padding={"0px 4px 0px 4px"}
                   >
                     <FormLabel fontSize={"sm"}>Booking </FormLabel>
-                    <Input type="date" id="bookingDate" w={"60%"} />
+                    <Input type="date" id="bookingDate" disabled w={"60%"} />
                   </Flex>
                 </FormControl>
                 <FormControl>
@@ -2420,6 +2438,7 @@ const PaymentTransaction = () => {
                       id="date"
                       required
                       type="date"
+                      value={currentDate}
                       // w={"60%"}
                     />
                   </Flex>
@@ -2768,7 +2787,7 @@ const PaymentTransaction = () => {
                       >
                         {res.bankName}
                       </Td>
-                      <Td
+                      {/* <Td
                         border="1px solid black"
                         p={"8px"}
                         style={{
@@ -2793,7 +2812,40 @@ const PaymentTransaction = () => {
                         }}
                       >
                         {res.transactionStatus}
+                      </Td> */}
+
+<Td
+                        border="1px solid black"
+                        p={"10px"}
+                        style={{
+                          backgroundColor:
+                            res.transactionStatus === "Clear"
+                              ? "#22c35e"
+                              : res.transactionStatus === "Provisional" ||
+                                res.transactionStatus === "Pending" ||
+                                res.transactionStatus === "PDC"
+                              ? "#ECC94B"
+                              : "inherit",
+                          color:
+                            res.transactionStatus === "Clear"
+                              ? "white"
+                              : res.transactionStatus === "Provisional" ||
+                                res.transactionStatus === "Pending" ||
+                                res.transactionStatus === "PDC"
+                              ? "black"
+                              : res.transactionStatus === "Bounced"
+                              ? "red" // Set text color to red when status is "Bounced"
+                              : "inherit",
+                          textDecoration:
+                            res.transactionStatus === "Bounced"
+                              ? "line-through"
+                              : "none",
+                        }}
+                      >
+                        {res.transactionStatus}
                       </Td>
+
+
                       <Td
                         border="1px solid black"
                         p={"8px"}

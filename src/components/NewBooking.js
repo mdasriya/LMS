@@ -13,27 +13,29 @@ import {
   GridItem,
   useToast,
   Textarea,
+  filter,
 } from "@chakra-ui/react";
 //import { getFormSubmissionInfo } from "react-router-dom/dist/dom";
 
 import axios from "axios";
 
 const NewBooking = () => {
-
+  const [percent, setPercent] = useState(null)
   const [projectName, setProjectName] = useState("");
   const [blockName, setBlockname] = useState("");
   const [plotName, setPlotName] = useState("");
   const [contractorName, setcontractorName] = useState("");
   const [plottype, setplottype] = useState("");
-  const [registerygender, setregisterygender] = useState("");
+  const [registerygender, setregisterygender] = useState("Male");
   const [discountApplicable, setdiscountApplicable] = useState("");
   const [constructionapplicable, setconstructionapplicable] = useState("No");
   const [broker, setBroker] = useState("");
   const plotTypes = ["Normal", "EWS", "1BHK", "2BHK", "3BHK", "4BHK", "5BHK"]; // Replace with actual plot types
-  const genders = ["Male", "Female", "Other"]; // Replace with actual gender options
+  const genders = ["Male", "Female"]; // Replace with actual gender options
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [filterPlot, setFilterPlot] = useState([]);
   const toast = useToast();
+  const [render, setRender] = useState(false)
   const [formData, setFormData] = useState({
     projectName: "",
     blockName: "",
@@ -65,11 +67,10 @@ const NewBooking = () => {
     constructionAmount: "",
     remarks: "",
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prevData) => ({ ...prevData, [name]: value }));
+  // };
 
   const onAddBook = async () => {
     setIsSubmitting(true);
@@ -353,7 +354,7 @@ const NewBooking = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           console.log("onselect phot No : ", response.data.phpresult);
-
+          setFilterPlot(response.data.phpresult);
           let query1 =
             "SELECT * FROM master where projectName ='" + projectName + "';";
           // alert(query);
@@ -368,9 +369,9 @@ const NewBooking = () => {
           if (response1 && response1.data) {
             if (response1.data.phpresult) {
               setMaster(response1.data.phpresult);
-              
-              console.log("Response 1",response1.data.phpresult)
-              
+
+              console.log("Response 1", response1.data.phpresult);
+
               document.getElementById("registryGender").value = "Male";
 
               // document.getElementById('plotType').style.backgroundColor = 'gray';
@@ -406,6 +407,14 @@ const NewBooking = () => {
                 (document.getElementById("guidelineAmount").value *
                   document.getElementById("registryPercent").value) /
                 100;
+
+              // MY CODE START
+              // document.getElementById("registryAmount").value =
+              //   (document.getElementById("guidelineAmount").value *
+              //     document.getElementById("registryPercent").value) /
+              //   100;
+              // MY CODE END
+
               if (response1.data.phpresult[0]["serviceType"] == "Lumpsum") {
                 document.getElementById("serviceAmount").value =
                   response1.data.phpresult[0]["serviceValue"];
@@ -489,6 +498,7 @@ const NewBooking = () => {
   };
 
   const updateOnChange = () => {
+    console.log("call");
     document.getElementById("totalAmount").value =
       document.getElementById("areaSqft").value *
       document.getElementById("rateAreaSqft").value;
@@ -513,12 +523,19 @@ const NewBooking = () => {
     }
 
     if (document.getElementById("registryGender").value == "Male") {
+
+      setPercent(master[0].registryMalePercent)
+      console.log("call male", master[0].registryMalePercent);
       document.getElementById("registryPercent").value =
-        master[0]["registryMalePercent"];
+        master[0].registryMalePercent;
+        setRender((prev) => !prev)
     }
     if (document.getElementById("registryGender").value == "Female") {
+      setPercent(master[0].registryFemalePercent)
+      console.log("call female", master[0].registryFemalePercent);
       document.getElementById("registryPercent").value =
         master[0]["registryFemalePercent"];
+        setRender((prev) => !prev)
     }
 
     // this is for previous
@@ -598,11 +615,24 @@ const NewBooking = () => {
     loadContractor();
     loadBroker();
   }, []);
-  
-console.log("master", master)
+
+
+ useEffect(()=>{
+if(registerygender==="Male"){
+  setPercent(master[0]?.registryMalePercent)
+}else{
+  setPercent(master[0]?.registryFemalePercent)
+}
+ },[render,percent, master])
+
+  console.log("master", master);
+  console.log("plot", plotData);
+  console.log("block", blockData);
+  console.log("gender", registerygender);
+  console.log("percent", percent);
 
   return (
-    <Box p={4} width="100%" position={"relative"} bottom={"0rem"} >
+    <Box p={4} width="100%" position={"relative"} bottom={"0rem"}>
       <Center pb={2}>
         <Heading fontSize={"22px"} position={"relative"} bottom={"1rem"}>
           New Booking
@@ -623,12 +653,9 @@ console.log("master", master)
                 }}
                 placeholder="Select Project"
               >
-                {projectsData.map((project) => {
+                {projectsData.map((project, index) => {
                   return (
-                    <option
-                      key={project.projectName}
-                      value={project.projectName}
-                    >
+                    <option key={index} value={project.projectName}>
                       {project.projectName}
                     </option>
                   );
@@ -648,9 +675,9 @@ console.log("master", master)
                 }}
                 placeholder="Select Block"
               >
-                {blockData.map((block) => {
+                {blockData.map((block, index) => {
                   return (
-                    <option key={block.blockName} value={block.blockName}>
+                    <option key={index} value={block.blockName}>
                       {block.blockName}
                     </option>
                   );
@@ -670,13 +697,14 @@ console.log("master", master)
                 }}
                 placeholder="Select Plot No"
               >
-                {plotData.map((plot) => {
-                  return (
-                    <option key={plot.plotNo} value={plot.plotNo}>
-                      {plot.plotNo}
-                    </option>
-                  );
-                })}
+                {plotData &&
+                  plotData?.map((plot, index) => {
+                    return (
+                      <option key={index} value={plot.plotNo}>
+                        {plot.plotNo}
+                      </option>
+                    );
+                  })}
               </Select>
             </FormControl>
 
@@ -768,8 +796,8 @@ console.log("master", master)
                 <option value="" disabled>
                   Select Gender
                 </option>
-                {genders.map((gender) => (
-                  <option key={gender} value={gender}>
+                {genders.map((gender, index) => (
+                  <option key={index} value={gender}>
                     {gender}
                   </option>
                 ))}
@@ -857,6 +885,7 @@ console.log("master", master)
             <FormControl>
               <FormLabel>Registry Amount</FormLabel>
               <Input
+                // value={master?.guidelineAmount}
                 onChange={updateOnChange}
                 id="registryAmount"
                 type="text"
@@ -941,12 +970,9 @@ console.log("master", master)
                 }}
                 placeholder="Select Contactor"
               >
-                {contractorData.map((block) => {
+                {contractorData.map((block, index) => {
                   return (
-                    <option
-                      key={block.contractorName}
-                      value={block.contractorName}
-                    >
+                    <option key={index} value={block.contractorName}>
                       {block.contractorName}
                     </option>
                   );
@@ -983,17 +1009,18 @@ console.log("master", master)
                 id="guidelineAmount"
                 type="text"
                 name="guidelineAmount"
-
+                // value={ filter?  Number(filterPlot?.areaSqmt) * Number(master?.guideline) : ""}
                 //onChange={handleChange}
               />
             </FormControl>
 
             <FormControl>
-              <FormLabel>Registry Percent</FormLabel>
+              <FormLabel>Registry Percent:</FormLabel>
               <Input
                 type="text"
+value={percent}
                 onChange={updateOnChange}
-                id="registry"
+                // id="registry"
                 //onChange={handleChange}
               />
               <Input
@@ -1062,9 +1089,9 @@ console.log("master", master)
                   }}
                   placeholder="Select "
                 >
-                  {brokerData.map((block) => {
+                  {brokerData.map((block, index) => {
                     return (
-                      <option key={block.brokerName} value={block.brokerName}>
+                      <option key={index} value={block.brokerName}>
                         {block.brokerName}
                       </option>
                     );
@@ -1083,27 +1110,23 @@ console.log("master", master)
                   width={"320px"}
                   rows={2}
                 />
-                
               </FormControl>
 
-           
-                <Button
-                  colorScheme="blue"
-                  type="button"
-                  mt={8}
-                  onClick={onAddBook}
-                  isDisabled = {isSubmitting}
-                >
-                  {isSubmitting ? 'Submitting...' : 'Submit'}
-                </Button>
-            
-
-           
+              <Button
+                colorScheme="blue"
+                type="button"
+                mt={8}
+                onClick={onAddBook}
+                isDisabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Submit"}
+              </Button>
             </Box>
           </Grid>
         </form>
       </Box>
-      <br /><br />
+      <br />
+      <br />
     </Box>
   );
 };
