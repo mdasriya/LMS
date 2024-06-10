@@ -106,8 +106,8 @@ const Nav = ({ isLoggedIn, handleLogout }) => {
               <MenuList>
                 <MenuItem as={Link} to="/bookingstatus">
                   Booking Status
-                </MenuItem>
-                <MenuItem >
+                </MenuItem >
+                <MenuItem as={Link} to="/holdedplots" >
                 On-Hold Plots
                 </MenuItem>
                 <MenuItem as={Link} to="/newbooking">

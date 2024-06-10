@@ -34,6 +34,7 @@ import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { warning } from "framer-motion";
 
 const AddBlock = () => {
+
   const [show, setShow] = useState("");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState(null);
@@ -95,7 +96,7 @@ const AddBlock = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; 
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     if (value) {
       setShow(true);

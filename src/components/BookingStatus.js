@@ -45,6 +45,7 @@ const BookingStatus = () => {
   const [count, setCount] = useState(null)
  const [totalArea, setTotalArea] = useState(0)
  const [totalAreamt, setTotalAreamt] = useState(0)
+
  
 // render no project function 
 function initialFunction (){
@@ -216,7 +217,9 @@ const plotStatus = getUniqueValues("plotStatus");
   },[filteredBookings])
 
  
-  console.log(filteredBookings)
+  console.log(filteredBookings[1])
+  console.log(filteredBookings[highlightedRow])
+
 
 
   return (
