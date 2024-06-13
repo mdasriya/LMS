@@ -1687,6 +1687,8 @@ const [currentDate, setCurrentDate] = useState("")
     fetchDate();
   }, []);
 
+console.log("setData", blockData)
+
   return (
     <Box display={"flex"} height={"100vh"} maxW={"100vw"} ref={componentRef}>
       <Box flex={"20%"} borderRight={"1px solid grey"}>

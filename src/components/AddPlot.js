@@ -192,21 +192,19 @@ const AddPlot = () => {
     fData.append("plotType", formData.plotType);
     fData.append("plotStatus", formData.plotStatus);
 
-    const found = plot.filter((item) => {
-      if (
-        item.projectName == formData.projectName &&
-        item.plotNo == formData.plotNo
-      ) {
-        return item;
-      }
-    });
-    if (found.length > 0) {
-      toast({
-        title: `Plot already Exist`,
-        status: "error",
-        isClosable: true,
-      });
-      return;
+    let filterData = currentItems.filter((el)=> el.plotNo === formData.plotNo)
+    console.log(filterData)
+    if(filterData){
+    console.log(formData.plotNo, )
+      if(filterData.length>0){
+        console.log("if call")
+        toast({
+           title: `Plot already Exist`,
+           status: "error",
+           isClosable: true,
+         });
+         return;
+    }
     }
 
 
