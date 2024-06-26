@@ -846,7 +846,8 @@ const BookingList = () => {
                         </Td>
 
                         <Td border="1px solid black" color={"red"}>
-                          {"Not Tallied"}
+                        {data?.tallySatus}
+
                         </Td>
 
                         <Td border="1px solid black">

@@ -34,6 +34,7 @@ import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import { warning } from "framer-motion";
 
 const AddBlock = () => {
+  
   const [show, setShow] = useState("");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState(null);
@@ -53,6 +54,7 @@ const AddBlock = () => {
     areaSqmt: "",
     ratePerSqft: "",
   });
+  const [checkblock, setCheckBlock] = useState("")
 
   //fetch only project name
   const fetchProject = async () => {
@@ -95,7 +97,7 @@ const AddBlock = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; 
     setFormData((prevData) => ({ ...prevData, [name]: value }));
     if (value) {
       setShow(true);
@@ -161,16 +163,13 @@ const AddBlock = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   const handleDelete = (projectId) => {
     setProjectIdToDelete(projectId);
     setIsDeleteDialogOpen(true);
   };
 
-  // const confirmDelete = async () => {
+  
   //   setDelLoading(true)
   //   try {
   //     // Make a DELETE request to your API endpoint for deleting a project
@@ -215,24 +214,26 @@ const AddBlock = () => {
   });
 
   const handleEditBlockChange = (e) => {
+
     const { name, value } = e.target;
+
+if(name === "blockName"){
+  setCheckBlock(value)
+}
+
     setEditFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleEditBlockSubmit = async (e) => {
     e.preventDefault();
     setEditLoading(true);
-    console.log("edit Project", editFormData.projectName);
-    console.log("edit block", editFormData.blockName);
-    const findBlock = block.find(
-      (element) =>
-        editFormData.projectName === element.projectName &&
-        editFormData.blockName != element.blockName
-    );
-    if (findBlock) {
-      console.log("found", findBlock);
-      console.log("if call");
-      toast({
+    
+
+if(checkblock){
+  const conditionBlock = block.filter((el)=> el.blockName === checkblock)
+
+  if(conditionBlock.length>0){
+         toast({
         title: `Block Already exist`,
         status: "warning",
         position: "top-right",
@@ -240,7 +241,25 @@ const AddBlock = () => {
       });
       setEditLoading(false);
       return;
-    }
+  }
+}
+
+    // const findBlock = block.find(
+    //   (element) =>
+    //     editFormData.blockName === element.blockName
+    // );
+    // if (findBlock.length>0) {
+    //   console.log("found", findBlock);
+    //   console.log("if call");
+    //   toast({
+    //     title: `Block Already exist`,
+    //     status: "warning",
+    //     position: "top-right",
+    //     isClosable: true,
+    //   });
+    //   setEditLoading(false);
+    //   return;
+    // }
 
     const url = "https://lkgexcel.com/backend/editblock.php";
 
@@ -337,7 +356,7 @@ const AddBlock = () => {
     fetchData();
     fetchProject();
   }, []);
-
+console.log("block", block)
   return (
     <>
       <Box p={4} width="100%">

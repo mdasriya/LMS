@@ -13,6 +13,7 @@
 .transferred-row {
   text-decoration: line-through;
   color: red;
+
 }
 @media print {
   .print {

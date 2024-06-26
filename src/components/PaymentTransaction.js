@@ -54,12 +54,12 @@ const [currentDate, setCurrentDate] = useState("")
   const [showButtons, setShowButtons] = useState(true);
   const [showPayment, setShowPayment] = useState(true);
   const [showAction, setShowAction] = useState(true);
-
+  const navigate = useNavigate();
   const [currentPlot, setCurrentPlot] = useState([]);
   const [contractorData, setcontractorData] = useState([]);
   const [tPlot, setPlot] = useState([]);
   const [transactionData, setTransactionData] = useState([]);
-
+const [mode, setMode] = useState("")
   const componentRef = useRef();
   const [transferProjectName, setTransferProjectName] = useState("");
   const [transferBlockName, setTransferBlockName] = useState("");
@@ -80,6 +80,20 @@ const [currentDate, setCurrentDate] = useState("")
   const [transferAllBlock, setTransferAllBlock] = useState([]);
   const [transferAllPlot, setTransferAllPlot] = useState([]);
   const [AllPlot, setAllPlot] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    id: "",
+    date: "",
+    paymentType: "",
+    amount: "",
+    bankMode: "",
+    cheqNo: "",
+    bankName: "",
+    transactionStatus: "",
+    statusDate: "",
+    remarks: "",
+  });
+
   useEffect(() => {
     const updatedTransactionData = transactionData.map((res, index) => {
       if (transferredRows.includes(index)) {
@@ -852,20 +866,20 @@ const [currentDate, setCurrentDate] = useState("")
       document.getElementById("transactionStatus").value;
     const statusDate = document.getElementById("statusDate").value;
     const remarks = document.getElementById("remarks").value;
-
+console.log("object", mode)
     if (
       !date ||
       !paymentType ||
       isNaN(amount) ||
       !bankMode ||
-      !cheqNo ||
-      !bankName ||
+      // cheqNo ||
+      // bankName ||
       !transactionStatus ||
       !statusDate ||
       !remarks
     ) {
       alert("Please fill in all required fields.");
-      return; // Don't submit if any field is empty
+     return; 
     }
 
     try {
@@ -1256,19 +1270,7 @@ const [currentDate, setCurrentDate] = useState("")
     }
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editFormData, setEditFormData] = useState({
-    id: "",
-    date: "",
-    paymentType: "",
-    amount: "",
-    bankMode: "",
-    cheqNo: "",
-    bankName: "",
-    transactionStatus: "",
-    statusDate: "",
-    remarks: "",
-  });
+ 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -1445,14 +1447,14 @@ const [currentDate, setCurrentDate] = useState("")
     totalReceived -= amount;
 
     // Update UI with the new values
-    updateUI({
-      cashReceived,
-      cashBalance,
-      bankReceived,
-      bankBalance,
-      totalBalance,
-      totalReceived,
-    });
+    // updateUI({
+    //   cashReceived,
+    //   cashBalance,
+    //   bankReceived,
+    //   bankBalance,
+    //   totalBalance,
+    //   totalReceived,
+    // });
     console.log("Updated Cash Received:", cashReceived);
     console.log("Updated Cash Balance:", cashBalance);
     console.log("Updated Bank Received:", bankReceived);
@@ -1536,32 +1538,35 @@ const [currentDate, setCurrentDate] = useState("")
 
     const formData = new FormData();
     formData.append("query", query);
+console.log("frmData", formData)
+    // try {
+    //   // Send the query to insert the transaction
+    //   const response = await axios.post(url, formData);
 
-    try {
-      // Send the query to insert the transaction
-      const response = await axios.post(url, formData);
+    //   // Send the update query to adjust balances
+    //   formData.set("query", updateQuery);
+    //   await axios.post(url, formData);
 
-      // Send the update query to adjust balances
-      formData.set("query", updateQuery);
-      await axios.post(url, formData);
-
-      return response.data; // Return the inserted data or success status
-    } catch (error) {
-      console.error("Error inserting transaction:", error);
-      throw error; // Throw the error for handling in the calling code
-    }
+    //   return response.data; // Return the inserted data or success status
+    // } catch (error) {
+    //   console.error("Error inserting transaction:", error);
+    //   throw error; // Throw the error for handling in the calling code
+    // }
   };
 
-  // Function to handle transfer
-  // Function to handle transfer
-  // Function to handle transfer
+
   const handleTransfer = async () => {
+
+console.log("object", transferData)
+
     if (transferData && transactionData[transferData.index]) {
       const selectedRow = transactionData[transferData.index];
       const fromProject = selectedRow.projectName;
       const fromBlock = selectedRow.blockName;
       const fromPlot = selectedRow.plotno;
-
+console.log("object1", fromProject)
+console.log("object2", fromBlock)
+console.log("object3", fromPlot)
       setTransferProjectName(selectedRow.projectName);
       setTransferBlockName(selectedRow.blockName);
       setTransferPlotName(selectedRow.plotno);
@@ -1625,7 +1630,7 @@ const [currentDate, setCurrentDate] = useState("")
         }, CHQ/REF NO: ${selectedRow.cheqNo}, bank name: ${
           selectedRow.bankName
         }`;
-        console.log(logMessage);
+        // console.log(logMessage);
 
         try {
           const statusUpdateSuccess = await trasnferTransactionStatus(
@@ -1653,7 +1658,7 @@ const [currentDate, setCurrentDate] = useState("")
         });
 
         // Reload the page
-        window.location.reload();
+        // window.location.reload();
 
         setIsTransferModalOpen(false);
       }
@@ -1668,7 +1673,20 @@ const [currentDate, setCurrentDate] = useState("")
   const handleBrokerButtonClick = () => {
     navigate("/brokertransaction", { state: { constructionData } });
   };
-  const navigate = useNavigate();
+  
+
+  const selectMode = (e) => {
+const {name, value} = e.target
+if(name==="paymentType" && value=="Cash"){
+  document.getElementById("bankMode").value = "none";
+setMode(value)
+}else{
+  document.getElementById("bankMode").value = "";
+  setMode("")
+}
+
+
+  }
 
 
   useEffect(() => {
@@ -2239,14 +2257,14 @@ console.log("setData", blockData)
                   <Button
                     as={Link}
                     to="/contractortransaction"
-                    onClick={handleContractorButtonClick}
+                    // onClick={handleContractorButtonClick}
                   >
                     Contractor
                   </Button>
                   <Button
                     as={Link}
                     to="/brokertransaction"
-                    onClick={handleBrokerButtonClick}
+                    // onClick={handleBrokerButtonClick}
                   >
                     Broker
                   </Button>
@@ -2455,8 +2473,8 @@ console.log("setData", blockData)
                     <FormLabel fontSize={"sm"} margin={0}>
                       Payment Type
                     </FormLabel>
-                    <Select placeholder="Select" id="paymentType" required>
-                      <option value="Cash">Cash</option>
+                    <Select name="paymentType" onChange={selectMode}  placeholder="Select" id="paymentType" required>
+                      <option  value="Cash">Cash</option>
                       <option value="Bank">Bank</option>
                       {/* Add more projects as needed */}
                     </Select>
@@ -2514,7 +2532,7 @@ console.log("setData", blockData)
                     <Input
                       id="cheqNo"
                       type="text"
-                      required
+                      // required={mode==="Cash"}
                       // w={"60%"}
                     />
                   </Flex>

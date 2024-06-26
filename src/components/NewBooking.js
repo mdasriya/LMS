@@ -12,30 +12,25 @@ import {
   Heading,
   GridItem,
   useToast,
-  Textarea,
-  filter,
 } from "@chakra-ui/react";
 //import { getFormSubmissionInfo } from "react-router-dom/dist/dom";
 
 import axios from "axios";
 
 const NewBooking = () => {
-  const [percent, setPercent] = useState(null)
   const [projectName, setProjectName] = useState("");
   const [blockName, setBlockname] = useState("");
   const [plotName, setPlotName] = useState("");
   const [contractorName, setcontractorName] = useState("");
   const [plottype, setplottype] = useState("");
-  const [registerygender, setregisterygender] = useState("Male");
+  const [registerygender, setregisterygender] = useState("");
   const [discountApplicable, setdiscountApplicable] = useState("");
-  const [constructionapplicable, setconstructionapplicable] = useState("No");
+  const [constructionapplicable, setconstructionapplicable] = useState("");
   const [broker, setBroker] = useState("");
   const plotTypes = ["Normal", "EWS", "1BHK", "2BHK", "3BHK", "4BHK", "5BHK"]; // Replace with actual plot types
-  const genders = ["Male", "Female"]; // Replace with actual gender options
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [filterPlot, setFilterPlot] = useState([]);
+  const genders = ["Male", "Female", "Other"]; // Replace with actual gender options
+
   const toast = useToast();
-  const [render, setRender] = useState(false)
   const [formData, setFormData] = useState({
     projectName: "",
     blockName: "",
@@ -67,13 +62,13 @@ const NewBooking = () => {
     constructionAmount: "",
     remarks: "",
   });
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData((prevData) => ({ ...prevData, [name]: value }));
-  // };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
   const onAddBook = async () => {
-    setIsSubmitting(true);
     const url = "https://lkgexcel.com/backend/setQuery.php";
     let query =
       "INSERT INTO booking (id, projectName, blockName, plotNo, plotType, customerName, customerAddress, customerContact, registryGender, areaSqft, rateAreaSqft, totalAmount, discountApplicable, discountPercent, netAmount, registryAmount, serviceAmount, maintenanceAmount, miscAmount, grandTotal, constructionApplicable, constructionContractor, constructionAmount, totalAmountPayable, guidelineAmount, registryPercent, bankAmountPayable, bookingDate, cashAmountPayable, broker,remarks) VALUES (NULL, '" +
@@ -137,13 +132,11 @@ const NewBooking = () => {
       "', '" +
       document.getElementById("remarks").value +
       "')";
+
+    console.log(query);
     let fData = new FormData();
     fData.append("query", query);
-    // let projectName1 = document.getElementById("projectName").value;
-    // let blockName1 = document.getElementById("blockName").value;
-    // let plotNo1 = document.getElementById("plotNo").value;
-    let plotType1 = document.getElementById("plotType").value;
-    console.log(plotType1);
+
     try {
       const response = await axios.post(url, fData);
       console.log(response);
@@ -184,10 +177,8 @@ const NewBooking = () => {
       document.getElementById("bookingDate").value = "";
       document.getElementById("cashAmountPayable").value = "";
       document.getElementById("remarks").value = "";
-      setIsSubmitting(false);
     } catch (error) {
       console.log(error.toJSON());
-      setIsSubmitting(false);
     }
   };
 
@@ -301,7 +292,7 @@ const NewBooking = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           setplotData(response.data.phpresult);
-          console.log("Ploat DAta : ", response.data);
+          console.log(response.data.phpresult);
         }
       }
     } catch (error) {
@@ -324,7 +315,7 @@ const NewBooking = () => {
       if (response && response.data) {
         if (response.data.phpresult) {
           setprojectsData(response.data.phpresult);
-          console.log("project data", response.data.phpresult);
+          console.log(response.data.phpresult);
         }
       }
     } catch (error) {
@@ -353,8 +344,8 @@ const NewBooking = () => {
 
       if (response && response.data) {
         if (response.data.phpresult) {
-          console.log("onselect phot No : ", response.data.phpresult);
-          setFilterPlot(response.data.phpresult);
+          console.log(response.data.phpresult);
+
           let query1 =
             "SELECT * FROM master where projectName ='" + projectName + "';";
           // alert(query);
@@ -369,8 +360,6 @@ const NewBooking = () => {
           if (response1 && response1.data) {
             if (response1.data.phpresult) {
               setMaster(response1.data.phpresult);
-
-              console.log("Response 1", response1.data.phpresult);
 
               document.getElementById("registryGender").value = "Male";
 
@@ -390,8 +379,7 @@ const NewBooking = () => {
               document.getElementById("netAmount").value =
                 document.getElementById("totalAmount").value;
               document.getElementById("guidelineAmount").value =
-                // response.data.phpresult[0]["areaSqft"] *
-                response.data.phpresult[0]["areaSqmt"] *
+                response.data.phpresult[0]["areaSqft"] *
                 response1.data.phpresult[0]["guideline"];
 
               if (document.getElementById("registryGender").value == "Male") {
@@ -407,14 +395,6 @@ const NewBooking = () => {
                 (document.getElementById("guidelineAmount").value *
                   document.getElementById("registryPercent").value) /
                 100;
-
-              // MY CODE START
-              // document.getElementById("registryAmount").value =
-              //   (document.getElementById("guidelineAmount").value *
-              //     document.getElementById("registryPercent").value) /
-              //   100;
-              // MY CODE END
-
               if (response1.data.phpresult[0]["serviceType"] == "Lumpsum") {
                 document.getElementById("serviceAmount").value =
                   response1.data.phpresult[0]["serviceValue"];
@@ -498,7 +478,6 @@ const NewBooking = () => {
   };
 
   const updateOnChange = () => {
-    console.log("call");
     document.getElementById("totalAmount").value =
       document.getElementById("areaSqft").value *
       document.getElementById("rateAreaSqft").value;
@@ -516,33 +495,22 @@ const NewBooking = () => {
         document.getElementById("totalAmount").value;
     }
 
-    {
-      // This is Previous
-      // document.getElementById("guidelineAmount").value =
-      //   plotData[0]["areaSqmt"] * master[0]["guideline"];
-    }
+    document.getElementById("guidelineAmount").value =
+      plotData[0]["areaSqft"] * master[0]["guideline"];
 
     if (document.getElementById("registryGender").value == "Male") {
-
-      setPercent(master[0].registryMalePercent)
-      console.log("call male", master[0].registryMalePercent);
       document.getElementById("registryPercent").value =
-        master[0].registryMalePercent;
-        setRender((prev) => !prev)
+        master[0]["registryMalePercent"];
     }
     if (document.getElementById("registryGender").value == "Female") {
-      setPercent(master[0].registryFemalePercent)
-      console.log("call female", master[0].registryFemalePercent);
       document.getElementById("registryPercent").value =
         master[0]["registryFemalePercent"];
-        setRender((prev) => !prev)
     }
 
-    // this is for previous
-    //  { document.getElementById("registryAmount").value =
-    //     (document.getElementById("guidelineAmount").value *
-    //       document.getElementById("registryPercent").value) /
-    //     100;}
+    document.getElementById("registryAmount").value =
+      (document.getElementById("guidelineAmount").value *
+        document.getElementById("registryPercent").value) /
+      100;
     if (master[0]["serviceType"] == "Lumpsum") {
       document.getElementById("serviceAmount").value =
         master[0]["serviceValue"];
@@ -596,17 +564,14 @@ const NewBooking = () => {
         document.getElementById("grandTotal").value;
     }
 
-    {
-      // This is Previous
-      // document.getElementById("bankAmountPayable").value =
-      //   (document.getElementById("guidelineAmount").value *
-      //     document.getElementById("registry").value) /
-      //   100;
-    }
+    document.getElementById("bankAmountPayable").value =
+      (document.getElementById("guidelineAmount").value *
+        document.getElementById("registry").value) /
+      100;
 
-    // document.getElementById("cashAmountPayable").value =
-    //   document.getElementById("totalAmountPayable").value -
-    //   document.getElementById("bankAmountPayable").value;
+    document.getElementById("cashAmountPayable").value =
+      document.getElementById("totalAmountPayable").value -
+      document.getElementById("bankAmountPayable").value;
   };
 
   useEffect(() => {
@@ -615,21 +580,6 @@ const NewBooking = () => {
     loadContractor();
     loadBroker();
   }, []);
-
-
- useEffect(()=>{
-if(registerygender==="Male"){
-  setPercent(master[0]?.registryMalePercent)
-}else{
-  setPercent(master[0]?.registryFemalePercent)
-}
- },[render,percent, master])
-
-  console.log("master", master);
-  console.log("plot", plotData);
-  console.log("block", blockData);
-  console.log("gender", registerygender);
-  console.log("percent", percent);
 
   return (
     <Box p={4} width="100%" position={"relative"} bottom={"0rem"}>
@@ -653,9 +603,12 @@ if(registerygender==="Male"){
                 }}
                 placeholder="Select Project"
               >
-                {projectsData.map((project, index) => {
+                {projectsData.map((project) => {
                   return (
-                    <option key={index} value={project.projectName}>
+                    <option
+                      key={project.projectName}
+                      value={project.projectName}
+                    >
                       {project.projectName}
                     </option>
                   );
@@ -675,9 +628,9 @@ if(registerygender==="Male"){
                 }}
                 placeholder="Select Block"
               >
-                {blockData.map((block, index) => {
+                {blockData.map((block) => {
                   return (
-                    <option key={index} value={block.blockName}>
+                    <option key={block.blockName} value={block.blockName}>
                       {block.blockName}
                     </option>
                   );
@@ -697,14 +650,13 @@ if(registerygender==="Male"){
                 }}
                 placeholder="Select Plot No"
               >
-                {plotData &&
-                  plotData?.map((plot, index) => {
-                    return (
-                      <option key={index} value={plot.plotNo}>
-                        {plot.plotNo}
-                      </option>
-                    );
-                  })}
+                {plotData.map((plot) => {
+                  return (
+                    <option key={plot.plotNo} value={plot.plotNo}>
+                      {plot.plotNo}
+                    </option>
+                  );
+                })}
               </Select>
             </FormControl>
 
@@ -796,8 +748,8 @@ if(registerygender==="Male"){
                 <option value="" disabled>
                   Select Gender
                 </option>
-                {genders.map((gender, index) => (
-                  <option key={index} value={gender}>
+                {genders.map((gender) => (
+                  <option key={gender} value={gender}>
                     {gender}
                   </option>
                 ))}
@@ -885,7 +837,6 @@ if(registerygender==="Male"){
             <FormControl>
               <FormLabel>Registry Amount</FormLabel>
               <Input
-                // value={master?.guidelineAmount}
                 onChange={updateOnChange}
                 id="registryAmount"
                 type="text"
@@ -970,9 +921,12 @@ if(registerygender==="Male"){
                 }}
                 placeholder="Select Contactor"
               >
-                {contractorData.map((block, index) => {
+                {contractorData.map((block) => {
                   return (
-                    <option key={index} value={block.contractorName}>
+                    <option
+                      key={block.contractorName}
+                      value={block.contractorName}
+                    >
                       {block.contractorName}
                     </option>
                   );
@@ -1009,18 +963,17 @@ if(registerygender==="Male"){
                 id="guidelineAmount"
                 type="text"
                 name="guidelineAmount"
-                // value={ filter?  Number(filterPlot?.areaSqmt) * Number(master?.guideline) : ""}
+
                 //onChange={handleChange}
               />
             </FormControl>
 
             <FormControl>
-              <FormLabel>Registry Percent:</FormLabel>
+              <FormLabel>Registry Percent</FormLabel>
               <Input
                 type="text"
-value={percent}
                 onChange={updateOnChange}
-                // id="registry"
+                id="registry"
                 //onChange={handleChange}
               />
               <Input
@@ -1073,7 +1026,6 @@ value={percent}
                   name="bookingDate"
                   //onChange={handleChange}
                   required
-                  defaultValue={new Date().toISOString().substr(0, 10)}
                 />
               </FormControl>
               <FormControl>
@@ -1089,9 +1041,9 @@ value={percent}
                   }}
                   placeholder="Select "
                 >
-                  {brokerData.map((block, index) => {
+                  {brokerData.map((block) => {
                     return (
-                      <option key={index} value={block.brokerName}>
+                      <option key={block.brokerName} value={block.brokerName}>
                         {block.brokerName}
                       </option>
                     );
@@ -1100,15 +1052,13 @@ value={percent}
               </FormControl>
               <FormControl>
                 <FormLabel>Remarks</FormLabel>
-                <Textarea
+                <Input
                   onChange={updateOnChange}
                   id="remarks"
                   type="text"
                   name="remarks"
                   //onChange={handleChange}
                   required
-                  width={"320px"}
-                  rows={2}
                 />
               </FormControl>
 
@@ -1117,16 +1067,13 @@ value={percent}
                 type="button"
                 mt={8}
                 onClick={onAddBook}
-                isDisabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit"}
+                Submit
               </Button>
             </Box>
           </Grid>
         </form>
       </Box>
-      <br />
-      <br />
     </Box>
   );
 };

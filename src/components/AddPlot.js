@@ -323,15 +323,6 @@ const AddPlot = () => {
     formData.append("plotStatus", editFormData.plotStatus);
 
    
-   
-    // if (foundPlotNo.length > 0) {
-    //   toast({
-    //     title: `Plot Number already Exist`,
-    //     status: "error",
-    //     isClosable: true,
-    //   });
-    //   return;
-    // }
 
     try {
       const response = await axios.post(url, formData);
@@ -658,6 +649,11 @@ const AddPlot = () => {
                         {plotItem.plotStatus.toUpperCase()}
                       </Text>
                     )}
+                    {plotItem.plotStatus === "Hold" && (
+                      <Text fontWeight={500} p={"1px"}>
+                        {plotItem.plotStatus.toUpperCase()}
+                      </Text>
+                    )}
                     {plotItem.plotStatus === "Registered" && (
                       <Text
                         fontWeight={500}
@@ -812,7 +808,7 @@ const AddPlot = () => {
                   required
                 >
                   <option value={editFormData.plotStatus}>{editFormData.plotStatus}</option>
-                  {/* <option value="Not Available" disabled>Not Available</option> */}
+                   <option value="Hold">Hold</option> 
                 </Select>
               </FormControl>
             </ModalBody>
